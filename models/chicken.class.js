@@ -1,0 +1,7 @@
+class Chicken{
+    x;
+    y;
+
+
+    
+}
