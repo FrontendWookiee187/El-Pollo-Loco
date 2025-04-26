@@ -5,6 +5,7 @@ img;
 height = 150;
 width = 100;
 speed = 0.15;
+otherDirection = false;
 
 imageCache = {};
 currentImage = 0;
@@ -33,9 +34,9 @@ moveRight(){
 }
 
 moveLeft(){
-    setInterval(() => {
+    
         this.x -= this.speed;
-    }, 1000/60)
+    
 }
 
 
