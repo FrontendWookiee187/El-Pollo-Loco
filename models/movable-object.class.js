@@ -8,6 +8,7 @@ speed = 0.15;
 otherDirection = false;
 speedY = 0;
 acceleration = 2.5;
+energy = 100;
 
 imageCache = {};
 currentImage = 0;
@@ -15,7 +16,7 @@ currentImage = 0;
 applayGravity() {
 
 setInterval(() => {
-    if(this.isAboveGround()){
+    if(this.isAboveGround() || this.speedY > 0) {
     this.y -= this.speedY;
     this.speedY -= this.acceleration; // Gravity effect
 }}, 1000 / 25);
@@ -30,6 +31,31 @@ loadImage(path) {
 this.img = new Image();
 this.img.src = path;
 
+}
+
+draw(ctx){
+ctx.drawImage(this.img, this.x, this.y, this.width, this.height);
+}
+
+drawFrame(ctx) {
+
+        if(this instanceof Character || this instanceof Chicken) {        
+
+    ctx.beginPath();
+        ctx.lineWidth = '5';
+        ctx.strokeStyle = 'blue';
+        ctx.rect(this.x, this.y, this.width, this.height);
+        ctx.stroke();
+
+    }
+}
+
+//character.isColliding(chicken);
+isColliding(mo) {
+    return this.x + this.width > mo.x &&
+        this.y + this.height > mo.y &&
+        this.x < mo.x &&
+        this.y < mo.y + mo.height;
 }
 
 loadImages(arr) {
@@ -53,14 +79,16 @@ playAnimation(images){
 }
 
 moveRight(){
-    console.log('Moving right');
-    
+
+    this.x += this.speed; // Move right
 }
 
 moveLeft(){
-    
-        this.x -= this.speed;
-    
+    this.x -= this.speed; // Move left
+}
+
+jump(){
+    this.speedY = 30;
 }
 
 

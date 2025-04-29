@@ -16,12 +16,25 @@ constructor(canvas, keyboard) {
     this.keyboard = keyboard;
     this.draw();
     this.setWorld();
+    this.checkCollisions();
 }
 
     setWorld(){
        this.character.world = this; 
     }
 
+    checkCollisions(){
+
+        setInterval(() => {
+            this.level.enemies.forEach(enemy => {
+               if( this.character.isColliding(enemy)) {
+                console.log('Collision with character', enemy);                
+               }                
+            });
+        },200)
+
+        
+    }
 
     draw(){
 
@@ -53,17 +66,28 @@ constructor(canvas, keyboard) {
     addToMap(mo){
 
         if (mo.otherDirection) {
+            this.flipImage(mo);            
+        }
+
+        mo.draw(this.ctx);
+        mo.drawFrame(this.ctx);        
+
+        if (mo.otherDirection) {
+            this.flipImageBack(mo); 
+        }
+    }
+
+flipImage(mo){
+    
             this.ctx.save();
             this.ctx.translate(mo.width, 0); // Translate to the right edge of the image
             this.ctx.scale(-1, 1); // Flip the image horizontally
             mo.x = mo.x * -1;
-        }
-
-        this.ctx.drawImage(mo.img, mo.x, mo.y, mo.width, mo.height);
-
-        if (mo.otherDirection) {
-            mo.x = mo.x * -1; // Reset the x position to the original value
-            this.ctx.restore(); // Restore the original state
-        }
-    }
 }
+
+flipImageBack(mo){
+    mo.x = mo.x * -1; // Reset the x position to the original value
+    this.ctx.restore(); // Restore the original state
+
+}}
+

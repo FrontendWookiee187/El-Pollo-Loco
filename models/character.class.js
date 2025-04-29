@@ -2,7 +2,7 @@ class Character extends MovableObject {
 
     height = 300;
     width = 150;
-    y = 10;
+    y = 130;
     speed = 10;
 
     IMAGES_WALKING =[
@@ -45,14 +45,19 @@ class Character extends MovableObject {
 
         setInterval(() => {
             if(this.world.keyboard.RIGHT && this.x < this.world.level.level_end_x){  
-                this.x += this.speed; // Move right
+                this.moveRight();
                 this.otherDirection = false; // Set otherDirection to false when moving right
             }
 
             if(this.world.keyboard.LEFT && this.x > 0){ // Prevent moving left if x is less than or equal to 0
-                this.x -= this.speed; // Move left
+                this.moveLeft();
                 this.otherDirection = true; // Set otherDirection to true when moving left
             }
+
+            if(this.world.keyboard.SPACE && !this.isAboveGround()){
+                this.jump(); // Call the jump method when UP key is pressed and character is on the ground
+            }
+
             this.world.camera_x = -this.x + 100;
 
         },1000/60)
@@ -73,9 +78,8 @@ class Character extends MovableObject {
         },50);
     }
  
-    jump(){
-
-
+    jump() {
+        this.speedY = 30; // Set the speedY to a positive value to make the character jump
     }
     
 }
