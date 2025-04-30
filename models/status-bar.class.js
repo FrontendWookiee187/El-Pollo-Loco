@@ -12,10 +12,11 @@ IMAGES = [
 percentage = 100; // Initial health percentage
 
 constructor() {
-    super().loadImage('./img/7_statusbars/1_statusbar/2_statusbar_health/blue/0.png');
+    super();
     this.loadImages(this.IMAGES);
-    this.x = 20;
-    this.y = 20;
+    this.setPercentage(100); // Set the initial health percentage
+    this.x = 30;
+    this.y = 0;
     this.width = 200;
     this.height = 60;
     this.percentage = 100; // Initial health percentage
@@ -24,7 +25,7 @@ constructor() {
 // setPercentage(50);
 setPercentage(percentage){
   this.percentage = percentage; // Set the health percentage  // => 0....5
-  let path = this.imageCache[this.resolveImageIndex()]; // Set the image based on the percentage
+  let path = this.IMAGES[this.resolveImageIndex()]; // Get the image path based on the percentage
   this.img = this.imageCache[path]; 
 }
 

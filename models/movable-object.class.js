@@ -24,24 +24,11 @@ setInterval(() => {
 }
 
 isAboveGround() {
+    if(this instanceof ThrowableObject) { // throwable object should always fall
+        return true;
+    } else{
     return this.y < 130
 }
-
-
-
-
-
-drawFrame(ctx) {
-
-        if(this instanceof Character || this instanceof Chicken) {        
-
-    ctx.beginPath();
-        ctx.lineWidth = '5';
-        ctx.strokeStyle = 'blue';
-        ctx.rect(this.x, this.y, this.width, this.height);
-        ctx.stroke();
-
-    }
 }
 
 //character.isColliding(chicken);
