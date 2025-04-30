@@ -35,6 +35,8 @@ const level1 = new Level([
    
 ],
 
+DrawableObject.createRandomBottles(10) // Verwende die statische Methode
+
 
 
 );

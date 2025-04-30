@@ -12,17 +12,17 @@ class ThrowableObject extends MovableObject {
         
     }
 
-    throw(){        
+    throw(otherDirection){        
         this.speedY = 20; // Set the initial speed in the Y direction
         this.applayGravity(); // Start applying gravity
+
         setInterval(() => {
-            this.x += 10;
+            if (otherDirection) {                
+                this.x -= 10;
+                
+            }else {                
+                this.x += 10;
+                }
         }, 25)
-
-
-
     }
-
-
-
 }

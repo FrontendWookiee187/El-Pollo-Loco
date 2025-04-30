@@ -33,13 +33,17 @@ constructor(canvas, keyboard) {
         
     }
 
-    checkThrowObjects(){
-        if(this.keyboard.D){
+    checkThrowObjects() {
+        if (this.keyboard.D && this.character.otherDirection == false) { // Check if the D key is pressed and character is facing right
             let bottle = new ThrowableObject(this.character.x + 100, this.character.y + 100);
+            bottle.throw(this.character.otherDirection); // Übergibt die Laufrichtung
             this.throwableObjects.push(bottle);
-        }
 
-
+         } else if (this.keyboard.D && this.character.otherDirection == true) { // Check if the D key is pressed and character is facing left
+            let bottle = new ThrowableObject(this.character.x - 100, this.character.y - 100);
+            bottle.throw(this.character.otherDirection); // Übergibt die Laufrichtung
+            this.throwableObjects.push(bottle);
+         }
     }
 
     checkCollisions(){
@@ -69,6 +73,7 @@ constructor(canvas, keyboard) {
         this.addObjectsToMap(this.level.enemies);
         this.addObjectsToMap(this.level.clouds); 
         this.addObjectsToMap(this.throwableObjects);
+        
                     
         this.ctx.translate(- this.camera_x, 0);
 
