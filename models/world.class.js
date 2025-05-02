@@ -8,6 +8,7 @@ keyboard;
 camera_x = 0;
 statusBar = new StatusBar();
 statusBarBottles = new StatusBarBottles();
+statusBarCoins = new StatusBarCoins();
 throwableObjects = [];
 
 constructor(canvas, keyboard) {
@@ -71,12 +72,30 @@ constructor(canvas, keyboard) {
          });
 
          // Kollision mit Flaschen
-    this.level.bottles.forEach((bottle, index) => {
-        if (this.character.isColliding(bottle)) {
-            this.level.bottles.splice(index, 1); // Entferne die Flasche aus dem Level
-            this.updateBottleStatusBar(); // Aktualisiere die Flaschen-Leiste
+         this.level.bottles.forEach((bottle, index) => {
+            if (this.character.isColliding(bottle)) {
+                if (this.statusBarBottles.percentage < 100) { // Nur aufnehmen, wenn die Leiste nicht voll ist
+                    this.level.bottles.splice(index, 1); // Entferne die Flasche aus dem Level
+                    this.updateBottleStatusBar(); // Aktualisiere die Flaschen-Leiste
+                } else {
+                    console.log('Flaschen-Leiste ist voll!'); // Debugging-Ausgabe
+                }
+            }
+        });
+
+    // Kollision mit Coins
+    this.level.coins.forEach((coin, index) => {
+        if (this.character.isColliding(coin)) {
+            if (this.statusBarCoins.percentage < 100) { // Nur aufnehmen, wenn die Leiste nicht voll ist
+                this.level.coins.splice(index, 1); // Entferne die Münze aus dem Level
+                this.updateCoinStatusBar(); // Aktualisiere die Münzen-Leiste
+            } else {
+                console.log('Münzen-Leiste ist voll!'); // Debugging-Ausgabe
+            }
         }
     });
+
+
     }
 
     draw(){
@@ -91,6 +110,7 @@ constructor(canvas, keyboard) {
         // ----- Space for fixed objects -----
         this.addToMap(this.statusBar);
         this.addToMap(this.statusBarBottles);
+        this.addToMap(this.statusBarCoins);
         this.ctx.translate(this.camera_x, 0); 
 
 
@@ -99,7 +119,7 @@ constructor(canvas, keyboard) {
         this.addObjectsToMap(this.level.clouds); 
         this.addObjectsToMap(this.throwableObjects);
         this.addObjectsToMap(this.level.bottles); // Flaschen hinzufügen
-
+        this.addObjectsToMap(this.level.coins);
         
                     
         this.ctx.translate(- this.camera_x, 0);
@@ -164,6 +184,16 @@ updateBottleStatusBarOnThrow() {
     if (currentPercentage > 0) {
         let newPercentage = currentPercentage - (100 / maxBottles); // Verringere die Anzeige
         this.statusBarBottles.setPercentage(Math.max(newPercentage, 0)); // Begrenze auf 0%
+    }
+}
+
+updateCoinStatusBar() {
+    let maxCoins = 5; // Maximale Anzahl an Coins
+    let currentPercentage = this.statusBarCoins.percentage;
+
+    if (currentPercentage < 100) {
+        let newPercentage = currentPercentage + (100 / maxCoins); // Erhöhe die Anzeige
+        this.statusBarCoins.setPercentage(Math.min(newPercentage, 100)); // Begrenze auf 100%
     }
 }
 
