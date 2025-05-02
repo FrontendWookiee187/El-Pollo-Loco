@@ -10,6 +10,18 @@ energy = 100;
 
 lastHit = 0;
 
+rX;
+rY;
+rW;
+rH;
+
+offset= {
+    top: 50,
+    bottom: 10,
+    left: 30,
+    right: 30
+};
+
 
 
 
@@ -31,12 +43,19 @@ isAboveGround() {
 }
 }
 
+getRealFrame(){
+    this.rX = this.x + this.offset.left;
+    this.rY = this.y + this.offset.top;
+    this.rW = this.width - this.offset.left - this.offset.right;
+    this.rH = this.height - this.offset.top - this.offset.bottom;
+}
+
 //character.isColliding(chicken);
 isColliding(mo) {
-    return this.x + this.width > mo.x &&
-        this.y + this.height > mo.y &&
-        this.x < mo.x &&
-        this.y < mo.y + mo.height;
+    return this.x + this.offset.left < mo.x + mo.width - mo.offset.right &&
+           this.x + this.width - this.offset.right > mo.x + mo.offset.left &&
+           this.y + this.offset.top < mo.y + mo.height - mo.offset.bottom &&
+           this.y + this.height - this.offset.bottom > mo.y + mo.offset.top;
 }
 
 hit(){

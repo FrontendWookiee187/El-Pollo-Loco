@@ -4,6 +4,7 @@ class Character extends MovableObject {
     width = 150;
     y = 130;
     speed = 10;
+    
 
     IMAGES_WALKING =[
 
@@ -58,6 +59,7 @@ class Character extends MovableObject {
         this.loadImages(this.IMAGES_HURT);
         this.applayGravity();
         this.animate();
+        this.getRealFrame();
         
 
     }

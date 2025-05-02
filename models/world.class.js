@@ -7,6 +7,7 @@ ctx;
 keyboard;
 camera_x = 0;
 statusBar = new StatusBar();
+statusBarBottles = new StatusBarBottles();
 throwableObjects = [];
 
 constructor(canvas, keyboard) {
@@ -66,6 +67,7 @@ constructor(canvas, keyboard) {
         this.ctx.translate(-this.camera_x, 0); 
         // ----- Space for fixed objects -----
         this.addToMap(this.statusBar);
+        this.addToMap(this.statusBarBottles);
         this.ctx.translate(this.camera_x, 0); 
 
 
@@ -73,6 +75,8 @@ constructor(canvas, keyboard) {
         this.addObjectsToMap(this.level.enemies);
         this.addObjectsToMap(this.level.clouds); 
         this.addObjectsToMap(this.throwableObjects);
+        this.addObjectsToMap(this.level.bottles); // Flaschen hinzufügen
+
         
                     
         this.ctx.translate(- this.camera_x, 0);

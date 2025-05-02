@@ -37,21 +37,5 @@ class DrawableObject{
      img.src = path;
       this.imageCache[path] = img;                
        });                
-         }
-
-
-         // Statische Methode zum Erstellen zufälliger Flaschen
-    static createRandomBottles(amount) {
-        let bottles = [];
-        for (let i = 0; i < amount; i++) {
-            let x = 200 + Math.random() * 2000; // Zufällige x-Position
-            let y = 130; // Feste y-Position (z. B. auf dem Boden)
-            bottles.push(new ThrowableObject(x, y));
-        }
-        return bottles;
-    }
-
-
-
-
+         }  
 }
