@@ -35,25 +35,48 @@ constructor(canvas, keyboard) {
     }
 
     checkThrowObjects() {
-        if (this.keyboard.D && this.character.otherDirection == false) { // Check if the D key is pressed and character is facing right
-            let bottle = new ThrowableObject(this.character.x + 100, this.character.y + 100);
-            bottle.throw(this.character.otherDirection); // Übergibt die Laufrichtung
-            this.throwableObjects.push(bottle);
-
-         } else if (this.keyboard.D && this.character.otherDirection == true) { // Check if the D key is pressed and character is facing left
-            let bottle = new ThrowableObject(this.character.x - 100, this.character.y - 100);
-            bottle.throw(this.character.otherDirection); // Übergibt die Laufrichtung
-            this.throwableObjects.push(bottle);
-         }
+        // Überprüfen, ob die D-Taste gedrückt ist
+        if (this.keyboard.D) {
+            // Überprüfen, ob Flaschen verfügbar sind
+            if (this.statusBarBottles.percentage > 0) {
+                let bottleX;
+                let bottleY = this.character.y + 100;
+    
+                // Überprüfen, ob der Charakter nach links schaut
+                if (this.character.otherDirection) {
+                    bottleX = this.character.x - 100; // Position links vom Charakter
+                } else {
+                    bottleX = this.character.x + 100; // Position rechts vom Charakter
+                }
+    
+                // Flasche erstellen und werfen
+                let bottle = new ThrowableObject(bottleX, bottleY);
+                bottle.throw(this.character.otherDirection); // Übergibt die Laufrichtung
+                this.throwableObjects.push(bottle);
+    
+                // Flaschen-Leiste aktualisieren
+                this.updateBottleStatusBarOnThrow();
+            }
+        }
     }
 
     checkCollisions(){
+
+        // Kollision mit Gegnern (z. B. Hühnern)
         this.level.enemies.forEach(enemy => {
             if( this.character.isColliding(enemy)) {
              this.character.hit();
              this.statusBar.setPercentage(this.character.energy); // Update the status bar   
           }                
          });
+
+         // Kollision mit Flaschen
+    this.level.bottles.forEach((bottle, index) => {
+        if (this.character.isColliding(bottle)) {
+            this.level.bottles.splice(index, 1); // Entferne die Flasche aus dem Level
+            this.updateBottleStatusBar(); // Aktualisiere die Flaschen-Leiste
+        }
+    });
     }
 
     draw(){
@@ -121,5 +144,31 @@ flipImageBack(mo){
     mo.x = mo.x * -1; // Reset the x position to the original value
     this.ctx.restore(); // Restore the original state
 
-}}
+}
+
+
+updateBottleStatusBar() {
+    let maxBottles = 5; // Maximale Anzahl an Flaschen
+    let currentPercentage = this.statusBarBottles.percentage;
+
+    if (currentPercentage < 100) {
+        let newPercentage = currentPercentage + (100 / maxBottles); // Erhöhe die Anzeige
+        this.statusBarBottles.setPercentage(Math.min(newPercentage, 100)); // Begrenze auf 100%
+    }
+}
+
+updateBottleStatusBarOnThrow() {
+    let maxBottles = 5; // Maximale Anzahl an Flaschen
+    let currentPercentage = this.statusBarBottles.percentage;
+
+    if (currentPercentage > 0) {
+        let newPercentage = currentPercentage - (100 / maxBottles); // Verringere die Anzeige
+        this.statusBarBottles.setPercentage(Math.max(newPercentage, 0)); // Begrenze auf 0%
+    }
+}
+
+
+}
+
+
 

@@ -23,8 +23,6 @@ offset= {
 };
 
 
-
-
 applayGravity() {
 
 setInterval(() => {
@@ -52,11 +50,18 @@ getRealFrame(){
 
 //character.isColliding(chicken);
 isColliding(mo) {
-    return this.x + this.offset.left < mo.x + mo.width - mo.offset.right &&
+    let colliding = this.x + this.offset.left < mo.x + mo.width - mo.offset.right &&
            this.x + this.width - this.offset.right > mo.x + mo.offset.left &&
            this.y + this.offset.top < mo.y + mo.height - mo.offset.bottom &&
            this.y + this.height - this.offset.bottom > mo.y + mo.offset.top;
-}
+
+           if (colliding) {
+            console.log('Kollision erkannt zwischen:', this, mo);
+        }
+    
+        return colliding;
+
+        }
 
 hit(){
     this.energy -= 5;
