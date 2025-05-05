@@ -90,6 +90,15 @@ class Character extends MovableObject {
         this.loadImages(this.IMAGES_DEAD);
         this.loadImages(this.IMAGES_HURT);
         this.applayGravity();
+
+        // Offsets für präzise Kollisionserkennung
+    this.offset = {
+        top: 50,    // Abstand von oben
+        bottom: -30, // Abstand von unten
+        left: 20,   // Abstand von links
+        right: 20   // Abstand von rechts
+    };
+
         this.animate();
         this.getRealFrame();
         

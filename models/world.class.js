@@ -19,6 +19,7 @@ constructor(canvas, keyboard) {
     this.draw();
     this.setWorld();
     this.run();
+    this.initBackgroundMusic();
 }
 
     setWorld(){
@@ -61,18 +62,24 @@ constructor(canvas, keyboard) {
         }
     }
 
-    checkCollisions(){
-
-        // Kollision mit Gegnern (z. B. Hühnern)
-        this.level.enemies.forEach(enemy => {
-            if( this.character.isColliding(enemy)) {
-             this.character.hit();
-             this.statusBar.setPercentage(this.character.energy); // Update the status bar   
-          }                
-         });
-
-         // Kollision mit Flaschen
-         this.level.bottles.forEach((bottle, index) => {
+    checkCollisions() {
+        // Prüfe zuerst, ob ein Huhn getroffen wurde
+        const chickenHit = this.checkChickenKO();
+    
+        // Wenn ein Huhn getroffen wurde, überspringe die allgemeine Kollisionsprüfung
+        if (!chickenHit) {
+            // Kollision mit Gegnern (z. B. Hühnern)
+            this.level.enemies.forEach(enemy => {
+                if (this.character.isColliding(enemy)) {
+                    console.log('Charakter wird getroffen von:', enemy);
+                    this.character.hit();
+                    this.statusBar.setPercentage(this.character.energy); // Aktualisiere die Lebensanzeige
+                }
+            });
+        }
+    
+        // Kollision mit Flaschen
+        this.level.bottles.forEach((bottle, index) => {
             if (this.character.isColliding(bottle)) {
                 if (this.statusBarBottles.percentage < 100) { // Nur aufnehmen, wenn die Leiste nicht voll ist
                     this.level.bottles.splice(index, 1); // Entferne die Flasche aus dem Level
@@ -82,20 +89,18 @@ constructor(canvas, keyboard) {
                 }
             }
         });
-
-    // Kollision mit Coins
-    this.level.coins.forEach((coin, index) => {
-        if (this.character.isColliding(coin)) {
-            if (this.statusBarCoins.percentage < 100) { // Nur aufnehmen, wenn die Leiste nicht voll ist
-                this.level.coins.splice(index, 1); // Entferne die Münze aus dem Level
-                this.updateCoinStatusBar(); // Aktualisiere die Münzen-Leiste
-            } else {
-                console.log('Münzen-Leiste ist voll!'); // Debugging-Ausgabe
+    
+        // Kollision mit Coins
+        this.level.coins.forEach((coin, index) => {
+            if (this.character.isColliding(coin)) {
+                if (this.statusBarCoins.percentage < 100) { // Nur aufnehmen, wenn die Leiste nicht voll ist
+                    this.level.coins.splice(index, 1); // Entferne die Münze aus dem Level
+                    this.updateCoinStatusBar(); // Aktualisiere die Münzen-Leiste
+                } else {
+                    console.log('Münzen-Leiste ist voll!'); // Debugging-Ausgabe
+                }
             }
-        }
-    });
-
-
+        });
     }
 
     draw(){
@@ -194,6 +199,55 @@ updateCoinStatusBar() {
     if (currentPercentage < 100) {
         let newPercentage = currentPercentage + (100 / maxCoins); // Erhöhe die Anzeige
         this.statusBarCoins.setPercentage(Math.min(newPercentage, 100)); // Begrenze auf 100%
+    }
+}
+
+checkChickenKO() {
+    let chickenHit = false; // Flag, um zu prüfen, ob ein Huhn getroffen wurde
+
+    this.level.enemies.forEach((enemy, index) => {
+        if (this.character.isColliding(enemy)) {
+            if (
+                this.character.speedY < 0 && // Der Charakter bewegt sich nach unten
+                this.character.y + this.character.height - this.character.offset.bottom < enemy.y + enemy.height - enemy.offset.bottom + 20
+            ) {
+                console.log('Charakter trifft das Huhn von oben:', enemy);
+                enemy.isKO = true;
+                enemy.speed = 0;
+
+                // Vertikale Geschwindigkeit des Charakters zurücksetzen
+                this.character.speedY = 15; // Charakter springt leicht zurück nach oben
+
+                // Kein Schaden, da der Charakter das Huhn von oben trifft
+                this.character.hit(true);
+
+                setTimeout(() => {
+                    console.log('Huhn wird entfernt:', enemy);
+                    this.level.enemies.splice(index, 1); // Entferne das Huhn
+                }, 1000);
+
+                chickenHit = true; // Markiere, dass ein Huhn getroffen wurde
+            }
+        }
+    });
+
+    return chickenHit; // Gibt zurück, ob ein Huhn getroffen wurde
+}
+
+initBackgroundMusic() {
+    this.backgroundMusic = new Audio('./audio/background_game.mp3'); // Pfad zur Musikdatei
+    this.backgroundMusic.loop = true; // Musik in Endlosschleife abspielen
+    this.backgroundMusic.volume = 0.2; // Lautstärke (0.0 bis 1.0)
+    this.backgroundMusic.play(); // Musik starten
+}
+
+toggleMute() {
+    if (this.backgroundMusic.muted) {
+        this.backgroundMusic.muted = false; // Musik wieder einschalten
+        console.log('Musik eingeschaltet');
+    } else {
+        this.backgroundMusic.muted = true; // Musik stummschalten
+        console.log('Musik stummgeschaltet');
     }
 }
 

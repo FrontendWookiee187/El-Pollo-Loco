@@ -12,17 +12,23 @@ class ThrowableObject extends MovableObject {
         
     }
 
-    throw(otherDirection){        
-        this.speedY = 20; // Set the initial speed in the Y direction
-        this.applayGravity(); // Start applying gravity
-
-        setInterval(() => {
-            if (otherDirection) {                
-                this.x -= 10;
-                
-            }else {                
-                this.x += 10;
-                }
-        }, 25)
+    throw(otherDirection) {
+        this.speedY = 20; // Anfangsgeschwindigkeit in der Y-Richtung
+        this.applayGravity(); // Starte die Schwerkraft
+    
+        // Horizontale und vertikale Bewegung der Flasche
+        this.throwInterval = setInterval(() => {
+            // Horizontale Bewegung
+            if (otherDirection) {
+                this.x -= 20; // Bewegt die Flasche nach links
+            } else {
+                this.x += 20; // Bewegt die Flasche nach rechts
+            }
+    
+            // Stoppe die Bewegung, wenn die Flasche den Bildschirm verlässt
+            if (this.x < 0 || this.x > 720 || this.y > 480) { // 480 ist die Bildschirmhöhe
+                clearInterval(this.throwInterval);
+            }
+        }, 25);
     }
 }

@@ -3,6 +3,7 @@ class Chicken extends MovableObject{
     width = 80;
     height = 80;
     y = 350;
+    isKO = false; // Zustand des Huhns (k.o. oder nicht)
 
     IMAGES_WALKING = [
         './img/3_enemies_chicken/chicken_normal/1_walk/1_w.png',
@@ -16,23 +17,46 @@ class Chicken extends MovableObject{
         './img/3_enemies_chicken/chicken_small/1_walk/3_w.png',
 ]; 
 
+IMAGES_KO =[
+    './img/3_enemies_chicken/chicken_normal/2_dead/dead.png'
+];
+
 
     constructor() {
         super().loadImage('./img/3_enemies_chicken/chicken_normal/1_walk/1_w.png');
         this.loadImages(this.IMAGES_WALKING);
+        this.loadImages(this.IMAGES_KO);
         
         this.x = 450 + Math.random() * 500;
         this.speed = 0.15 + Math.random() * 0.5;
+
+
+        // Offsets für präzise Kollisionserkennung
+        this.offset = {
+            top: -20,    // Abstand von oben
+            bottom: 10, // Abstand von unten
+            left: 10,   // Abstand von links
+            right: 10   // Abstand von rechts
+        };
+
         this.animate();
     }
 
-    animate(){
+    animate() {
         setInterval(() => {
-            this.moveLeft(); // Bewegt das Huhn kontinuierlich nach links
+            if (!this.isKO) {
+                this.moveLeft(); // Bewegt das Huhn kontinuierlich nach links
+            } else {
+                this.y += 5; // Lässt das Huhn nach unten fallen, wenn es k.o. ist
+            }
         }, 1000 / 60);
 
         setInterval(() => {
-        this.playAnimation(this.IMAGES_WALKING); // Spielt die Animation ab
-        },200);
+            if (this.isKO) {
+                this.playAnimation(this.IMAGES_KO); // Spielt die K.O.-Animation ab
+            } else {
+                this.playAnimation(this.IMAGES_WALKING); // Spielt die Laufanimation ab
+            }
+        }, 200);
     }
 }

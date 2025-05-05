@@ -24,21 +24,22 @@ offset= {
 
 
 applayGravity() {
-
-setInterval(() => {
-    if(this.isAboveGround() || this.speedY > 0) {
-    this.y -= this.speedY;
-    this.speedY -= this.acceleration; // Gravity effect
-}}, 1000 / 25);
-    
+    setInterval(() => {
+        if (this.isAboveGround() || this.speedY > 0) {
+            this.y -= this.speedY; // Bewege das Objekt nach oben oder unten
+            this.speedY -= this.acceleration; // Reduziere die Geschwindigkeit durch Schwerkraft
+        }
+    }, 1000 / 25);
 }
 
 isAboveGround() {
-    if(this instanceof ThrowableObject) { // throwable object should always fall
+    if (this instanceof ThrowableObject) { 
+        // ThrowableObject ist immer in der Luft
         return true;
-    } else{
-    return this.y < 130
-}
+    } else {
+        // Prüfen, ob der Charakter über dem Boden ist
+        return this.y < 130; // 130 ist die Bodenhöhe
+    }
 }
 
 getRealFrame(){
@@ -63,14 +64,21 @@ isColliding(mo) {
 
         }
 
-hit(){
-    this.energy -= 5;
-    if(this.energy < 0) {
-        this.energy = 0;
-    } else{
-        this.lastHit = new Date().getTime(); // Set the time of the last hit
-    }
-}
+        hit(enemyHitFromAbove = false) {
+            // Wenn der Charakter ein Huhn von oben trifft, erleidet er keinen Schaden
+            if (enemyHitFromAbove) {
+                console.log('Kein Schaden, da der Charakter ein Huhn von oben getroffen hat.');
+                return;
+            }
+        
+            // Standard-Schaden-Logik
+            this.energy -= 5;
+            if (this.energy < 0) {
+                this.energy = 0;
+            } else {
+                this.lastHit = new Date().getTime(); // Setze die Zeit des letzten Treffers
+            }
+        }
 
 isHurt() {
 

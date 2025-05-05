@@ -15,7 +15,9 @@ class Cloud extends MovableObject{
     }
 
     animate(){
-        this.moveLeft();
+        setInterval(() => {
+            this.moveLeft(); // Bewegt die Wolke kontinuierlich nach links
+        }, 1000 / 60); // 60 FPS
     }
 
    
