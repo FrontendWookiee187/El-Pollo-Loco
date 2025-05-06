@@ -33,10 +33,10 @@ IMAGES_KO =[
 
         // Offsets für präzise Kollisionserkennung
         this.offset = {
-            top: -20,    // Abstand von oben
-            bottom: 10, // Abstand von unten
-            left: 10,   // Abstand von links
-            right: 10   // Abstand von rechts
+            top: -5,    // Abstand von oben
+            bottom: 5, // Abstand von unten
+            left: 5,   // Abstand von links
+            right: 5   // Abstand von rechts
         };
 
         this.animate();

@@ -53,9 +53,10 @@ constructor(canvas, keyboard) {
                 }
     
                 // Flasche erstellen und werfen
-                let bottle = new ThrowableObject(bottleX, bottleY);
-                bottle.throw(this.character.otherDirection); // Übergibt die Laufrichtung
-                this.throwableObjects.push(bottle);
+            let bottle = new ThrowableObject(bottleX, bottleY);
+            bottle.world = this; // Setze die Referenz zur Welt
+            bottle.throw(this.character.otherDirection); // Übergibt die Laufrichtung
+            this.throwableObjects.push(bottle);
     
                 // Flaschen-Leiste aktualisieren
                 this.updateBottleStatusBarOnThrow();
@@ -64,6 +65,11 @@ constructor(canvas, keyboard) {
     }
 
     checkCollisions() {
+
+        this.throwableObjects.forEach((bottle) => {
+            bottle.handleBottleCollision(this.level.enemies); // Überprüfe Kollisionen mit Gegnern
+        });
+
         // Prüfe zuerst, ob ein Huhn getroffen wurde
         const chickenHit = this.checkChickenKO();
     

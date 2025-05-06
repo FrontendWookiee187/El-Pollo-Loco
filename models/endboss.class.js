@@ -39,6 +39,15 @@ class Endboss extends MovableObject {
     // this.isAttacking = false;
     // this.attackInterval = 2000; // Time between attacks in milliseconds
     // this.attackTimer = null; // Timer for attack interval
+
+
+    // Offsets für präzise Kollisionserkennung
+    this.offset = {
+      top: 20,
+      bottom: 20,
+      left: 20,
+      right: 20
+  };
   }
 
   animate(){

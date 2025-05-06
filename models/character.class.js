@@ -90,14 +90,14 @@ class Character extends MovableObject {
         this.loadImages(this.IMAGES_JUMPING);
         this.loadImages(this.IMAGES_DEAD);
         this.loadImages(this.IMAGES_HURT);
-        this.applayGravity();
+        this.applyGravity();
 
         // Offsets für präzise Kollisionserkennung
     this.offset = {
         top: 50,    // Abstand von oben
-        bottom: -30, // Abstand von unten
-        left: 20,   // Abstand von links
-        right: 20   // Abstand von rechts
+        bottom: 50, // Abstand von unten
+        left: 50,   // Abstand von links
+        right:  50   // Abstand von rechts
     };
 
         this.animate();
@@ -152,7 +152,7 @@ class Character extends MovableObject {
     }
  
     jump() {
-        this.speedY = 30; // Set the speedY to a positive value to make the character jump
+        this.speedY = 35; // Set the speedY to a positive value to make the character jump
         this.jumpSound.play(); // Spiele den Sprung-Sound ab
         this.jumpSound.volume = 0.2; // Lautstärke (0.0 bis 1.0)
     }
