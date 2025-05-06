@@ -10,6 +10,7 @@ statusBar = new StatusBar();
 statusBarBottles = new StatusBarBottles();
 statusBarCoins = new StatusBarCoins();
 throwableObjects = [];
+chickenKOSound = new Audio('./audio/chicken_head_edited.mp3')
 
 constructor(canvas, keyboard) {
 
@@ -218,12 +219,16 @@ checkChickenKO() {
                 // Vertikale Geschwindigkeit des Charakters zurücksetzen
                 this.character.speedY = 15; // Charakter springt leicht zurück nach oben
 
+                // Huhn-K.O.-Geräusch abspielen
+                this.chickenKOSound.play(); 
+                this.chickenKOSound.volume = 0.1; // Lautstärke anpassen
+
                 // Kein Schaden, da der Charakter das Huhn von oben trifft
                 this.character.hit(true);
 
                 setTimeout(() => {
                     console.log('Huhn wird entfernt:', enemy);
-                    this.level.enemies.splice(index, 1); // Entferne das Huhn
+                    this.level.enemies.splice(index, 1); // Entferne das Huhn                    
                 }, 1000);
 
                 chickenHit = true; // Markiere, dass ein Huhn getroffen wurde

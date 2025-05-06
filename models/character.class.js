@@ -4,6 +4,7 @@ class Character extends MovableObject {
     width = 150;
     y = 130;
     speed = 10;
+    jumpSound = new Audio('./audio/jump.mp3')
 
 
     IMAGES_IDLE = [
@@ -152,6 +153,8 @@ class Character extends MovableObject {
  
     jump() {
         this.speedY = 30; // Set the speedY to a positive value to make the character jump
+        this.jumpSound.play(); // Spiele den Sprung-Sound ab
+        this.jumpSound.volume = 0.2; // Lautstärke (0.0 bis 1.0)
     }
     
 }
