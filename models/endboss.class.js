@@ -47,8 +47,7 @@ class Endboss extends MovableObject {
     this.x = 2500;
     this.y = 55;
     this.health = 100; // Gesundheit des Endbosses
-    this.zIndex = 90
-    this.world = world; // Zugriff auf die Welt
+    this.zIndex = 90    
     this.currentAnimation = this.IMAGES_WALKING; // Aktuelle Animation initialisieren
     // this.animate();
     
