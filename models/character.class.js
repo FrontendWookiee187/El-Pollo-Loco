@@ -94,10 +94,10 @@ class Character extends MovableObject {
 
         // Offsets für präzise Kollisionserkennung
     this.offset = {
-        top: 50,    // Abstand von oben
-        bottom: 50, // Abstand von unten
-        left: 50,   // Abstand von links
-        right:  50   // Abstand von rechts
+        top: 15,    // Abstand von oben
+        bottom: -15, // Abstand von unten
+        left: 15,   // Abstand von links
+        right:  15   // Abstand von rechts
     };
 
         this.animate();

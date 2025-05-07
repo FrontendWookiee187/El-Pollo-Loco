@@ -31,6 +31,7 @@ class ThrowableObject extends MovableObject {
         this.y = y;
         this.height = 50;
         this.width = 50;
+        this.zIndex = 100; // Setze den Z-Index für die Flasche
         this.throw();
 
         // Offsets für präzise Kollisionserkennung
@@ -88,56 +89,55 @@ class ThrowableObject extends MovableObject {
     handleBottleCollision(enemies) {
         // Prüfe nur, wenn die Flasche sichtbar ist
         if (this.x >= 0 && this.x <= 720 && this.y >= 0 && this.y <= 390) {
-            console.log('Prüfe Kollisionen mit Gegnern:', enemies);
-    
             let collisionDetected = false;
     
             // Prüfe Kollisionen mit Gegnern
             enemies.forEach((enemy) => {
                 if (!this.hasHit && this.isColliding(enemy)) {
                     console.log('Flasche trifft Gegner:', enemy);
-                
+    
                     this.hasHit = true;
                     collisionDetected = true;
-                
+    
                     // Gegner als K.O. markieren
-                    enemy.isKO = true;
-                    enemy.speed = 0; // Geschwindigkeit des Gegners auf 0 setzen
-                    enemy.applyGravity = () => {}; // Schwerkraft für den Gegner deaktivieren
-                } else {
-                    console.log('Keine Kollision mit Gegner:', enemy);
+                    if (enemy instanceof Endboss) {
+                        enemy.health -= 20; // Reduziere die Gesundheit des Endbosses
+                        if (enemy.health <= 0) {
+                            enemy.isKO = true; // Markiere den Endboss als K.O.
+                        }
+                    } else {
+                        enemy.isKO = true; // Markiere normale Gegner als K.O.
+                        enemy.speed = 0; // Geschwindigkeit des Gegners auf 0 setzen
+                        enemy.applyGravity = () => {}; // Schwerkraft für den Gegner deaktivieren
+                    }
+    
+                    // Starte die Splash-Animation
+                    this.startSplashAnimation();
                 }
             });
     
             // Prüfe, ob die Flasche den Boden erreicht hat
             if (!this.hasHit && this.y >= 400) { // 400 ist die Bodenhöhe
-                console.log('Flasche trifft den Boden');
                 this.hasHit = true; // Markiere die Flasche als getroffen
                 collisionDetected = true;
-            }
     
-            // Starte die Splash-Animation, wenn eine Kollision erkannt wurde
-            if (collisionDetected) {
-                console.log('Starte Splash-Animation');
+                // Starte die Splash-Animation
                 this.startSplashAnimation();
             }
         }
     }
 
-    startSplashAnimation() {        
-        // Starte die Splash-Animation
-        let animationInterval = setInterval(() => {
-            this.playAnimation(this.IMAGES_SPLASH);
-        }, 100); // Wechsle das Bild alle 100ms
+    startSplashAnimation() {
+        console.log('Starte Splash-Animation an Position:', this.x, this.y);
+        this.loadImages(this.IMAGES_SPLASH);
+        this.playAnimation(this.IMAGES_SPLASH);
     
         // Entferne die Flasche nach der Animation
         setTimeout(() => {
-            clearInterval(animationInterval); // Stoppe die Animation            
-            if (this.world) {
-                const bottleIndex = this.world.throwableObjects.indexOf(this);
-                if (bottleIndex > -1) {
-                    this.world.throwableObjects.splice(bottleIndex, 1); // Entferne die Flasche
-                }
+            const bottleIndex = this.world.throwableObjects.indexOf(this);
+            if (bottleIndex > -1) {
+                console.log('Entferne Flasche nach Splash-Animation:', this);
+                this.world.throwableObjects.splice(bottleIndex, 1);
             }
         }, this.IMAGES_SPLASH.length * 100); // Warte, bis die Animation vollständig abgespielt wurde
     }

@@ -9,6 +9,7 @@ camera_x = 0;
 statusBar = new StatusBar();
 statusBarBottles = new StatusBarBottles();
 statusBarCoins = new StatusBarCoins();
+statusBarEndboss = new StatusBarEndboss();
 throwableObjects = [];
 chickenKOSound = new Audio('./audio/chicken_head_edited.mp3')
 
@@ -65,27 +66,35 @@ constructor(canvas, keyboard) {
     }
 
     checkCollisions() {
-
-        this.throwableObjects.forEach((bottle) => {
-            bottle.handleBottleCollision(this.level.enemies); // Überprüfe Kollisionen mit Gegnern
-        });
-
-        // Prüfe zuerst, ob ein Huhn getroffen wurde
-        const chickenHit = this.checkChickenKO();
+        // Prüfe Kollisionen zwischen Flaschen und Gegnern
+        this.throwableObjects.forEach((bottle, bottleIndex) => {
+            this.level.enemies.forEach((enemy, enemyIndex) => {
+                if (bottle.isColliding(enemy)) {
+                    console.log('Flasche trifft Gegner:', enemy);
     
-        // Wenn ein Huhn getroffen wurde, überspringe die allgemeine Kollisionsprüfung
-        if (!chickenHit) {
-            // Kollision mit Gegnern (z. B. Hühnern)
-            this.level.enemies.forEach(enemy => {
-                if (this.character.isColliding(enemy)) {
-                    console.log('Charakter wird getroffen von:', enemy);
-                    this.character.hit();
-                    this.statusBar.setPercentage(this.character.energy); // Aktualisiere die Lebensanzeige
+                    // Gegner als K.O. markieren
+                    if (enemy instanceof Endboss) {
+                        enemy.health -= 20; // Reduziere die Gesundheit des Endbosses
+                        this.statusBarEndboss.setPercentage(enemy.health); // Aktualisiere die Statusleiste des Endbosses
+                        if (enemy.health <= 0) {
+                            enemy.isKO = true; // Markiere den Endboss als K.O.
+                        }
+                    } else {
+                        enemy.isKO = true; // Markiere normale Gegner als K.O.
+                        enemy.speed = 0; // Geschwindigkeit des Gegners auf 0 setzen
+                        enemy.applyGravity = () => {}; // Schwerkraft für den Gegner deaktivieren
+                    }
+    
+                    // Starte die Splash-Animation der Flasche
+                    bottle.startSplashAnimation();
+    
+                    // Entferne die Flasche nach der Animation
+                    this.throwableObjects.splice(bottleIndex, 1);
                 }
             });
-        }
+        });
     
-        // Kollision mit Flaschen
+        // Kollision mit Flaschen (zum Aufnehmen)
         this.level.bottles.forEach((bottle, index) => {
             if (this.character.isColliding(bottle)) {
                 if (this.statusBarBottles.percentage < 100) { // Nur aufnehmen, wenn die Leiste nicht voll ist
@@ -108,40 +117,62 @@ constructor(canvas, keyboard) {
                 }
             }
         });
+    
+        // Kollision mit Gegnern
+        this.level.enemies.forEach(enemy => {
+            if (this.character.isColliding(enemy)) {
+                this.character.hit();
+                this.statusBar.setPercentage(this.character.energy); // Aktualisiere die Lebensanzeige
+            }
+        });
     }
 
-    draw(){
-
+    draw() {
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-
-        this.ctx.translate(this.camera_x, 0); // Move the canvas to the left by camera_x pixels
-
+    
+        this.ctx.translate(this.camera_x, 0); // Verschiebe die Kamera
+    
+        // Zeichne den Hintergrund
         this.addObjectsToMap(this.level.backgroundObjects);
+    
+        // Zeichne die Gegner (z. B. Endboss)
+    this.level.enemies.forEach(enemy => {
+        this.addToMap(enemy);
 
-        this.ctx.translate(-this.camera_x, 0); 
-        // ----- Space for fixed objects -----
+        // Zeichne die Statusleiste des Endbosses über dem Endboss
+        if (enemy instanceof Endboss) {
+            this.statusBarEndboss.x = enemy.x + enemy.width / 2 - this.statusBarEndboss.width / 2; // Zentriere die Statusleiste
+            this.statusBarEndboss.y = enemy.y - 20; // Positioniere die Statusleiste über dem Endboss
+            this.addToMap(this.statusBarEndboss);
+        }
+    });
+    
+        // Zeichne den Charakter
+        this.addToMap(this.character);
+    
+        // Zeichne die restlichen Objekte
+        this.addObjectsToMap(this.level.clouds);
+        this.addObjectsToMap(this.level.bottles);
+        this.addObjectsToMap(this.level.coins);
+    
+        // Zeichne die Flaschen (inklusive Splash-Animationen) zuletzt
+        this.throwableObjects.forEach(obj => this.addToMap(obj));
+    
+        this.ctx.translate(-this.camera_x, 0);
+    
+        // Zeichne die Statusleisten
         this.addToMap(this.statusBar);
         this.addToMap(this.statusBarBottles);
         this.addToMap(this.statusBarCoins);
-        this.ctx.translate(this.camera_x, 0); 
-
-
-        this.addToMap(this.character);         
-        this.addObjectsToMap(this.level.enemies);
-        this.addObjectsToMap(this.level.clouds); 
-        this.addObjectsToMap(this.throwableObjects);
-        this.addObjectsToMap(this.level.bottles); // Flaschen hinzufügen
-        this.addObjectsToMap(this.level.coins);
         
-                    
-        this.ctx.translate(- this.camera_x, 0);
 
-        self = this;
+        
+    
+        // Rekursives Zeichnen
+        let self = this;
         requestAnimationFrame(function() {
-
             self.draw();
         });
-        
     }
 
     addObjectsToMap(objects){
@@ -214,9 +245,11 @@ checkChickenKO() {
 
     this.level.enemies.forEach((enemy, index) => {
         if (this.character.isColliding(enemy)) {
+            // Prüfen, ob der Charakter von oben auf das Huhn springt
             if (
                 this.character.speedY < 0 && // Der Charakter bewegt sich nach unten
-                this.character.y + this.character.height - this.character.offset.bottom < enemy.y + enemy.height - enemy.offset.bottom + 20
+                this.character.y + this.character.height - this.character.offset.bottom >= enemy.y + enemy.offset.top && // Untere Kante des Charakters trifft obere Kante des Huhns
+                this.character.y + this.character.height - this.character.offset.bottom <= enemy.y + enemy.offset.top + 10 // Kleine Toleranz für die Erkennung
             ) {
                 console.log('Charakter trifft das Huhn von oben:', enemy);
                 enemy.isKO = true;

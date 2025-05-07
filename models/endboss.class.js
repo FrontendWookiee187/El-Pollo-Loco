@@ -16,29 +16,27 @@ class Endboss extends MovableObject {
         './img/4_enemie_boss_chicken/2_alert/G10.png',
         './img/4_enemie_boss_chicken/2_alert/G11.png',
         './img/4_enemie_boss_chicken/2_alert/G12.png',
-
-
-
     ];
+
+    IMAGES_DEAD = [
+        
+      './img/4_enemie_boss_chicken/5_dead/G24.png',
+      './img/4_enemie_boss_chicken/5_dead/G25.png',
+      './img/4_enemie_boss_chicken/5_dead/G26.png',
+  ];
 
 
 
   constructor() {
     super().loadImage(this.IMAGES_WALKING[0]);
     this.loadImages(this.IMAGES_WALKING);
+    this.loadImages(this.IMAGES_DEAD);
     this.x = 2500;
+    this.y = 55;
+    this.health = 100; // Gesundheit des Endbosses
+    this.zIndex = 90
     this.animate();
-    // this.y = 50;
-    // this.width = 300;
-    // this.height = 300;
-    // this.speed = 0.15;
-    // this.health = 100;
-    // this.lastHit = 0;
-    // this.lastHitTime = 0;
-    // this.isDead = false;
-    // this.isAttacking = false;
-    // this.attackInterval = 2000; // Time between attacks in milliseconds
-    // this.attackTimer = null; // Timer for attack interval
+    
 
 
     // Offsets für präzise Kollisionserkennung
@@ -50,10 +48,16 @@ class Endboss extends MovableObject {
   };
   }
 
-  animate(){
+  animate() {
     setInterval(() => {
-        this.playAnimation(this.IMAGES_WALKING); // Spielt die Animation ab
-        },200);
-  }
-
+        if (this.health <= 0) {
+            this.isKO = true; // Markiere den Endboss als K.O.
+            this.playAnimation(this.IMAGES_DEAD); // Spiele die Dead-Animation ab
+        } else if (this.isKO) {
+            this.playAnimation(this.IMAGES_DEAD); // Spiele weiterhin die Dead-Animation ab
+        } else {
+            this.playAnimation(this.IMAGES_WALKING); // Spiele die Laufanimation ab
+        }
+    }, 200);
+}
 }

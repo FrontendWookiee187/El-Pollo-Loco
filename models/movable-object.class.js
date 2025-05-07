@@ -59,17 +59,17 @@ isColliding(mo) {
            this.y + this.offset.top < mo.y + mo.height - mo.offset.bottom &&
            this.y + this.height - this.offset.bottom > mo.y + mo.offset.top;
 
-           console.log('Kollision prüfen:', {
-            bottleX: this.x,
-            bottleY: this.y,
-            bottleWidth: this.width,
-            bottleHeight: this.height,
-            enemyX: mo.x,
-            enemyY: mo.y,
-            enemyWidth: mo.width,
-            enemyHeight: mo.height,
-            colliding
-        });
+        //    console.log('Kollision prüfen:', {
+        //     bottleX: this.x,
+        //     bottleY: this.y,
+        //     bottleWidth: this.width,
+        //     bottleHeight: this.height,
+        //     enemyX: mo.x,
+        //     enemyY: mo.y,
+        //     enemyWidth: mo.width,
+        //     enemyHeight: mo.height,
+        //     colliding
+        // });
     
         return colliding;
 
@@ -83,7 +83,7 @@ isColliding(mo) {
             }
         
             // Standard-Schaden-Logik
-            this.energy -= 5;
+            this.energy -= 0;
             if (this.energy < 0) {
                 this.energy = 0;
             } else {
