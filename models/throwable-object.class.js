@@ -89,17 +89,22 @@ class ThrowableObject extends MovableObject {
     handleBottleCollision(enemies) {
         // Prüfe nur, wenn die Flasche sichtbar ist
         if (this.x >= 0 && this.x <= 720 && this.y >= 0 && this.y <= 390) {
-            let collisionDetected = false;
-    
-            // Prüfe Kollisionen mit Gegnern
             enemies.forEach((enemy) => {
-                if (!this.hasHit && this.isColliding(enemy)) {
+                if (!this.hasCollided && this.isColliding(enemy)) {
                     console.log('Flasche trifft Gegner:', enemy);
     
-                    this.hasHit = true;
-                    collisionDetected = true;
+                    // Markiere die Flasche als getroffen
+                    this.hasCollided = true;
     
-                    // Gegner als K.O. markieren
+                    // Stoppe die Bewegung der Flasche
+                    clearInterval(this.throwInterval); // Stoppe die Bewegung
+                    this.speedY = 0; // Setze die vertikale Geschwindigkeit auf 0
+    
+                    // Setze die Position der Splash-Animation auf die aktuelle Position der Flasche
+                    this.x = enemy.x + enemy.width / 2 - this.width / 2; // Zentriere die Flasche horizontal auf den Gegner
+                    this.y = enemy.y + enemy.height / 2 - this.height / 2; // Zentriere die Flasche vertikal auf den Gegner
+    
+                    // Gegner als K.O. markieren oder Schaden zufügen
                     if (enemy instanceof Endboss) {
                         enemy.health -= 20; // Reduziere die Gesundheit des Endbosses
                         if (enemy.health <= 0) {
@@ -115,19 +120,12 @@ class ThrowableObject extends MovableObject {
                     this.startSplashAnimation();
                 }
             });
-    
-            // Prüfe, ob die Flasche den Boden erreicht hat
-            if (!this.hasHit && this.y >= 400) { // 400 ist die Bodenhöhe
-                this.hasHit = true; // Markiere die Flasche als getroffen
-                collisionDetected = true;
-    
-                // Starte die Splash-Animation
-                this.startSplashAnimation();
-            }
         }
     }
 
     startSplashAnimation() {
+        if (this.hasCollided) return; // Verhindere mehrfaches Starten der Animation
+    
         console.log('Starte Splash-Animation an Position:', this.x, this.y);
         this.loadImages(this.IMAGES_SPLASH);
         this.playAnimation(this.IMAGES_SPLASH);

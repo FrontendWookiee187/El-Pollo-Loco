@@ -20,6 +20,15 @@ constructor(canvas, keyboard) {
     this.keyboard = keyboard;
     this.draw();
     this.setWorld();
+
+    // Setze die World-Referenz für alle Gegner, einschließlich des Endbosses
+    this.level.enemies.forEach(enemy => {
+        enemy.world = this; // Setze die World-Referenz
+        if (enemy instanceof Endboss) {
+            enemy.animate(); // Starte die Animation des Endbosses
+        }
+    });
+
     this.run();
     this.initBackgroundMusic();
 }
@@ -66,13 +75,25 @@ constructor(canvas, keyboard) {
     }
 
     checkCollisions() {
-        // Prüfe Kollisionen zwischen Flaschen und Gegnern
         this.throwableObjects.forEach((bottle, bottleIndex) => {
-            this.level.enemies.forEach((enemy, enemyIndex) => {
+            if (bottle.hasCollided) return; // Überspringe bereits behandelte Flaschen
+    
+            this.level.enemies.forEach((enemy) => {
                 if (bottle.isColliding(enemy)) {
                     console.log('Flasche trifft Gegner:', enemy);
     
-                    // Gegner als K.O. markieren
+                    // Markiere die Flasche als kollidiert
+                    bottle.hasCollided = true;
+    
+                    // Stoppe die Bewegung der Flasche
+                    clearInterval(bottle.throwInterval); // Stoppe die Bewegung
+                    bottle.speedY = 0; // Setze die vertikale Geschwindigkeit auf 0
+    
+                    // Setze die Position der Splash-Animation auf die aktuelle Position der Flasche
+                    bottle.x = enemy.x + enemy.width / 2 - bottle.width / 2; // Zentriere die Flasche horizontal auf den Gegner
+                    bottle.y = enemy.y + enemy.height / 2 - bottle.height / 2; // Zentriere die Flasche vertikal auf den Gegner
+    
+                    // Gegner als K.O. markieren oder Schaden zufügen
                     if (enemy instanceof Endboss) {
                         enemy.health -= 20; // Reduziere die Gesundheit des Endbosses
                         this.statusBarEndboss.setPercentage(enemy.health); // Aktualisiere die Statusleiste des Endbosses
@@ -88,11 +109,19 @@ constructor(canvas, keyboard) {
                     // Starte die Splash-Animation der Flasche
                     bottle.startSplashAnimation();
     
-                    // Entferne die Flasche nach der Animation
-                    this.throwableObjects.splice(bottleIndex, 1);
+                    // Entferne die Flasche erst nach der Dauer der Splash-Animation
+                    setTimeout(() => {
+                        if (this.throwableObjects.includes(bottle)) {
+                            console.log('Entferne Flasche nach Splash-Animation:', bottle);
+                            this.throwableObjects.splice(bottleIndex, 1);
+                        }
+                    }, bottle.IMAGES_SPLASH.length * 100); // Warte, bis die Splash-Animation vollständig abgespielt wurde
                 }
             });
         });
+    
+    
+    
     
         // Kollision mit Flaschen (zum Aufnehmen)
         this.level.bottles.forEach((bottle, index) => {
