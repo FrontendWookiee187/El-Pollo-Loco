@@ -82,6 +82,7 @@ class Endboss extends MovableObject {
             this.bossSound.volume = 0.5; // Setze die Lautstärke des Boss-Sounds
         } else {
             this.setAnimation(this.IMAGES_WALKING); // Spiele die Laufanimation ab
+            this.stopRageSound(); // Stoppe den Boss-Sound
         }
 
         // Spiele die aktuelle Animation
