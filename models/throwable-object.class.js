@@ -1,5 +1,6 @@
 class ThrowableObject extends MovableObject {
     hasHit = false; // Status, ob die Flasche bereits getroffen hat
+    soundBrokenBottle = new Audio('./audio/broken_bottle.mp3'); // Sound für zerbrochene Flasche
 
 
     IMAGES_ROTATION = [
@@ -82,6 +83,8 @@ class ThrowableObject extends MovableObject {
                 this.speedY = 0; // Stoppe die vertikale Bewegung
                 this.hasHit = true; // Markiere die Flasche als getroffen
                 this.startSplashAnimation(); // Starte die Splash-Animation
+                this.soundBrokenBottle.play(); // Spiele den Sound ab
+                this.soundBrokenBottle.volume = 0.3; // Setze die Lautstärke des Sounds
             }
         }, 1000 / 60); // 60 FPS
     }

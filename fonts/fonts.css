@@ -1,0 +1,64 @@
+@font-face {
+    font-family: 'Sombrero Capitals';
+    src: url('./fonts/SombreroCapitals-Regular.woff2') format('woff2'),
+        url('./fonts/SombreroCapitals-Regular.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Sombrero Filled Hollow';
+    src: url('./SombreroFilledHollow-Regular.woff2') format('woff2'),
+        url('./SombreroFilledHollow-Regular.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Sombrero';
+    src: url('./SombreroLight-Regular.woff2') format('woff2'),
+        url('./SombreroLight-Regular.woff') format('woff');
+    font-weight: 300;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Sombrero';
+    src: url('./Sombrero-Regular.woff2') format('woff2'),
+        url('./Sombrero-Regular.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Sombrero Filled';
+    src: url('./SombreroFilled-Regular.woff2') format('woff2'),
+        url('./SombreroFilled-Regular.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Sombrero Filled Shadow';
+    src: url('./SombreroFilledShadow-Regular.woff2') format('woff2'),
+        url('./SombreroFilledShadow-Regular.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'ARTESANIA Display';
+    src: url('./ARTESANIAdisplay.woff2') format('woff2'),
+        url('./ARTESANIAdisplay.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
+

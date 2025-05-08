@@ -4,7 +4,12 @@ class Character extends MovableObject {
     width = 150;
     y = 130;
     speed = 10;
-    jumpSound = new Audio('./audio/jump.mp3')
+    jumpSound = new Audio('./audio/jump.mp3');
+    stepSound = new Audio('./audio/step.mp3');
+    hurtSound = new Audio('./audio/hurt.mp3');
+    snorSound = new Audio('./audio/snoring.mp3');
+    idleSound = new Audio('./audio/whistle.mp3');
+    deadSound = new Audio('./audio/dying.mp3');
 
 
     IMAGES_IDLE = [
@@ -94,8 +99,8 @@ class Character extends MovableObject {
 
         // Offsets für präzise Kollisionserkennung
     this.offset = {
-        top: 15,    // Abstand von oben
-        bottom: -15, // Abstand von unten
+        top: 10,    // Abstand von oben
+        bottom: 20, // Abstand von unten
         left: 15,   // Abstand von links
         right:  15   // Abstand von rechts
     };
@@ -136,25 +141,65 @@ class Character extends MovableObject {
             inactivityTimer += 100; // Timer um 100ms erhöhen
 
             if (this.isDead()) {
-                this.playAnimation(this.IMAGES_DEAD); // Play dead animation            
+                this.playAnimation(this.IMAGES_DEAD); // Play dead animation 
+                this.stopAllSounds(); // Stop all sounds
+                this.deadSound.play(); // Play dead sound
+                this.deadSound.volume = 0.5; // Lautstärke (0.0 bis 1.0)                  
+
             } else if (this.isHurt()) {
                 this.playAnimation(this.IMAGES_HURT); // Play hurt animation
+                
+                this.hurtSound.play(); // Play hurt sound
+                this.hurtSound.volume = 0.5; // Lautstärke (0.0 bis 1.0)
+
             } else if (this.isAboveGround()) {
                 this.playAnimation(this.IMAGES_JUMPING); // Play jumping animation
+
             } else if (this.world.keyboard.RIGHT || this.world.keyboard.LEFT) {
                 this.playAnimation(this.IMAGES_WALKING); // Play walking animation
+
             } else if (inactivityTimer >= 15000) { // Nach 15 Sekunden Inaktivität
                 this.playAnimation(this.IMAGES_LONG_IDLE);
+                this.stopIdleSound(); // Stop Idle sounds
+                this.snorSound.play(); // Play snoring sound
+                this.snorSound.volume = 0.5; // Lautstärke (0.0 bis 1.0)
+
             }else {
-                this.playAnimation(this.IMAGES_IDLE); // Play idle animation
-            }
+                this.playAnimation(this.IMAGES_IDLE); // Play idle animation                
+                this.idleSound.play(); // Play idle sound
+            }   this.idleSound.volume = 0.5; // Lautstärke (0.0 bis 1.0)
         }, 100); // Update animation every 50ms
     }
  
     jump() {
         this.speedY = 35; // Set the speedY to a positive value to make the character jump
+        this.stopAllSounds(); // Stop all sounds
         this.jumpSound.play(); // Spiele den Sprung-Sound ab
         this.jumpSound.volume = 0.2; // Lautstärke (0.0 bis 1.0)
+    }
+
+    stopAllSounds(){
+    this.stepSound.pause();
+    this.stepSound.currentTime = 0;
+
+    this.hurtSound.pause();
+    this.hurtSound.currentTime = 0;
+
+    this.snorSound.pause();
+    this.snorSound.currentTime = 0;
+
+    this.idleSound.pause();
+    this.idleSound.currentTime = 0;
+
+    this.deadSound.pause();
+    this.deadSound.currentTime = 0;
+            
+    }
+
+    stopIdleSound(){
+        this.idleSound.pause();
+        this.idleSound.currentTime = 0;
+
     }
     
 }

@@ -3,6 +3,8 @@ class Endboss extends MovableObject {
     height = 400;
     width = 250;
     y = 55;
+    bossSound = new Audio('./audio/boss_sound.mp3');
+    bossDeadSound = new Audio('./audio/boss_dead.mp3');
 
 
 
@@ -67,10 +69,17 @@ class Endboss extends MovableObject {
         if (this.health <= 0) {
             this.isKO = true; // Markiere den Endboss als K.O.
             this.setAnimation(this.IMAGES_DEAD); // Spiele die Dead-Animation ab
+            this.stopRageSound(); // Stoppe den Boss-Sound
+            this.bossDeadSound.play(); // Spiele den Boss-Tod-Sound ab
+            this.bossDeadSound.volume = 0.5; // Setze die Lautstärke des Boss-Tod-Sounds
         } else if (this.isKO) {
             this.setAnimation(this.IMAGES_DEAD); // Spiele weiterhin die Dead-Animation ab
+            this.bossDeadSound.play(); // Spiele den Boss-Tod-Sound ab
+            this.bossDeadSound.volume = 0.5; // Setze die Lautstärke des Boss-Tod-Sounds
         } else if (this.isCharacterInRange()) {
-            this.setAnimation(this.IMAGES_ATTACK); // Spiele die Angriffsanimation ab
+            this.setAnimation(this.IMAGES_ATTACK); // Spiele die Angriffsanimation ab            
+            this.bossSound.play(); // Spiele den Boss-Sound ab
+            this.bossSound.volume = 0.5; // Setze die Lautstärke des Boss-Sounds
         } else {
             this.setAnimation(this.IMAGES_WALKING); // Spiele die Laufanimation ab
         }
@@ -101,6 +110,12 @@ setAnimation(images) {
       this.currentImage = 0; // Starte die Animation von vorne
       this.playAnimation(images); // Spiele die neue Animation ab
   }
+}
+
+stopRageSound(){
+
+  this.bossSound.pause(); // Stoppe den Boss-Sound
+  this.bossSound.currentTime = 0; // Setze die Wiedergabezeit auf den Anfang
 }
 
 

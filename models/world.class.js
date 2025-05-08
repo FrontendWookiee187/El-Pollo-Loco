@@ -12,6 +12,8 @@ statusBarCoins = new StatusBarCoins();
 statusBarEndboss = new StatusBarEndboss();
 throwableObjects = [];
 chickenKOSound = new Audio('./audio/chicken_head_edited.mp3')
+soundBottleCollect = new Audio('./audio/collect_bottle.mp3')
+soundCoinCollect = new Audio('./audio/coin_collect.mp3')
 
 constructor(canvas, keyboard) {
 
@@ -120,15 +122,14 @@ constructor(canvas, keyboard) {
             });
         });
     
-    
-    
-    
         // Kollision mit Flaschen (zum Aufnehmen)
         this.level.bottles.forEach((bottle, index) => {
             if (this.character.isColliding(bottle)) {
                 if (this.statusBarBottles.percentage < 100) { // Nur aufnehmen, wenn die Leiste nicht voll ist
                     this.level.bottles.splice(index, 1); // Entferne die Flasche aus dem Level
                     this.updateBottleStatusBar(); // Aktualisiere die Flaschen-Leiste
+                    this.soundBottleCollect.play(); // Spiele den Sound ab
+                    this.soundBottleCollect.volume = 0.3; // Lautstärke anpassen
                 } else {
                     console.log('Flaschen-Leiste ist voll!'); // Debugging-Ausgabe
                 }
@@ -141,19 +142,48 @@ constructor(canvas, keyboard) {
                 if (this.statusBarCoins.percentage < 100) { // Nur aufnehmen, wenn die Leiste nicht voll ist
                     this.level.coins.splice(index, 1); // Entferne die Münze aus dem Level
                     this.updateCoinStatusBar(); // Aktualisiere die Münzen-Leiste
+                    this.soundCoinCollect.play(); // Spiele den Sound ab
+                    this.soundCoinCollect.volume = 0.3; // Lautstärke anpassen
                 } else {
                     console.log('Münzen-Leiste ist voll!'); // Debugging-Ausgabe
                 }
             }
         });
     
-        // Kollision mit Gegnern
-        this.level.enemies.forEach(enemy => {
-            if (this.character.isColliding(enemy)) {
-                this.character.hit();
-                this.statusBar.setPercentage(this.character.energy); // Aktualisiere die Lebensanzeige
-            }
-        });
+       // Kollision mit Gegnern
+this.level.enemies.forEach(enemy => {
+    if (this.character.isColliding(enemy)) {
+        // Prüfe, ob der Charakter auf ein Huhn springt
+        if ((enemy instanceof Chicken || enemy instanceof ChickenSmall) &&
+            this.character.speedY < -5 && // Der Charakter bewegt sich nach unten
+            this.character.y + this.character.height - this.character.offset.bottom >= enemy.y + enemy.offset.top && // Untere Kante des Charakters trifft obere Kante des Huhns
+            this.character.y + this.character.height - this.character.offset.bottom <= enemy.y + enemy.offset.top + 57 // Toleranz für die Erkennung
+        ) {
+            console.log('Charakter trifft das Huhn von oben:', enemy);
+            enemy.isKO = true;
+            enemy.speed = 0;
+
+            // Vertikale Geschwindigkeit des Charakters zurücksetzen
+            this.character.speedY = 15; // Charakter springt leicht zurück nach oben
+
+            // Huhn-K.O.-Geräusch abspielen
+            this.chickenKOSound.play();
+            this.chickenKOSound.volume = 0.1;
+
+            // Entferne das Huhn nach kurzer Verzögerung
+            setTimeout(() => {
+                console.log('Huhn wird entfernt:', enemy);
+                this.level.enemies.splice(this.level.enemies.indexOf(enemy), 1);
+            }, 1000);
+
+            return; // Beende die Verarbeitung für diese Kollision
+        }
+
+        // Standard-Kollisionslogik für Gegner
+        this.character.hit();
+        this.statusBar.setPercentage(this.character.energy); // Aktualisiere die Lebensanzeige
+    }
+});
     }
 
     draw() {
@@ -276,9 +306,9 @@ checkChickenKO() {
         if (this.character.isColliding(enemy)) {
             // Prüfen, ob der Charakter von oben auf das Huhn springt
             if (
-                this.character.speedY < 0 && // Der Charakter bewegt sich nach unten
+                this.character.speedY < -5 && // Der Charakter bewegt sich nach unten
                 this.character.y + this.character.height - this.character.offset.bottom >= enemy.y + enemy.offset.top && // Untere Kante des Charakters trifft obere Kante des Huhns
-                this.character.y + this.character.height - this.character.offset.bottom <= enemy.y + enemy.offset.top + 10 // Kleine Toleranz für die Erkennung
+                this.character.y + this.character.height - this.character.offset.bottom <= enemy.y + enemy.offset.top + 30 // Kleine Toleranz für die Erkennung
             ) {
                 console.log('Charakter trifft das Huhn von oben:', enemy);
                 enemy.isKO = true;
@@ -308,19 +338,37 @@ checkChickenKO() {
 }
 
 initBackgroundMusic() {
-    this.backgroundMusic = new Audio('./audio/background_game.mp3'); // Pfad zur Musikdatei
+    this.backgroundMusic = new Audio('./audio/background_game_2.mp3'); // Pfad zur Musikdatei
     this.backgroundMusic.loop = true; // Musik in Endlosschleife abspielen
-    this.backgroundMusic.volume = 0.2; // Lautstärke (0.0 bis 1.0)
+    this.backgroundMusic.volume = 0.5; // Lautstärke (0.0 bis 1.0)
     this.backgroundMusic.play(); // Musik starten
 }
 
 toggleMute() {
-    if (this.backgroundMusic.muted) {
-        this.backgroundMusic.muted = false; // Musik wieder einschalten
-        console.log('Musik eingeschaltet');
+    // Prüfe, ob die Hintergrundmusik aktuell stummgeschaltet ist
+    const isMuted = this.backgroundMusic.muted;
+
+    // Alle Audio-Elemente auf der Seite finden
+    const allAudioElements = document.querySelectorAll('audio');
+
+    allAudioElements.forEach(audio => {
+        audio.muted = !isMuted; // Umschalten zwischen stumm und nicht stumm
+    });
+
+    // Hintergrundmusik ebenfalls umschalten
+    this.backgroundMusic.muted = !isMuted;
+
+    // Stummschalten/entschalten der direkt erstellten Audio-Objekte
+    this.chickenKOSound.muted = !isMuted;
+
+    this.character.jumpSound.muted = !isMuted; // Stummschalten/entschalten der Sprunggeräusche
+
+
+    // Konsolenausgabe für Debugging
+    if (isMuted) {
+        console.log('Alle Audio-Elemente wurden wieder eingeschaltet');
     } else {
-        this.backgroundMusic.muted = true; // Musik stummschalten
-        console.log('Musik stummgeschaltet');
+        console.log('Alle Audio-Elemente wurden stummgeschaltet');
     }
 }
 

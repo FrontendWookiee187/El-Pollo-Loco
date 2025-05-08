@@ -29,7 +29,7 @@ class ChickenSmall extends MovableObject{
 
         // Offsets für präzise Kollisionserkennung
         this.offset = {
-            top: -20,     // Abstand von oben
+            top: 5,     // Abstand von oben
             bottom: 5,  // Abstand von unten
             left: 5,    // Abstand von links
             right: 5    // Abstand von rechts
