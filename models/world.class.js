@@ -14,6 +14,8 @@ throwableObjects = [];
 chickenKOSound = new Audio('./audio/chicken_head_edited.mp3')
 soundBottleCollect = new Audio('./audio/collect_bottle.mp3')
 soundCoinCollect = new Audio('./audio/coin_collect.mp3')
+gameEnded = false; // Flag, um das Spielende zu verfolgen
+intervalId;
 
 constructor(canvas, keyboard) {
 
@@ -40,17 +42,24 @@ constructor(canvas, keyboard) {
     }
 
     run() {
-        setInterval(() => {
+        this.intervalId = setInterval(() => {
             this.checkCollisions();
             this.checkThrowObjects();
-    
-            // Prüfe, ob das Spiel endet
-            if (this.character.isDead()) {
-                this.showEndScreen(false); // Zeige "You Lost"
-            } else if (this.level.enemies.some(enemy => enemy instanceof Endboss && enemy.isKO)) {
-                this.showEndScreen(true); // Zeige "You Won"
+
+            if (!this.gameEnded) {
+                if (this.character.isDead()) {
+                    this.gameEnded = true;
+                    this.showEndScreen(false);
+                } else if (this.level.enemies.some(enemy => enemy instanceof Endboss && enemy.isKO)) {
+                    this.gameEnded = true;
+                    this.showEndScreen(true);
+                }
             }
         }, 200);
+    }
+
+    stopGameLoop() {
+        clearInterval(this.intervalId); // Stoppe den Spiel-Loop
     }
 
     checkThrowObjects() {
@@ -393,6 +402,7 @@ toggleMute() {
 }
 
 showEndScreen(won) {
+    console.log('showEndScreen aufgerufen:', won ? 'You Won' : 'You Lost');
     const endScreen = document.getElementById('endScreen');
     const endScreenImage = document.getElementById('endScreenImage');
     const canvas = document.getElementById('canvas');
@@ -405,6 +415,11 @@ showEndScreen(won) {
     } else {
         endScreenImage.src = './img/You won, you lost/YouLost.png'; // Bild für "You Lost"
     }
+}
+
+resetWorld() {
+    this.stopGameLoop(); // Stoppe den Spiel-Loop
+    console.log('Welt wurde zurückgesetzt');
 }
 
 
