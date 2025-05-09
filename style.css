@@ -19,6 +19,7 @@ body{
 
 canvas{
     background-color: black;
+    display: none;
 }
 
 h1{

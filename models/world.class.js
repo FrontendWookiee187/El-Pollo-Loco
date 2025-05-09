@@ -39,14 +39,18 @@ constructor(canvas, keyboard) {
        this.character.world = this; 
     }
 
-    run(){
-
+    run() {
         setInterval(() => {
-           this.checkCollisions();
-           this.checkThrowObjects();
-        },200)
-
-        
+            this.checkCollisions();
+            this.checkThrowObjects();
+    
+            // Prüfe, ob das Spiel endet
+            if (this.character.isDead()) {
+                this.showEndScreen(false); // Zeige "You Lost"
+            } else if (this.level.enemies.some(enemy => enemy instanceof Endboss && enemy.isKO)) {
+                this.showEndScreen(true); // Zeige "You Won"
+            }
+        }, 200);
     }
 
     checkThrowObjects() {
@@ -348,27 +352,58 @@ toggleMute() {
     // Prüfe, ob die Hintergrundmusik aktuell stummgeschaltet ist
     const isMuted = this.backgroundMusic.muted;
 
-    // Alle Audio-Elemente auf der Seite finden
+    // Alle Audio-Elemente im DOM stummschalten/entschalten
     const allAudioElements = document.querySelectorAll('audio');
-
     allAudioElements.forEach(audio => {
         audio.muted = !isMuted; // Umschalten zwischen stumm und nicht stumm
     });
 
-    // Hintergrundmusik ebenfalls umschalten
-    this.backgroundMusic.muted = !isMuted;
+    // Stummschalten/entschalten aller direkt erstellten Audio-Objekte
+    const allAudioObjects = [
+        this.backgroundMusic,
+        this.chickenKOSound,
+        this.soundBottleCollect,
+        this.soundCoinCollect,
+        this.character.jumpSound,
+        this.character.stepSound,
+        this.character.hurtSound,
+        this.character.snorSound,
+        this.character.idleSound,
+        this.character.deadSound,
+    ];
 
-    // Stummschalten/entschalten der direkt erstellten Audio-Objekte
-    this.chickenKOSound.muted = !isMuted;
+    this.level.enemies.forEach(enemy => {
+        if (enemy instanceof Endboss) {
+            allAudioObjects.push(enemy.bossSound, enemy.bossDeadSound);
+        }
+    });
 
-    this.character.jumpSound.muted = !isMuted; // Stummschalten/entschalten der Sprunggeräusche
-
+    allAudioObjects.forEach(audio => {
+        if (audio) {
+            audio.muted = !isMuted; // Umschalten zwischen stumm und nicht stumm
+        }
+    });
 
     // Konsolenausgabe für Debugging
     if (isMuted) {
         console.log('Alle Audio-Elemente wurden wieder eingeschaltet');
     } else {
         console.log('Alle Audio-Elemente wurden stummgeschaltet');
+    }
+}
+
+showEndScreen(won) {
+    const endScreen = document.getElementById('endScreen');
+    const endScreenImage = document.getElementById('endScreenImage');
+    const canvas = document.getElementById('canvas');
+
+    canvas.style.display = 'none'; // Verstecke das Canvas
+    endScreen.style.display = 'flex'; // Zeige den Endbildschirm
+
+    if (won) {
+        endScreenImage.src = './img/You won, you lost/YouWonB.png'; // Bild für "You Won"
+    } else {
+        endScreenImage.src = './img/You won, you lost/YouLost.png'; // Bild für "You Lost"
     }
 }
 

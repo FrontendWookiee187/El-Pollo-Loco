@@ -9,6 +9,7 @@ world = new World(canvas, keyboard);
 
 
 console.log('My Character is: ', world['character']);
+console.log('Spiel neu gestartet');
 
 
 }
@@ -56,4 +57,35 @@ window.addEventListener('keyup', (e) => {
     
     
 
+});
+
+
+document.addEventListener('DOMContentLoaded', () => {
+    const startScreen = document.getElementById('startScreen');
+    const endScreen = document.getElementById('endScreen');
+    const endScreenImage = document.getElementById('endScreenImage');
+    const startButton = document.getElementById('startButton');
+    const restartButton = document.getElementById('restartButton');
+    const backToStartButton = document.getElementById('backToStartButton');
+    const canvas = document.getElementById('canvas');
+
+    startButton.addEventListener('click', () => {
+        startScreen.style.display = 'none'; // Verstecke den Startbildschirm
+        canvas.style.display = 'block'; // Zeige das Canvas an
+        init(); // Starte das Spiel
+    });
+
+    restartButton.addEventListener('click', () => {
+        endScreen.style.display = 'none'; // Verstecke den Endbildschirm
+        canvas.style.display = 'block'; // Zeige das Canvas an
+        console.log('Endscreen hidden, Canvas shown');
+        init(); // Starte das Spiel neu
+    });
+
+    backToStartButton.addEventListener('click', () => {
+        console.log('Back to Start Button clicked');
+        endScreen.style.display = 'none'; // Verstecke den Endbildschirm
+        startScreen.style.display = 'flex'; // Zeige den Startbildschirm
+        console.log('Endscreen hidden, Startscreen shown');
+    });
 });

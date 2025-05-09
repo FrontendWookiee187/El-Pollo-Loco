@@ -49,6 +49,7 @@ class Endboss extends MovableObject {
     this.x = 2500;
     this.y = 55;
     this.health = 100; // Gesundheit des Endbosses
+    this.speed = 20; // Geschwindigkeit des
     this.zIndex = 90    
     this.currentAnimation = this.IMAGES_WALKING; // Aktuelle Animation initialisieren
     // this.animate();
@@ -77,9 +78,21 @@ class Endboss extends MovableObject {
             this.bossDeadSound.play(); // Spiele den Boss-Tod-Sound ab
             this.bossDeadSound.volume = 0.5; // Setze die Lautstärke des Boss-Tod-Sounds
         } else if (this.isCharacterInRange()) {
-            this.setAnimation(this.IMAGES_ATTACK); // Spiele die Angriffsanimation ab            
-            this.bossSound.play(); // Spiele den Boss-Sound ab
-            this.bossSound.volume = 0.5; // Setze die Lautstärke des Boss-Sounds
+            this.setAnimation(this.IMAGES_ATTACK); // Spiele die Angriffsanimation ab
+
+            // Bewegung auf den Charakter zu
+            const character = this.world.character;
+            if (this.x > character.x) {
+                this.x -= this.speed; // Bewege den Endboss nach links
+            } else if (this.x < character.x) {
+                this.x += this.speed; // Bewege den Endboss nach rechts
+            }
+
+            // Spiele den Boss-Sound nur, wenn er nicht bereits läuft
+            if (this.bossSound.paused) {
+                this.bossSound.play();
+                this.bossSound.volume = 0.5; // Setze die Lautstärke des Boss-Sounds
+            }
         } else {
             this.setAnimation(this.IMAGES_WALKING); // Spiele die Laufanimation ab
             this.stopRageSound(); // Stoppe den Boss-Sound
