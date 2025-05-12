@@ -8,6 +8,8 @@ function init(){
         world.stopGameLoop(); // Stoppe den alten Spiel-Loop
     }
 
+    initLevel();
+
 canvas=document.getElementById('canvas');
 world = new World(canvas, keyboard);
 
@@ -85,6 +87,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const restartButton = document.getElementById('restartButton');
     const backToStartButton = document.getElementById('backToStartButton');
     const canvas = document.getElementById('canvas');
+    let h1 = document.getElementById('h1');
+    let description = document.getElementById('description');
+    let mute = document.getElementById('mute');
 
     startButton.addEventListener('click', () => {
         startScreen.style.display = 'none'; // Verstecke den Startbildschirm
@@ -100,6 +105,9 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         endScreen.style.display = 'none'; // Verstecke den Endbildschirm
         canvas.style.display = 'block'; // Zeige das Canvas an
+        h1.style.display = 'block'; 
+        description.style.display = 'flex';
+        mute.style.display = 'block';
         init(); // Starte das Spiel neu
     });
     
@@ -112,5 +120,8 @@ document.addEventListener('DOMContentLoaded', () => {
         endScreen.style.display = 'none'; // Verstecke den Endbildschirm
         startScreen.style.display = 'flex'; // Zeige den Startbildschirm
         canvas.style.display = 'none'; // Verstecke das Canvas
+        h1.style.display = 'block'; 
+        description.style.display = 'flex';
+        mute.style.display = 'block';
     });
 });

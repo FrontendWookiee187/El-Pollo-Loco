@@ -5,12 +5,22 @@
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.8); /* Dunkler Hintergrund */
+    background-color: rgba(0, 0, 0, 0.3); /* Dunkler Hintergrund */
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     z-index: 1000; /* Überlagert alles andere */
+}
+
+.description-start-screen{
+
+    font-family: 'ARTESANIA Display';
+    font-size: 20px;
+    display: flex;
+    flex-direction: row;
+    gap: 16px   ;
+    padding-bottom: 20px;
 }
 
 .start-screen-image {

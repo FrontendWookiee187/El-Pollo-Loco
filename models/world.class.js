@@ -406,9 +406,17 @@ showEndScreen(won) {
     const endScreen = document.getElementById('endScreen');
     const endScreenImage = document.getElementById('endScreenImage');
     const canvas = document.getElementById('canvas');
+    let h1 = document.getElementById('h1');
+    let description = document.getElementById('description');
+    let mute = document.getElementById('mute');
 
     canvas.style.display = 'none'; // Verstecke das Canvas
     endScreen.style.display = 'flex'; // Zeige den Endbildschirm
+
+    h1.style.display = 'none';
+    description.style.display = 'none';
+    mute.style.display = 'none';
+
 
     if (won) {
         endScreenImage.src = './img/You won, you lost/YouWonB.png'; // Bild für "You Won"
