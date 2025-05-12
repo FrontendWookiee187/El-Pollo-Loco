@@ -88,6 +88,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let h1 = document.getElementById('h1');
     let description = document.getElementById('description');
     let mute = document.getElementById('mute');
+    let touchControls = document.getElementById('touchControls');
 
     startButton.addEventListener('click', () => {
         startScreen.style.display = 'none'; // Verstecke den Startbildschirm
@@ -95,7 +96,9 @@ document.addEventListener('DOMContentLoaded', () => {
         h1.style.display = 'block'; 
         description.style.display = 'flex';
         mute.style.display = 'block';
+        
         init(); // Starte das Spiel
+        hindViewTouchButtons();
     });
 
     restartButton.addEventListener('click', () => {
@@ -109,7 +112,9 @@ document.addEventListener('DOMContentLoaded', () => {
         h1.style.display = 'block'; 
         description.style.display = 'flex';
         mute.style.display = 'block';
+        
         init(); // Starte das Spiel neu
+        hindViewTouchButtons();
     });
     
     backToStartButton.addEventListener('click', () => {
@@ -121,9 +126,10 @@ document.addEventListener('DOMContentLoaded', () => {
         endScreen.style.display = 'none'; // Verstecke den Endbildschirm
         startScreen.style.display = 'flex'; // Zeige den Startbildschirm
         canvas.style.display = 'none'; // Verstecke das Canvas
-        h1.style.display = 'block'; 
-        description.style.display = 'flex';
-        mute.style.display = 'block';
+        h1.style.display = 'none'; 
+        description.style.display = 'none';
+        mute.style.display = 'none';
+        touchControls.style.display = 'none';
     });
 });
 
@@ -145,3 +151,52 @@ function checkOrientation() {
 // Überprüfe die Orientierung beim Laden der Seite und bei Änderungen
 window.addEventListener('load', checkOrientation);
 window.addEventListener('resize', checkOrientation);
+
+document.addEventListener('DOMContentLoaded', () => {
+    const touchControls = document.getElementById('touchControls');
+
+    // Zeige die Touch-Buttons nur auf mobilen Geräten
+    if (window.innerWidth <= 768) {
+        touchControls.style.display = 'none'; // Zeige die Touch-Buttons
+    } else {
+        touchControls.style.display = 'none'; // Verstecke die Touch-Buttons
+    }
+
+    // Event-Listener für die Touch-Buttons
+    document.getElementById('leftButton').addEventListener('touchstart', () => {
+        keyboard.LEFT = true;
+    });
+    document.getElementById('leftButton').addEventListener('touchend', () => {
+        keyboard.LEFT = false;
+    });
+
+    document.getElementById('rightButton').addEventListener('touchstart', () => {
+        keyboard.RIGHT = true;
+    });
+    document.getElementById('rightButton').addEventListener('touchend', () => {
+        keyboard.RIGHT = false;
+    });
+
+    document.getElementById('jumpButton').addEventListener('touchstart', () => {
+        keyboard.SPACE = true;
+    });
+    document.getElementById('jumpButton').addEventListener('touchend', () => {
+        keyboard.SPACE = false;
+    });
+
+    document.getElementById('throwButton').addEventListener('touchstart', () => {
+        keyboard.D = true;
+    });
+    document.getElementById('throwButton').addEventListener('touchend', () => {
+        keyboard.D = false;
+    });
+});
+
+function hindViewTouchButtons(){
+    let touchControls = document.getElementById('touchControls');
+
+if (window.innerWidth <= 768){
+    touchControls.style.display = 'flex'; // Zeige die Touch-Buttons
+}
+
+};

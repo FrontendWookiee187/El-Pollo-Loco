@@ -21,7 +21,8 @@ class StatusBarBottles extends DrawableObject{
         this.y = 60;
         this.width = 200;
         this.height = 60;
-        console.log('StatusBarBottles initialisiert:', this.IMAGES);
+        this.responsivePositioning();
+         window.addEventListener('resize', () => this.responsivePositioning());
     }
 
     // setPercentage(50);
@@ -30,6 +31,12 @@ setPercentage(percentage){
     let path = this.IMAGES[this.resolveImageIndex()]; // Get the image path based on the percentage
     this.img = this.imageCache[path]; 
   }
+
+  responsivePositioning(){
+   if(window.innerWidth <= 768){      
+      this.y = 80;      
+   }
+}
   
     resolveImageIndex(){
       if (this.percentage == 100){
@@ -45,6 +52,7 @@ setPercentage(percentage){
       } else {
          return 0; 
       }
+      
       
   }
 

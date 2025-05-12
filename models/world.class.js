@@ -49,11 +49,17 @@ constructor(canvas, keyboard) {
             if (!this.gameEnded) {
                 if (this.character.isDead()) {
                     this.gameEnded = true;
+                    
+                    setTimeout(() => {
                     this.showEndScreen(false);
+                    }, 3500);
+
                 } else if (this.level.enemies.some(enemy => enemy instanceof Endboss && enemy.isKO)) {
                     this.gameEnded = true;
+
+                    setTimeout(() => {
                     this.showEndScreen(true);
-                }
+                    }, 3500);}
             }
         }, 200);
     }
@@ -235,12 +241,9 @@ this.level.enemies.forEach(enemy => {
         // Zeichne die Statusleisten
         this.addToMap(this.statusBar);
         this.addToMap(this.statusBarBottles);
-        this.addToMap(this.statusBarCoins);
-        
-
-        
-    
-        // Rekursives Zeichnen
+        this.addToMap(this.statusBarCoins);     
+  
+    // Rekursives Zeichnen
         let self = this;
         requestAnimationFrame(function() {
             self.draw();
@@ -312,44 +315,6 @@ updateCoinStatusBar() {
     }
 }
 
-checkChickenKO() {
-    let chickenHit = false; // Flag, um zu prüfen, ob ein Huhn getroffen wurde
-
-    this.level.enemies.forEach((enemy, index) => {
-        if (this.character.isColliding(enemy)) {
-            // Prüfen, ob der Charakter von oben auf das Huhn springt
-            if (
-                this.character.speedY < -5 && // Der Charakter bewegt sich nach unten
-                this.character.y + this.character.height - this.character.offset.bottom >= enemy.y + enemy.offset.top && // Untere Kante des Charakters trifft obere Kante des Huhns
-                this.character.y + this.character.height - this.character.offset.bottom <= enemy.y + enemy.offset.top + 30 // Kleine Toleranz für die Erkennung
-            ) {
-                console.log('Charakter trifft das Huhn von oben:', enemy);
-                enemy.isKO = true;
-                enemy.speed = 0;
-
-                // Vertikale Geschwindigkeit des Charakters zurücksetzen
-                this.character.speedY = 15; // Charakter springt leicht zurück nach oben
-
-                // Huhn-K.O.-Geräusch abspielen
-                this.chickenKOSound.play(); 
-                this.chickenKOSound.volume = 0.1; // Lautstärke anpassen
-
-                // Kein Schaden, da der Charakter das Huhn von oben trifft
-                this.character.hit(true);
-
-                setTimeout(() => {
-                    console.log('Huhn wird entfernt:', enemy);
-                    this.level.enemies.splice(index, 1); // Entferne das Huhn                    
-                }, 1000);
-
-                chickenHit = true; // Markiere, dass ein Huhn getroffen wurde
-            }
-        }
-    });
-
-    return chickenHit; // Gibt zurück, ob ein Huhn getroffen wurde
-}
-
 initBackgroundMusic() {
     this.backgroundMusic = new Audio('./audio/background_game_2.mp3'); // Pfad zur Musikdatei
     this.backgroundMusic.loop = true; // Musik in Endlosschleife abspielen
@@ -412,16 +377,16 @@ showEndScreen(won) {
 
     canvas.style.display = 'none'; // Verstecke das Canvas
     endScreen.style.display = 'flex'; // Zeige den Endbildschirm
+    document.getElementById('touchControls').style.display = 'none';
 
     h1.style.display = 'none';
     description.style.display = 'none';
     mute.style.display = 'none';
 
-
     if (won) {
-        endScreenImage.src = './img/You won, you lost/YouWonB.png'; // Bild für "You Won"
+        endScreenImage.src = './img/You won, you lost/YouWonB.png'; // Bild für "You Won"        
     } else {
-        endScreenImage.src = './img/You won, you lost/YouLost.png'; // Bild für "You Lost"
+        endScreenImage.src = './img/You won, you lost/YouLost.png'; // Bild für "You Lost"        
     }
 }
 

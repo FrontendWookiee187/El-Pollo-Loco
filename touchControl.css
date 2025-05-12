@@ -1,11 +1,11 @@
 .touch-controls {
-    position: fixed;
-    bottom: 20px;
-    width: 100%;
-    display: flex;
-    justify-content: center;
-    gap: 10px;
-    z-index: 1000;
+    display: none;
+    position: absolute; /* Absolut positioniert über dem Canvas */
+    bottom: 20px; /* Abstand vom unteren Rand */
+    left: 50%; /* Zentriere horizontal */
+    transform: translateX(-50%); /* Korrigiere die Zentrierung */
+    width: auto; /* Passe die Breite an den Inhalt an */
+    z-index: 1000; /* Überlagere das Canvas */
 }
 
 .touch-controls button {

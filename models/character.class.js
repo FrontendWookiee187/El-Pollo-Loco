@@ -150,7 +150,8 @@ class Character extends MovableObject {
                 this.playAnimation(this.IMAGES_DEAD); // Play dead animation 
                 this.stopAllSounds(); // Stop all sounds
                 this.deadSound.play(); // Play dead sound
-                this.deadSound.volume = 0.5; // Lautstärke (0.0 bis 1.0)                  
+                this.deadSound.volume = 0.5; // Lautstärke (0.0 bis 1.0)   
+                this.y += 5;               
 
             } else if (this.isHurt()) {
                 this.playAnimation(this.IMAGES_HURT); // Play hurt animation

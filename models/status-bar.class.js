@@ -20,6 +20,8 @@ constructor() {
     this.width = 200;
     this.height = 60;
     this.percentage = 100; // Initial health percentage
+    this.responsivePositioning();
+     window.addEventListener('resize', () => this.responsivePositioning());
 }
 
 // setPercentage(50);
@@ -27,6 +29,12 @@ setPercentage(percentage){
   this.percentage = percentage; // Set the health percentage  // => 0....5
   let path = this.IMAGES[this.resolveImageIndex()]; // Get the image path based on the percentage
   this.img = this.imageCache[path]; 
+}
+
+responsivePositioning(){
+   if(window.innerWidth <= 768){      
+      this.y = 20;      
+   }
 }
 
   resolveImageIndex(){
@@ -45,6 +53,7 @@ setPercentage(percentage){
     }
     
 }
+
   
 }
 

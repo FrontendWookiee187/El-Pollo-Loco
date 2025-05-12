@@ -22,7 +22,8 @@ class StatusBarCoins extends DrawableObject{
         this.y = 120;
         this.width = 200;
         this.height = 60;
-        console.log('StatusBarCoins initialisiert:', this.IMAGES);
+        this.responsivePositioning();
+         window.addEventListener('resize', () => this.responsivePositioning());
     }
 
     // setPercentage(50);
@@ -31,6 +32,12 @@ setPercentage(percentage){
     let path = this.IMAGES[this.resolveImageIndex()]; // Get the image path based on the percentage
     this.img = this.imageCache[path]; 
   }
+
+  responsivePositioning(){
+   if(window.innerWidth <= 768){      
+      this.y = 140;      
+   }
+}
   
     resolveImageIndex(){
       if (this.percentage == 100){
