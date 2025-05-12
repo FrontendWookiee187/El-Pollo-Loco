@@ -70,13 +70,11 @@ window.addEventListener('keyup', (e) => {
     }
     else if(e.keyCode == 68) {
         keyboard.D = false;
-    }
-    
-    
-    
-    
-
+    } 
 });
+
+
+
 
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -94,6 +92,9 @@ document.addEventListener('DOMContentLoaded', () => {
     startButton.addEventListener('click', () => {
         startScreen.style.display = 'none'; // Verstecke den Startbildschirm
         canvas.style.display = 'block'; // Zeige das Canvas an
+        h1.style.display = 'block'; 
+        description.style.display = 'flex';
+        mute.style.display = 'block';
         init(); // Starte das Spiel
     });
 
@@ -125,3 +126,22 @@ document.addEventListener('DOMContentLoaded', () => {
         mute.style.display = 'block';
     });
 });
+
+function checkOrientation() {
+    let rotateMessage = document.getElementById('rotateMessage');
+    let canvas = document.getElementById('canvas');
+
+    if (window.innerHeight > window.innerWidth) {
+        // Hochformat
+        rotateMessage.style.display = 'flex'; // Zeige die Hinweismeldung
+        
+    } else {
+        // Querformat
+        rotateMessage.style.display = 'none'; // Verstecke die Hinweismeldung
+        
+    }
+}
+
+// Überprüfe die Orientierung beim Laden der Seite und bei Änderungen
+window.addEventListener('load', checkOrientation);
+window.addEventListener('resize', checkOrientation);

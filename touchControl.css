@@ -1,0 +1,24 @@
+.touch-controls {
+    position: fixed;
+    bottom: 20px;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    z-index: 1000;
+}
+
+.touch-controls button {
+    width: 60px;
+    height: 60px;
+    font-size: 24px;
+    border: none;
+    border-radius: 50%;
+    background-color: #ff5722;
+    color: white;
+    cursor: pointer;
+}
+
+.touch-controls button:active {
+    background-color: #e64a19;
+}

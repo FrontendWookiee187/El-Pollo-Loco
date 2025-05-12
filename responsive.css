@@ -1,0 +1,22 @@
+/* Für kleinere Bildschirme */
+@media (max-width: 768px) {
+    body {
+        font-size: 48px; /* Kleinere Schriftgröße */
+        background-size: cover; /* Hintergrundbild anpassen */
+    }
+
+    canvas {
+        width: 100%; /* Canvas passt sich der Bildschirmbreite an */
+        height: auto; /* Höhe wird proportional angepasst */
+    }
+
+    h1 {
+        font-size: 32px; /* Kleinere Schriftgröße für die Überschrift */
+    }
+
+    .description {
+        font-size: 16px; /* Kleinere Schriftgröße für die Beschreibung */
+        flex-direction: column; /* Beschreibung untereinander anordnen */
+        gap: 8px;
+    }
+}
