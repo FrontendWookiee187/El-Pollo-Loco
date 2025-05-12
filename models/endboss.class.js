@@ -5,6 +5,7 @@ class Endboss extends MovableObject {
     y = 55;
     bossSound = new Audio('./audio/boss_sound.mp3');
     bossDeadSound = new Audio('./audio/boss_dead.mp3');
+    winnerSound = new Audio('./audio/yeaoh-82662.mp3');
 
 
 
@@ -72,7 +73,7 @@ class Endboss extends MovableObject {
             this.setAnimation(this.IMAGES_DEAD); // Spiele die Dead-Animation ab
             this.stopRageSound(); // Stoppe den Boss-Sound
             this.bossDeadSound.play(); // Spiele den Boss-Tod-Sound ab
-            this.bossDeadSound.volume = 0.5; // Setze die Lautstärke des Boss-Tod-Sounds
+            this.bossDeadSound.volume = 0.5; // Setze die Lautstärke des Boss-Tod-Sounds            
         } else if (this.isKO) {
             this.setAnimation(this.IMAGES_DEAD); // Spiele weiterhin die Dead-Animation ab
             this.bossDeadSound.play(); // Spiele den Boss-Tod-Sound ab
@@ -131,6 +132,12 @@ stopRageSound(){
   this.bossSound.pause(); // Stoppe den Boss-Sound
   this.bossSound.currentTime = 0; // Setze die Wiedergabezeit auf den Anfang
 }
+
+playYeahSound(){
+ if (this.health <= 0) {           
+this.winnerSound.play(); // Spiele den Gewinner-Sound ab
+this.winnerSound.volume = 0.5; // Setze die Lautstärke des Gewinner-Sounds}
+}}
 
 
 

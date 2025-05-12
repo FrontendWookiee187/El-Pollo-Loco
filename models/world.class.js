@@ -16,6 +16,7 @@ soundBottleCollect = new Audio('./audio/collect_bottle.mp3')
 soundCoinCollect = new Audio('./audio/coin_collect.mp3')
 gameEnded = false; // Flag, um das Spielende zu verfolgen
 intervalId;
+allAudioObjects = [];
 
 constructor(canvas, keyboard) {
 
@@ -23,8 +24,8 @@ constructor(canvas, keyboard) {
     this.canvas = canvas;
     this.keyboard = keyboard;
     this.draw();
-    this.setWorld();
-
+    this.setWorld(); 
+    
     // Setze die World-Referenz für alle Gegner, einschließlich des Endbosses
     this.level.enemies.forEach(enemy => {
         enemy.world = this; // Setze die World-Referenz
@@ -33,8 +34,32 @@ constructor(canvas, keyboard) {
         }
     });
 
+    this.initAudioObjects();
     this.run();
     this.initBackgroundMusic();
+}
+
+initAudioObjects() {
+    this.allAudioObjects = [
+        this.backgroundMusic,
+        this.chickenKOSound,
+        this.soundBottleCollect,
+        this.soundCoinCollect,
+        this.character.jumpSound,
+        this.character.stepSound,
+        this.character.hurtSound,
+        this.character.snorSound,
+        this.character.idleSound,
+        this.character.deadSound,
+    ];
+
+    this.level.enemies.forEach(enemy => {
+        if (enemy instanceof Endboss) {
+            this.allAudioObjects.push(enemy.bossSound, enemy.bossDeadSound);
+        }
+    });
+
+    console.log('Audio-Objekte initialisiert:', this.allAudioObjects);
 }
 
     setWorld(){
@@ -149,8 +174,7 @@ constructor(canvas, keyboard) {
                     this.updateBottleStatusBar(); // Aktualisiere die Flaschen-Leiste
                     this.soundBottleCollect.play(); // Spiele den Sound ab
                     this.soundBottleCollect.volume = 0.3; // Lautstärke anpassen
-                } else {
-                    console.log('Flaschen-Leiste ist voll!'); // Debugging-Ausgabe
+                } else {                    
                 }
             }
         });
@@ -163,8 +187,7 @@ constructor(canvas, keyboard) {
                     this.updateCoinStatusBar(); // Aktualisiere die Münzen-Leiste
                     this.soundCoinCollect.play(); // Spiele den Sound ab
                     this.soundCoinCollect.volume = 0.3; // Lautstärke anpassen
-                } else {
-                    console.log('Münzen-Leiste ist voll!'); // Debugging-Ausgabe
+                } else {                    
                 }
             }
         });
@@ -190,8 +213,7 @@ this.level.enemies.forEach(enemy => {
             this.chickenKOSound.volume = 0.1;
 
             // Entferne das Huhn nach kurzer Verzögerung
-            setTimeout(() => {
-                console.log('Huhn wird entfernt:', enemy);
+            setTimeout(() => {                
                 this.level.enemies.splice(this.level.enemies.indexOf(enemy), 1);
             }, 1000);
 
@@ -333,7 +355,7 @@ toggleMute() {
     });
 
     // Stummschalten/entschalten aller direkt erstellten Audio-Objekte
-    const allAudioObjects = [
+    this.allAudioObjects = [
         this.backgroundMusic,
         this.chickenKOSound,
         this.soundBottleCollect,
@@ -348,22 +370,15 @@ toggleMute() {
 
     this.level.enemies.forEach(enemy => {
         if (enemy instanceof Endboss) {
-            allAudioObjects.push(enemy.bossSound, enemy.bossDeadSound);
+            this.allAudioObjects.push(enemy.bossSound, enemy.bossDeadSound);
         }
     });
 
-    allAudioObjects.forEach(audio => {
+    this.allAudioObjects.forEach(audio => {
         if (audio) {
             audio.muted = !isMuted; // Umschalten zwischen stumm und nicht stumm
         }
     });
-
-    // Konsolenausgabe für Debugging
-    if (isMuted) {
-        console.log('Alle Audio-Elemente wurden wieder eingeschaltet');
-    } else {
-        console.log('Alle Audio-Elemente wurden stummgeschaltet');
-    }
 }
 
 showEndScreen(won) {
@@ -381,20 +396,28 @@ showEndScreen(won) {
 
     h1.style.display = 'none';
     description.style.display = 'none';
-    mute.style.display = 'none';
-
-    if (won) {
+    mute.style.display = 'none';  
+    
+     if (won) {
         endScreenImage.src = './img/You won, you lost/YouWonB.png'; // Bild für "You Won"        
     } else {
         endScreenImage.src = './img/You won, you lost/YouLost.png'; // Bild für "You Lost"        
     }
+
+    this.allAudioObjects.forEach(audio => {
+        if (audio) {
+            audio.pause(); // Stoppe die Wiedergabe
+        audio.currentTime = 0; // Setze die Wiedergabeposition auf den Anfang
+        audio.muted = true; // Stummschalten
+        this.backgroundMusic.pause();        
+        }      
+
+    });    
 }
 
 resetWorld() {
-    this.stopGameLoop(); // Stoppe den Spiel-Loop
-    console.log('Welt wurde zurückgesetzt');
+    this.stopGameLoop(); // Stoppe den Spiel-Loop    
 }
-
 
 }
 

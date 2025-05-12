@@ -9,7 +9,7 @@ class Character extends MovableObject {
     hurtSound = new Audio('./audio/hurt.mp3');
     snorSound = new Audio('./audio/snoring.mp3');
     idleSound = new Audio('./audio/whistle.mp3');
-    deadSound = new Audio('./audio/dying.mp3');
+    deadSound = new Audio('./audio/dying.mp3');   
 
 
     IMAGES_IDLE = [
@@ -149,8 +149,12 @@ class Character extends MovableObject {
             if (this.isDead()) {
                 this.playAnimation(this.IMAGES_DEAD); // Play dead animation 
                 this.stopAllSounds(); // Stop all sounds
+
+                
                 this.deadSound.play(); // Play dead sound
-                this.deadSound.volume = 0.5; // Lautstärke (0.0 bis 1.0)   
+                this.deadSound.volume = 0.5; // Lautstärke (0.0 bis 1.0) 
+
+
                 this.y += 5;               
 
             } else if (this.isHurt()) {
@@ -171,10 +175,13 @@ class Character extends MovableObject {
                 this.snorSound.play(); // Play snoring sound
                 this.snorSound.volume = 0.5; // Lautstärke (0.0 bis 1.0)
 
-            }else {
+            }else if (inactivityTimer >= 2000) { // Nach 5 Sekunden Inaktivität
                 this.playAnimation(this.IMAGES_IDLE); // Play idle animation                
                 this.idleSound.play(); // Play idle sound
-            }   this.idleSound.volume = 0.5; // Lautstärke (0.0 bis 1.0)
+                this.idleSound.volume = 0.5; // Lautstärke (0.0 bis 1.0)
+            }
+
+            
         }, 100); // Update animation every 50ms
     }
  
