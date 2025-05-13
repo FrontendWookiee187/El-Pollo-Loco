@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>El Pollo Loco – Quellen & Credits</title>
+    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="fonts/fonts.css" />
+    <style>
+        body {
+            background-image: url(./img/5_background/background-main-2.png);
+            background-size: cover;
+            background-repeat: no-repeat;
+            min-height: 100vh;
+            margin: 0;
+            color: white;
+            font-family: 'ARTESANIA Display', Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+        }
+        .credits-container {
+            background: rgba(0,0,0,0.85);
+            border-radius: 16px;
+            margin-top: 60px;
+            padding: 32px 24px;
+            max-width: 600px;
+            width: 90%;
+            box-shadow: 0 4px 24px rgba(0,0,0,0.3);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        h1 {
+            font-family: 'ARTESANIA Display', Arial, sans-serif;
+            font-size: 2.5rem;
+            margin-bottom: 16px;
+            letter-spacing: 2px;
+        }
+        ul {
+            list-style: none;
+            padding: 0;
+            margin: 0 0 24px 0;
+            width: 100%;
+        }
+        li {
+            margin-bottom: 14px;
+            font-size: 1.1rem;
+            line-height: 1.5;
+        }
+        a {
+            color: #ff5722;
+            text-decoration: none;
+            transition: color 0.2s;
+            word-break: break-all;
+        }
+        a:hover {
+            color: #fff;
+            text-decoration: underline;
+        }
+        .back-btn {
+            margin-top: 24px;
+            padding: 10px 24px;
+            font-size: 1.1rem;
+            border: none;
+            border-radius: 8px;
+            background: #ff5722;
+            color: white;
+            font-family: 'ARTESANIA Display', Arial, sans-serif;
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+            transition: background 0.2s;
+        }
+        .back-btn:hover {
+            background: #e64a19;
+        }
+        @media (max-width: 600px) {
+            .credits-container {
+                padding: 18px 6px;
+                margin-top: 24px;
+            }
+            h1 {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="credits-container">
+        <h1>Quellen &amp; Credits</h1>
+        <ul>
+            <li>
+                <strong>Sprites &amp; Grafiken:</strong><br>
+                <a href="https://developerakademie.com/" target="_blank" rel="noopener">Developer Akademie</a> (CC0)
+            </li>
+            <li>
+                <strong>Soundeffekte &amp; Musik:</strong><br>
+                <a href="https://pixabay.com/de/music/" target="_blank" rel="noopener">Pixabay Music</a> (verschiedene CC-Lizenzen)<br>
+                <a href="https://freesound.org/" target="_blank" rel="noopener">Freesound.org</a> (verschiedene CC-Lizenzen)
+            </li>
+            <li>
+                <strong>Fonts:</strong><br>
+                <a href="https://www.dafont.com/de/sombrero-filled.font" target="_blank" rel="noopener">Sombrero Filled</a> von Vladimir Nikolic<br>
+                <a href="https://www.dafont.com/de/artesania.font" target="_blank" rel="noopener">ARTESANIA Display</a> von  Antonio Sánchez
+            </li>
+            <li>
+                <strong>Tutorials &amp; Inspiration:</strong><br>
+                <a href="https://developer.mozilla.org/" target="_blank" rel="noopener">MDN Web Docs</a><br>
+                <a href="https://www.w3schools.com/" target="_blank" rel="noopener">w3schools.com</a><br>
+                <a href="https://developerakademie.com/" target="_blank" rel="noopener">Developer Akademie</a><br>
+                <a href="https://chatgpt.com/" target="_blank" rel="noopener">ChatGPT</a>
+            </li>
+            <li>
+                <strong>Impressum-Generator:</strong><br>
+                <a href="https://impressum-generator.de/" target="_blank" rel="noopener">impressum-generator.de</a>
+            </li>
+        </ul>
+        <button class="back-btn" onclick="window.location.href='index.html'">Zurück zum Spiel</button>
+    </div>
+</body>
+</html>
