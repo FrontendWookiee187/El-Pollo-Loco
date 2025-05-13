@@ -10,7 +10,7 @@ class Character extends MovableObject {
     snorSound = new Audio('./audio/snoring.mp3');
     idleSound = new Audio('./audio/whistle.mp3');
     deadSound = new Audio('./audio/dying.mp3');   
-
+    deadSoundPlayed = false;
 
     IMAGES_IDLE = [
 
@@ -25,7 +25,6 @@ class Character extends MovableObject {
         './img/2_character_pepe/1_idle/idle/I-9.png',
         './img/2_character_pepe/1_idle/idle/I-10.png'
     ];
-
 
     IMAGES_LONG_IDLE = [
 
@@ -72,20 +71,15 @@ class Character extends MovableObject {
         './img/2_character_pepe/5_dead/D-55.png',
         './img/2_character_pepe/5_dead/D-56.png',
         './img/2_character_pepe/5_dead/D-57.png'
-
-
     ]
 
     IMAGES_HURT = [
         './img/2_character_pepe/4_hurt/H-41.png',
         './img/2_character_pepe/4_hurt/H-42.png',
         './img/2_character_pepe/4_hurt/H-43.png'
-
     ]
 
-    world;
-
-    
+    world;    
 
     constructor() {
         super().loadImage('./img/2_character_pepe/2_walk/W-21.png');
@@ -106,8 +100,7 @@ class Character extends MovableObject {
     };
 
         this.animate();
-        this.getRealFrame();
-        
+        this.getRealFrame();      
 
     }
 
@@ -151,10 +144,12 @@ class Character extends MovableObject {
                 this.stopAllSounds(); // Stop all sounds
 
                 
-                this.deadSound.play(); // Play dead sound
-                this.deadSound.volume = 0.5; // Lautstärke (0.0 bis 1.0) 
-
-
+                 // Nur einmal abspielen:
+                if (!this.deadSoundPlayed) {
+                    this.deadSound.play();
+                    this.deadSound.volume = 0.5;
+                    this.deadSoundPlayed = true; // <--- Merken, dass gespielt wurde
+                }
                 this.y += 5;               
 
             } else if (this.isHurt()) {
@@ -180,7 +175,6 @@ class Character extends MovableObject {
                 this.idleSound.play(); // Play idle sound
                 this.idleSound.volume = 0.5; // Lautstärke (0.0 bis 1.0)
             }
-
             
         }, 100); // Update animation every 50ms
     }
@@ -204,10 +198,11 @@ class Character extends MovableObject {
 
     this.idleSound.pause();
     this.idleSound.currentTime = 0;
-
-    this.deadSound.pause();
-    this.deadSound.currentTime = 0;
-            
+    
+    if (!this.isDead()) {
+        this.deadSound.pause();
+        this.deadSound.currentTime = 0;
+    }            
     }
 
     stopIdleSound(){

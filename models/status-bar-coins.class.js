@@ -1,6 +1,5 @@
 class StatusBarCoins extends DrawableObject{
 
-
     IMAGES = [
 
         './img/7_statusbars/1_statusbar/1_statusbar_coin/green/0.png',
@@ -10,7 +9,6 @@ class StatusBarCoins extends DrawableObject{
         './img/7_statusbars/1_statusbar/1_statusbar_coin/green/80.png',
         './img/7_statusbars/1_statusbar/1_statusbar_coin/green/100.png'
     ]
-
 
     percentage = 100; // Initial coin percentage
 
@@ -55,8 +53,4 @@ setPercentage(percentage){
       }
       
   }
-
-
-
-
 }

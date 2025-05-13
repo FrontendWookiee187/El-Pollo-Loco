@@ -155,7 +155,7 @@ initAudioObjects() {
     
                     // Starte die Splash-Animation der Flasche
                     bottle.startSplashAnimation();
-    
+
                     // Entferne die Flasche erst nach der Dauer der Splash-Animation
                     setTimeout(() => {
                         if (this.throwableObjects.includes(bottle)) {
@@ -217,10 +217,8 @@ this.level.enemies.forEach(enemy => {
             setTimeout(() => {                
                 this.level.enemies.splice(this.level.enemies.indexOf(enemy), 1);
             }, 1000);
-
             return; // Beende die Verarbeitung für diese Kollision
         }
-
         // Standard-Kollisionslogik für Gegner
         this.character.hit();
         this.statusBar.setPercentage(this.character.energy); // Aktualisiere die Lebensanzeige
@@ -229,17 +227,13 @@ this.level.enemies.forEach(enemy => {
     }
 
     draw() {
-        this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-    
-        this.ctx.translate(this.camera_x, 0); // Verschiebe die Kamera
-    
+        this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);    
+        this.ctx.translate(this.camera_x, 0); // Verschiebe die Kamera    
         // Zeichne den Hintergrund
-        this.addObjectsToMap(this.level.backgroundObjects);
-    
+        this.addObjectsToMap(this.level.backgroundObjects);    
         // Zeichne die Gegner (z. B. Endboss)
     this.level.enemies.forEach(enemy => {
         this.addToMap(enemy);
-
         // Zeichne die Statusleiste des Endbosses über dem Endboss
         if (enemy instanceof Endboss) {
             this.statusBarEndboss.x = enemy.x + enemy.width / 2 - this.statusBarEndboss.width / 2; // Zentriere die Statusleiste
@@ -307,7 +301,6 @@ flipImageBack(mo){
 
 }
 
-
 updateBottleStatusBar() {
     let maxBottles = 5; // Maximale Anzahl an Flaschen
     let currentPercentage = this.statusBarBottles.percentage;
@@ -331,7 +324,6 @@ updateBottleStatusBarOnThrow() {
 updateCoinStatusBar() {
     let maxCoins = 5; // Maximale Anzahl an Coins
     let currentPercentage = this.statusBarCoins.percentage;
-
     if (currentPercentage < 100) {
         let newPercentage = currentPercentage + (100 / maxCoins); // Erhöhe die Anzeige
         this.statusBarCoins.setPercentage(Math.min(newPercentage, 100)); // Begrenze auf 100%
@@ -341,13 +333,10 @@ updateCoinStatusBar() {
 initBackgroundMusic() {
     this.backgroundMusic = new Audio('./audio/background_game_2.mp3');
     this.backgroundMusic.loop = true;
-    this.backgroundMusic.volume = 0.5;
-    
+    this.backgroundMusic.volume = 0.5;    
     const muted = localStorage.getItem('muted') === '1';
     this.backgroundMusic.muted = muted;
-
-    this.backgroundMusic.play();
-    
+    this.backgroundMusic.play();    
     this.allAudioObjects.forEach(audio => {
         if (audio) {
             audio.muted = muted;
@@ -377,8 +366,7 @@ toggleMute() {
         this.character.hurtSound,
         this.character.snorSound,
         this.character.idleSound,
-        this.character.deadSound,
-        
+        this.character.deadSound,        
     ];
 
     this.level.enemies.forEach(enemy => {
@@ -437,7 +425,6 @@ showEndScreen(won) {
 resetWorld() {
     this.stopGameLoop(); // Stoppe den Spiel-Loop    
 }
-
 }
 
 

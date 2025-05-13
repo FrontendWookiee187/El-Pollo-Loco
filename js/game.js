@@ -7,12 +7,10 @@ function init(){
     if (world) {
         world.stopGameLoop(); // Stoppe den alten Spiel-Loop
     }
-
     initLevel();
 
 canvas=document.getElementById('canvas');
 world = new World(canvas, keyboard);
-
 
 // Setze den Zustand zurück
 world.character.energy = 100; // Volle Energie für den Charakter
@@ -29,7 +27,6 @@ world.level.enemies.forEach(enemy => {
 world.gameEnded = false; // Setze das Spielende-Flag zurück
 
 console.log('Spiel neu gestartet');
-
 
 }
 
@@ -72,10 +69,6 @@ window.addEventListener('keyup', (e) => {
         keyboard.D = false;
     } 
 });
-
-
-
-
 
 document.addEventListener('DOMContentLoaded', () => {
     const startScreen = document.getElementById('startScreen');
@@ -222,7 +215,6 @@ function hindViewTouchButtons(){
 if (window.innerWidth <= 1024){
     touchControls.style.display = 'flex'; // Zeige die Touch-Buttons
 }
-
 };
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -290,7 +282,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 });
-
 
 function resizeCanvasForFullscreen() {
     const canvas = document.getElementById('canvas');

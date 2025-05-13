@@ -21,7 +21,6 @@ IMAGES_KO =[
     './img/3_enemies_chicken/chicken_normal/2_dead/dead.png'
 ];
 
-
     constructor() {
         super().loadImage('./img/3_enemies_chicken/chicken_normal/1_walk/1_w.png');
         this.loadImages(this.IMAGES_WALKING);
@@ -29,7 +28,6 @@ IMAGES_KO =[
         
         this.x = 450 + Math.random() * 500;
         this.speed = 0.15 + Math.random() * 0.5;
-
 
         // Offsets für präzise Kollisionserkennung
         this.offset = {

@@ -52,8 +52,6 @@ responsivePositioning(){
        return 0; 
     }
     
-}
-
-  
+}  
 }
 

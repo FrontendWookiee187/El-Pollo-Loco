@@ -7,8 +7,6 @@ class Endboss extends MovableObject {
     bossDeadSound = new Audio('./audio/boss_dead.mp3');
     winnerSound = new Audio('./audio/yeaoh-82662.mp3');
 
-
-
     IMAGES_WALKING = [
         
         './img/4_enemie_boss_chicken/2_alert/G5.png',
@@ -40,8 +38,6 @@ class Endboss extends MovableObject {
     './img/4_enemie_boss_chicken/3_attack/G20.png',
   ];
 
-
-
   constructor(world) {
     super().loadImage(this.IMAGES_WALKING[0]);
     this.loadImages(this.IMAGES_WALKING);
@@ -53,9 +49,7 @@ class Endboss extends MovableObject {
     this.speed = 20; // Geschwindigkeit des
     this.zIndex = 90    
     this.currentAnimation = this.IMAGES_WALKING; // Aktuelle Animation initialisieren
-    // this.animate();
-    
-
+    // this.animate();  
 
     // Offsets für präzise Kollisionserkennung
     this.offset = {
@@ -104,9 +98,7 @@ class Endboss extends MovableObject {
     }, 200);
 }
 
-isCharacterInRange() {
-  
-  
+isCharacterInRange() { 
 
   if (!this.world || !this.world.character) {
       console.warn('World oder Character ist nicht definiert');
@@ -138,8 +130,5 @@ playYeahSound(){
 this.winnerSound.play(); // Spiele den Gewinner-Sound ab
 this.winnerSound.volume = 0.5; // Setze die Lautstärke des Gewinner-Sounds}
 }}
-
-
-
 
 }

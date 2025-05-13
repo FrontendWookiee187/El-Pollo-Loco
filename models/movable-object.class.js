@@ -57,22 +57,9 @@ isColliding(mo) {
     let colliding = this.x + this.offset.left < mo.x + mo.width - mo.offset.right &&
            this.x + this.width - this.offset.right > mo.x + mo.offset.left &&
            this.y + this.offset.top < mo.y + mo.height - mo.offset.bottom &&
-           this.y + this.height - this.offset.bottom > mo.y + mo.offset.top;
-
-        //    console.log('Kollision prüfen:', {
-        //     bottleX: this.x,
-        //     bottleY: this.y,
-        //     bottleWidth: this.width,
-        //     bottleHeight: this.height,
-        //     enemyX: mo.x,
-        //     enemyY: mo.y,
-        //     enemyWidth: mo.width,
-        //     enemyHeight: mo.height,
-        //     colliding
-        // });
+           this.y + this.height - this.offset.bottom > mo.y + mo.offset.top;       
     
         return colliding;
-
         }
 
         hit(enemyHitFromAbove = false) {
@@ -108,11 +95,9 @@ playAnimation(images){
         let path = images[i];
         this.img = this.imageCache[path];
         this.currentImage++;
-
 }
 
 moveRight(){
-
     this.x += this.speed; // Move right
 }
 
@@ -123,6 +108,4 @@ moveLeft(){
 jump(){
     this.speedY = 30;
 }
-
-
 }

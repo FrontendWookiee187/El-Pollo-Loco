@@ -19,9 +19,7 @@ class Coin extends DrawableObject{
             left: 50,   // Abstand von links
             right: 50   // Abstand von rechts
         };
-    }
-
-    
+    }    
 
     animate() {
         let currentImageIndex = 0; // Start mit dem ersten Bild
@@ -30,10 +28,4 @@ class Coin extends DrawableObject{
             this.img = this.imageCache[this.IMAGES_COIN[currentImageIndex]]; // Aktualisiere das Bild
         }, 200); // Wechsle das Bild alle 200ms
     }
-
-
-
-
-
-
 }
