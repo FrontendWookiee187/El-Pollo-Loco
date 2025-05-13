@@ -67,7 +67,14 @@ class Endboss extends MovableObject {
             this.setAnimation(this.IMAGES_DEAD); // Spiele die Dead-Animation ab
             this.stopRageSound(); // Stoppe den Boss-Sound
             this.bossDeadSound.play(); // Spiele den Boss-Tod-Sound ab
-            this.bossDeadSound.volume = 0.5; // Setze die Lautstärke des Boss-Tod-Sounds            
+            this.bossDeadSound.volume = 0.5; // Setze die Lautstärke des Boss-Tod-Sounds           
+        
+        // Jubel-Sound NUR EINMAL abspielen:
+            if (!this.yeahSoundPlayed) {
+                this.playYeahSound();
+                this.yeahSoundPlayed = true;
+            }
+        
         } else if (this.isKO) {
             this.setAnimation(this.IMAGES_DEAD); // Spiele weiterhin die Dead-Animation ab
             this.bossDeadSound.play(); // Spiele den Boss-Tod-Sound ab
