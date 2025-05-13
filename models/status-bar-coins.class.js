@@ -34,7 +34,7 @@ setPercentage(percentage){
   }
 
   responsivePositioning(){
-   if(window.innerWidth <= 768){      
+   if(window.innerWidth <= 1024){      
       this.y = 140;      
    }
 }

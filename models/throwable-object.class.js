@@ -83,8 +83,11 @@ class ThrowableObject extends MovableObject {
                 this.speedY = 0; // Stoppe die vertikale Bewegung
                 this.hasHit = true; // Markiere die Flasche als getroffen
                 this.startSplashAnimation(); // Starte die Splash-Animation
-                this.soundBrokenBottle.play(); // Spiele den Sound ab
-                this.soundBrokenBottle.volume = 0.3; // Setze die Lautstärke des Sounds
+                if (this.world && this.soundBrokenBottle) {
+        this.soundBrokenBottle.muted = this.world.backgroundMusic.muted;
+        this.soundBrokenBottle.play();
+    }
+    this.soundBrokenBottle.volume = 0.3;
             }
         }, 1000 / 60); // 60 FPS
     }
@@ -132,6 +135,13 @@ class ThrowableObject extends MovableObject {
         console.log('Starte Splash-Animation an Position:', this.x, this.y);
         this.loadImages(this.IMAGES_SPLASH);
         this.playAnimation(this.IMAGES_SPLASH);
+
+         // Sound abspielen, aber vorher Mute-Status setzen
+    if (this.world && this.soundBrokenBottle) {
+        this.soundBrokenBottle.muted = this.world.backgroundMusic.muted;
+        this.soundBrokenBottle.volume = 0.3;
+        this.soundBrokenBottle.play();
+    }
     
         // Entferne die Flasche nach der Animation
         setTimeout(() => {

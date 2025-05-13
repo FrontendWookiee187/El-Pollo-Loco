@@ -1,51 +1,83 @@
-/* Für kleinere Bildschirme */
-@media (max-width: 768px) {
+@media (max-width: 1024px) {
     body {
-        font-size: 48px; /* Kleinere Schriftgröße */
-        background-size: cover; /* Hintergrundbild anpassen */
+        font-size: 48px;
+        background-size: cover;
     }
-
-    canvas {
-        width: 100%; /* Canvas passt sich der Bildschirmbreite an */
-        height: auto; /* Höhe wird proportional angepasst */
-    }
-
-    h1 {
-        font-size: 32px; /* Kleinere Schriftgröße für die Überschrift */
-    }
-
-    .description {
-        font-size: 16px; /* Kleinere Schriftgröße für die Beschreibung */
-        flex-direction: column; /* Beschreibung untereinander anordnen */
-        gap: 8px;
-    }
-
-    .status-bar {
-        top: 20px; /* Verschiebe die Statusleisten nach unten */
-    }
-
+    h1 { font-size: 32px; }
+    .description { font-size: 16px; flex-direction: column; gap: 8px; }
+    .status-bar { top: 20px; }
     .touch-controls {
-    position: fixed;
-    bottom: 20px;
-    width: 100%;
-    display: flex;
-    justify-content: center;
-    gap: 10px;
-    z-index: 1000;
+        position: fixed;
+        bottom: 20px;
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        gap: 10px;
+        z-index: 1000;
+    }
+    .touch-controls button {
+        width: 60px;
+        height: 60px;
+        font-size: 24px;
+        border: none;
+        border-radius: 50%;
+        background-color: #ff5722;
+        color: white;
+        cursor: pointer;
+    }
+    .touch-controls button:active {
+        background-color: #e64a19;
+    }
+    .fullscreen-btn {
+        position: fixed;
+        bottom: 100px;
+        right: 20px;
+        z-index: 2000;
+        padding: 14px 20px;
+        font-size: 28px;
+        border-radius: 8px;
+        border: none;
+        background: #ff5722;
+        color: white;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+        display: none;
+    }
+    .fullscreen-btn { display: block; }
+
+    .gameContainer{
+
+        display: flex;
+        justify-content: center;
+    }
+
+} /* <-- HIER muss die schließende Klammer hin! */
+
+/* Jetzt kommen die Fullscreen-Regeln außerhalb der Media Query! */
+#gameContainer:fullscreen,
+#gameContainer:-webkit-full-screen,
+#gameContainer:-ms-fullscreen {
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    flex-direction: column !important;
+    width: 100vw !important;
+    height: 100vh !important;
+    background: #ff0000 !important; /* TEST: Rot */
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    box-sizing: border-box !important;
+    z-index: 9999 !important;
 }
 
-.touch-controls button {
-    width: 60px;
-    height: 60px;
-    font-size: 24px;
-    border: none;
-    border-radius: 50%;
-    background-color: #ff5722;
-    color: white;
-    cursor: pointer;
-}
-
-.touch-controls button:active {
-    background-color: #e64a19;
-}
+#gameContainer:fullscreen canvas,
+#gameContainer:-webkit-full-screen canvas,
+#gameContainer:-ms-fullscreen canvas {
+    width: auto !important;
+    height: auto !important;
+    max-width: none !important;
+    max-height: none !important;
+    display: block;
 }

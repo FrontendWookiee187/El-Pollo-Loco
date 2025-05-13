@@ -1,23 +1,27 @@
 <!DOCTYPE html>
 <html lang="de">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
-    <link rel="icon" type="image/png" href="img/6_salsa_bottle/salsa_bottle.png">
-    
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <link
+      rel="icon"
+      type="image/png"
+      href="img/6_salsa_bottle/salsa_bottle.png"
+    />
+
     <title>El Pollo Loco</title>
 
-    <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="startscreen.css">
-    <link rel="stylesheet" href="endscreen.css">  
-    <link rel="stylesheet" href="responsive.css">
-    <link rel="stylesheet" href="touchControl.css">
-    <link rel="stylesheet" href="fonts/fonts.css">  
-    
+    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="startscreen.css" />
+    <link rel="stylesheet" href="endscreen.css" />
+    <link rel="stylesheet" href="touchControl.css" />
+    <link rel="stylesheet" href="fonts/fonts.css" />
+    <link rel="stylesheet" href="responsive.css" />
+
     <script src="./models/drawable-object.class.js"></script>
     <script src="./models/movable-object.class.js"></script>
-    <script src="./models/character.class.js"></script>    
+    <script src="./models/character.class.js"></script>
     <script src="./models/chicken.class.js"></script>
     <script src="./models/chicken-small.class.js"></script>
     <script src="./models/endboss.class.js"></script>
@@ -30,96 +34,95 @@
     <script src="./models/status-bar-bottles.js"></script>
     <script src="./models/status-bar-health-endboss.class.js"></script>
     <script src="./models/status-bar-coins.class.js"></script>
-    
-    
-    
-    <script src="./models/level.class.js"></script> 
-    
+
+    <script src="./models/level.class.js"></script>
+
     <script src="./levels/level1.js"></script>
     <script src="./models/world.class.js"></script>
-    <script src="./models/keyboard.class.js"></script> 
-    
-    
+    <script src="./models/keyboard.class.js"></script>
+
     <script src="./js/game.js"></script>
-     
-    
-    
-        
-    
-    
-       
-</head>
-<body>
-
+  </head>
+  <body>
     <div id="startScreen" class="start-screen">
-        <img src="./img/9_intro_outro_screens/start/startscreen_2.png" alt="Start Screen" class="start-screen-image">
-       
-       <div class="description-start-screen">
+      <img
+        src="./img/9_intro_outro_screens/start/startscreen_2.png"
+        alt="Start Screen"
+        class="start-screen-image"
+      />
 
+      <div class="description-start-screen">
         <div>
-         <span>move left: arrow left </span>
-         <span>|</span>
-         <span>move right: arrow right</span>
+          <span>move left: arrow left </span>
+          <span>|</span>
+          <span>move right: arrow right</span>
         </div>
 
         <span>|</span>
 
         <div>
-            <span>jump: space</span>
-            <span>|</span>
-            <span>throw: D</span>
+          <span>jump: space</span>
+          <span>|</span>
+          <span>throw: D</span>
         </div>
+      </div>
 
+      <button id="startButton" class="start-button">Start Game</button>
     </div>
-       
-        <button id="startButton" class="start-button">Start Game</button>
-    </div>
 
-
-    <div id="endScreen" class="end-screen" style="display: none;">
-        <img id="endScreenImage" src="" alt="End Screen" class="end-screen-image">
-        <button id="restartButton" class="end-button">Restart Game</button>
-        <button id="backToStartButton" class="end-button">Back to Start</button>
+    <div id="endScreen" class="end-screen" style="display: none">
+      <img
+        id="endScreenImage"
+        src=""
+        alt="End Screen"
+        class="end-screen-image"
+      />
+      <button id="restartButton" class="end-button">Restart Game</button>
+      <button id="backToStartButton" class="end-button">Back to Start</button>
     </div>
 
     <h1 id="h1">El Pollo Loco</h1>
 
-    <canvas id="canvas" width="720" height="480">
+    <div id="gameContainer" class="gameContainer">
+      <canvas id="canvas" width="720" height="480"></canvas>
+      <button id="mute" class="mute-btn" aria-label="Mute/Unmute"></button>
 
+      <button
+        id="fullscreenButton"
+        class="fullscreen-btn"
+        style="display: none"
+      >
+        ⛶
+      </button>
 
-    </canvas>
-
-    <div class="description" id="description">
-
-        <div>
-         <span>move left: arrow left </span>
-         <span>|</span>
-         <span>move right: arrow right</span>
-        </div>
-
-        <span>|</span>
-
-        <div>
-            <span>jump: space</span>
-            <span>|</span>
-            <span>throw: D</span>
-        </div>
-
+      <div id="touchControls" class="touch-controls">
+        <button id="leftButton">←</button>
+        <button id="jumpButton">↑</button>
+        <button id="rightButton">→</button>
+        <button id="throwButton">D</button>
+      </div>
     </div>
 
+    <div class="description" id="description">
+      <div>
+        <span>move left: arrow left </span>
+        <span>|</span>
+        <span>move right: arrow right</span>
+      </div>
 
-    <button onclick="world.toggleMute()" id="mute">Mute/Unmute</button>
+      <span>|</span>
 
-    <div id="rotateMessage" class="rotate-message">
-    <p>Bitte drehen Sie Ihr Geraet ins Querformat, um das Spiel zu spielen.</p>
-</div>
+      <div>
+        <span>jump: space</span>
+        <span>|</span>
+        <span>throw: D</span>
+      </div>
+    </div>
 
-<div id="touchControls" class="touch-controls">
-    <button id="leftButton">←</button>
-    <button id="jumpButton">↑</button>
-    <button id="rightButton">→</button>
-    <button id="throwButton">D</button>
-</div>
-    
-</body>
+        <div id="rotateMessage" class="rotate-message">
+      <p>
+        Bitte drehen Sie Ihr Geraet ins Querformat, um das Spiel zu spielen.
+      </p>
+    </div>
+  </body>
 </html>

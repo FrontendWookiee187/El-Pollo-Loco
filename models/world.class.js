@@ -111,6 +111,7 @@ initAudioObjects() {
                 // Flasche erstellen und werfen
             let bottle = new ThrowableObject(bottleX, bottleY);
             bottle.world = this; // Setze die Referenz zur Welt
+            bottle.soundBrokenBottle.muted = this.backgroundMusic.muted;
             bottle.throw(this.character.otherDirection); // Übergibt die Laufrichtung
             this.throwableObjects.push(bottle);
     
@@ -338,20 +339,31 @@ updateCoinStatusBar() {
 }
 
 initBackgroundMusic() {
-    this.backgroundMusic = new Audio('./audio/background_game_2.mp3'); // Pfad zur Musikdatei
-    this.backgroundMusic.loop = true; // Musik in Endlosschleife abspielen
-    this.backgroundMusic.volume = 0.5; // Lautstärke (0.0 bis 1.0)
-    this.backgroundMusic.play(); // Musik starten
+    this.backgroundMusic = new Audio('./audio/background_game_2.mp3');
+    this.backgroundMusic.loop = true;
+    this.backgroundMusic.volume = 0.5;
+    
+    const muted = localStorage.getItem('muted') === '1';
+    this.backgroundMusic.muted = muted;
+
+    this.backgroundMusic.play();
+    
+    this.allAudioObjects.forEach(audio => {
+        if (audio) {
+            audio.muted = muted;
+        }
+    });
 }
 
-toggleMute() {
-    // Prüfe, ob die Hintergrundmusik aktuell stummgeschaltet ist
-    const isMuted = this.backgroundMusic.muted;
+toggleMute() {    
+    const isMuted = this.backgroundMusic.muted;    
+    const newMuted = !isMuted;
+    localStorage.setItem('muted', newMuted ? '1' : '0');
 
     // Alle Audio-Elemente im DOM stummschalten/entschalten
     const allAudioElements = document.querySelectorAll('audio');
     allAudioElements.forEach(audio => {
-        audio.muted = !isMuted; // Umschalten zwischen stumm und nicht stumm
+        audio.muted = newMuted;
     });
 
     // Stummschalten/entschalten aller direkt erstellten Audio-Objekte
@@ -366,6 +378,7 @@ toggleMute() {
         this.character.snorSound,
         this.character.idleSound,
         this.character.deadSound,
+        
     ];
 
     this.level.enemies.forEach(enemy => {
@@ -374,9 +387,15 @@ toggleMute() {
         }
     });
 
+    this.throwableObjects.forEach(bottle => {
+        if (bottle.soundBrokenBottle) {
+            this.allAudioObjects.push(bottle.soundBrokenBottle);
+        }
+    });
+
     this.allAudioObjects.forEach(audio => {
         if (audio) {
-            audio.muted = !isMuted; // Umschalten zwischen stumm und nicht stumm
+            audio.muted = newMuted;
         }
     });
 }

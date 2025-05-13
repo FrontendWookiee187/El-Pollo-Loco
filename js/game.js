@@ -89,9 +89,33 @@ document.addEventListener('DOMContentLoaded', () => {
     let description = document.getElementById('description');
     let mute = document.getElementById('mute');
     let touchControls = document.getElementById('touchControls');
+    let muteIcon = document.getElementById('mute');
+
+    function updateMuteButton() {
+        const muted = localStorage.getItem('muted') === '1';
+        if (muted) {
+            mute.innerHTML = '<span aria-hidden="true">&#128263;</span>'; // Lautsprecher mit X
+            mute.classList.add('muted');
+            mute.title = "Ton an";
+        } else {
+            mute.innerHTML = '<span aria-hidden="true">&#128266;</span>'; // Lautsprecher
+            mute.classList.remove('muted');
+            mute.title = "Ton aus";
+        }
+    }
+
+    updateMuteButton();
+
+    mute.addEventListener('click', () => {
+        if (typeof world !== 'undefined' && world) {
+            world.toggleMute();
+            updateMuteButton();
+        }
+    });
 
     startButton.addEventListener('click', () => {
         startScreen.style.display = 'none'; // Verstecke den Startbildschirm
+        muteIcon.style.display = 'flex'; // Zeige den Mute-Button
         canvas.style.display = 'block'; // Zeige das Canvas an
         h1.style.display = 'block'; 
         description.style.display = 'flex';
@@ -156,7 +180,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const touchControls = document.getElementById('touchControls');
 
     // Zeige die Touch-Buttons nur auf mobilen Geräten
-    if (window.innerWidth <= 768) {
+    if (window.innerWidth <= 1024) {
         touchControls.style.display = 'none'; // Zeige die Touch-Buttons
     } else {
         touchControls.style.display = 'none'; // Verstecke die Touch-Buttons
@@ -195,8 +219,103 @@ document.addEventListener('DOMContentLoaded', () => {
 function hindViewTouchButtons(){
     let touchControls = document.getElementById('touchControls');
 
-if (window.innerWidth <= 768){
+if (window.innerWidth <= 1024){
     touchControls.style.display = 'flex'; // Zeige die Touch-Buttons
 }
 
 };
+
+document.addEventListener('DOMContentLoaded', () => {
+    const fullscreenButton = document.getElementById('fullscreenButton');
+    const gameContainer = document.getElementById('gameContainer');
+
+    function showFullscreenButtonIfMobile() {
+        if (window.innerWidth <= 1024) {
+            fullscreenButton.style.display = 'block';
+        } else {
+            fullscreenButton.style.display = 'none';
+        }
+    }
+
+    // Standardmäßig ausblenden
+    fullscreenButton.style.display = 'none';
+
+    // Nach Spielstart anzeigen
+    document.getElementById('startButton').addEventListener('click', () => {
+        showFullscreenButtonIfMobile();
+    });
+
+    // Auch nach Neustart anzeigen
+    document.getElementById('restartButton').addEventListener('click', () => {
+        showFullscreenButtonIfMobile();
+    });
+
+    // Beim Zurück zum Start ausblenden
+    document.getElementById('backToStartButton').addEventListener('click', () => {
+        fullscreenButton.style.display = 'none';
+    });
+
+    // Bei Fenstergröße ändern ggf. anpassen
+    window.addEventListener('resize', showFullscreenButtonIfMobile);
+
+    // Fullscreen-Button toggelt Fullscreen-Modus
+    fullscreenButton.addEventListener('click', () => {
+        if (document.fullscreenElement) {
+            // Fullscreen verlassen
+            if (document.exitFullscreen) {
+                document.exitFullscreen();
+            } else if (document.webkitExitFullscreen) {
+                document.webkitExitFullscreen();
+            } else if (document.msExitFullscreen) {
+                document.msExitFullscreen();
+            }
+        } else {
+            // Fullscreen aktivieren
+            let elem = document.getElementById('gameContainer');
+            if (elem.requestFullscreen) {
+                elem.requestFullscreen();
+            } else if (elem.webkitRequestFullscreen) {
+                elem.webkitRequestFullscreen();
+            } else if (elem.msRequestFullscreen) {
+                elem.msRequestFullscreen();
+            }
+        }
+    });
+    
+    document.addEventListener('fullscreenchange', () => {
+        if (document.fullscreenElement) {
+            fullscreenButton.textContent = '⤫'; 
+        } else {
+            fullscreenButton.textContent = '⛶'; 
+        }
+    });
+});
+
+
+function resizeCanvasForFullscreen() {
+    const canvas = document.getElementById('canvas');
+    const aspect = 720 / 480; // Seitenverhältnis deines Spiels
+    let w = window.innerWidth;
+    let h = window.innerHeight;
+
+    if (document.fullscreenElement) {
+        if (w / h > aspect) {
+            // Fenster ist breiter als das Seitenverhältnis → Höhe begrenzt
+            h = window.innerHeight;
+            w = h * aspect;
+        } else {
+            // Fenster ist schmaler oder gleich → Breite begrenzt
+            w = window.innerWidth;
+            h = w / aspect;
+        }
+        canvas.style.width = w + 'px';
+        canvas.style.height = h + 'px';
+        canvas.style.display = 'block';
+    } else {
+        canvas.style.width = '';
+        canvas.style.height = '';
+    }
+}
+
+document.addEventListener('fullscreenchange', resizeCanvasForFullscreen);
+window.addEventListener('resize', resizeCanvasForFullscreen);
