@@ -14,6 +14,4 @@ class Bottle extends DrawableObject{
         this.width = 50; // Breite der Flasche
     }
 
-
-
 }
