@@ -3,7 +3,8 @@ body{
     flex-direction: column;    
     align-items: center;
     background-image: url(./img/5_background/background-main-2.png);
-    background-size: auto;
+    background-size: cover;
+    background-position: center;
     background-repeat: no-repeat;
     display: flex;
     justify-content: center;
