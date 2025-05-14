@@ -49,7 +49,8 @@ class Endboss extends MovableObject {
     this.speed = 20; // Geschwindigkeit des
     this.zIndex = 90    
     this.currentAnimation = this.IMAGES_WALKING; // Aktuelle Animation initialisieren
-    // this.animate();  
+    this.lastJumpTime = Date.now();
+    this.isJumping = false;  
 
     // Offsets für präzise Kollisionserkennung
     this.offset = {
@@ -62,6 +63,8 @@ class Endboss extends MovableObject {
 
   animate() {
     setInterval(() => {
+        const now = Date.now();
+
         if (this.health <= 0) {
             this.isKO = true; // Markiere den Endboss als K.O.
             this.setAnimation(this.IMAGES_DEAD); // Spiele die Dead-Animation ab
@@ -69,7 +72,7 @@ class Endboss extends MovableObject {
             this.bossDeadSound.play(); // Spiele den Boss-Tod-Sound ab
             this.bossDeadSound.volume = 0.5; // Setze die Lautstärke des Boss-Tod-Sounds           
         
-        // Jubel-Sound NUR EINMAL abspielen:
+            // Jubel-Sound NUR EINMAL abspielen:
             if (!this.yeahSoundPlayed) {
                 this.playYeahSound();
                 this.yeahSoundPlayed = true;
@@ -79,21 +82,40 @@ class Endboss extends MovableObject {
             this.setAnimation(this.IMAGES_DEAD); // Spiele weiterhin die Dead-Animation ab
             this.bossDeadSound.play(); // Spiele den Boss-Tod-Sound ab
             this.bossDeadSound.volume = 0.5; // Setze die Lautstärke des Boss-Tod-Sounds
+        
         } else if (this.isCharacterInRange()) {
             this.setAnimation(this.IMAGES_ATTACK); // Spiele die Angriffsanimation ab
+
+            // Sprung alle 2 Sekunden
+            if (!this.isJumping && now - this.lastJumpTime > 2500) {
+                this.isJumping = true;
+                this.speedY = 50; // Sprungstärke
+                this.lastJumpTime = now;
+            }
 
             // Bewegung auf den Charakter zu
             const character = this.world.character;
             if (this.x > character.x) {
-                this.x -= this.speed; // Bewege den Endboss nach links
+                this.x -= this.speed;
             } else if (this.x < character.x) {
-                this.x += this.speed; // Bewege den Endboss nach rechts
+                this.x += this.speed;
+            }
+
+            // Schwerkraft anwenden, wenn gesprungen wird
+            if (this.isJumping) {
+                this.y -= this.speedY;
+                this.speedY -= 10; // Schwerkraft
+                if (this.y >= 55) { // Bodenhöhe für Endboss
+                    this.y = 55;
+                    this.speedY = 0;
+                    this.isJumping = false;
+                }
             }
 
             // Spiele den Boss-Sound nur, wenn er nicht bereits läuft
             if (this.bossSound.paused) {
                 this.bossSound.play();
-                this.bossSound.volume = 0.5; // Setze die Lautstärke des Boss-Sounds
+                this.bossSound.volume = 0.5;
             }
         } else {
             this.setAnimation(this.IMAGES_WALKING); // Spiele die Laufanimation ab
