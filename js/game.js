@@ -296,27 +296,41 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Fullscreen-Button toggelt Fullscreen-Modus
     fullscreenButton.addEventListener('click', () => {
-        if (document.fullscreenElement) {
-            // Exit fullscreen
-            if (document.exitFullscreen) {
-                document.exitFullscreen();
-            } else if (document.webkitExitFullscreen) {
-                document.webkitExitFullscreen();
-            } else if (document.msExitFullscreen) {
-                document.msExitFullscreen();
-            }
-        } else {
-            // Enter fullscreen
-            let elem = document.getElementById('gameContainer');
-            if (elem.requestFullscreen) {
-                elem.requestFullscreen();
-            } else if (elem.webkitRequestFullscreen) {
-                elem.webkitRequestFullscreen();
-            } else if (elem.msRequestFullscreen) {
-                elem.msRequestFullscreen();
-            }
+    const startScreen = document.getElementById('startScreen');
+    const endScreen = document.getElementById('endScreen');
+    const gameContainer = document.getElementById('gameContainer');
+
+    // Prüfe, welcher Screen sichtbar ist
+    const startScreenVisible = startScreen && startScreen.style.display !== 'none' && startScreen.style.display !== '';
+    const endScreenVisible = endScreen && endScreen.style.display !== 'none' && endScreen.style.display !== '';
+
+    let elem = gameContainer;
+    if (startScreenVisible) {
+        elem = startScreen;
+    } else if (endScreenVisible) {
+        elem = endScreen;
+    }
+
+    if (document.fullscreenElement) {
+        // Exit fullscreen
+        if (document.exitFullscreen) {
+            document.exitFullscreen();
+        } else if (document.webkitExitFullscreen) {
+            document.webkitExitFullscreen();
+        } else if (document.msExitFullscreen) {
+            document.msExitFullscreen();
         }
-    });
+    } else {
+        // Enter fullscreen
+        if (elem.requestFullscreen) {
+            elem.requestFullscreen();
+        } else if (elem.webkitRequestFullscreen) {
+            elem.webkitRequestFullscreen();
+        } else if (elem.msRequestFullscreen) {
+            elem.msRequestFullscreen();
+        }
+    }
+});
     
     document.addEventListener('fullscreenchange', () => {
         if (document.fullscreenElement) {
