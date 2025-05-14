@@ -1,27 +1,110 @@
-<html>
-
+<!DOCTYPE html>
+<html lang="de">
 <head>
-<meta charset="UTF-8" />
+    <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
-    <link
-      rel="icon"
-      type="image/png"
-      href="img/6_salsa_bottle/salsa_bottle.png"/>
+    <title>El Pollo Loco – Impressum</title>
+    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="fonts/fonts.css" />
+    <link rel="icon" type="image/png" href="img/6_salsa_bottle/salsa_bottle.png"/>
+    <style>
+        body {
+            background-image: url(./img/5_background/background-main-2.png);
+            background-size: cover;
+            background-repeat: no-repeat;
+            min-height: 100vh;
+            margin: 0;
+            color: white;
+            font-family: 'ARTESANIA Display', Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+        }
+        .impressum-container {
+            background: rgba(0,0,0,0.85);
+            border-radius: 16px;
+            margin-top: 60px;
+            padding: 32px 24px;
+            max-width: 600px;
+            width: 90%;
+            box-shadow: 0 4px 24px rgba(0,0,0,0.3);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        h1 {
+            font-family: 'Sombrero Filled Hollow', Arial, sans-serif;
+            font-size: 2.5rem;
+            margin-bottom: 16px;
+            letter-spacing: 2px;
+        }
+        p, a {
+            font-size: 20px;
+            color: #fff;
+            line-height: 1.6;
+        }
+        a {
+            color: #ff5722;
+            text-decoration: none;
+            transition: color 0.2s;
+            word-break: break-all;
+        }
+        a:hover {
+            color: #fff;
+            text-decoration: underline;
+        }
+        .back-btn {
+            margin-top: 24px;
+            padding: 10px 24px;
+            font-size: 1.1rem;
+            border: none;
+            border-radius: 8px;
+            background: #ff5722;
+            color: white;
+            font-family: 'ARTESANIA Display', Arial, sans-serif;
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+            transition: background 0.2s;
+        }
+        .back-btn:hover {
+            background: #e64a19;
+        }
+        @media (max-width: 600px) {
+            .impressum-container {
+                padding: 18px 6px;
+                margin-top: 24px;
+            }
+            h1 {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
 </head>
-
-<body>   
-
-<h1>Impressum</h1><p>Angaben gemäß § 5 DDG</p><p>Daniel Grabowski<br> 
-<br> 
-Am Mühlenweg 3C<br> 
-14669 Ketzin <br> 
-</p><p> <strong>Vertreten durch: </strong><br>
-Daniel Grabowski<br>
-</p><p><strong>Kontakt:</strong> <br>
-Telefon: 0173-7941017<br>
-E-Mail: <a href='mailto:rasen_karotte27@icloud.com'>grabowski.daniel@gmail.com</a></br></p><br> 
-Erstellt mit <a href="https://impressum-generator.de" rel="dofollow">Impressum-Generator.de</a>, dem Tool für Impressum und <a href="https://impressum-generator.de/datenschutz-generator" rel="dofollow">Datenschutz-Erklärung</a>. Nach einer Vorlage der <a href="https://www.kanzlei-hasselbach.de/" rel="dofollow">Kanzlei Hasselbach</a>.
-
+<body>
+    <div class="impressum-container">
+        <h1>Impressum</h1>
+        <p><strong>Angaben gemäß § 5 DDG</strong></p>
+        <p>
+            Daniel Grabowski<br>
+            Am Mühlenweg 3C<br>
+            14669 Ketzin
+        </p>
+        <p>
+            <strong>Vertreten durch:</strong><br>
+            Daniel Grabowski
+        </p>
+        <p>
+            <strong>Kontakt:</strong><br>
+            Telefon: 0173-7941017<br>
+            E-Mail: <a href="mailto: rasen_karotte27@icloud.com">rasen_karotte27@icloud.com</a>
+        </p>
+        <p style="font-size:20px; color:#bbb;">
+            Erstellt mit <a href="https://impressum-generator.de" rel="dofollow" target="_blank">Impressum-Generator.de</a>, dem Tool für Impressum und <br>
+            <a href="https://impressum-generator.de/datenschutz-generator" rel="dofollow" target="_blank">Datenschutz-Erklärung</a>.<br>
+            Nach einer Vorlage der <a href="https://www.kanzlei-hasselbach.de/" rel="dofollow" target="_blank">Kanzlei Hasselbach</a>.
+        </p>
+        <button class="back-btn" onclick="window.location.href='index.html'">Zurück zum Spiel</button>
+    </div>
 </body>
 </html>
