@@ -171,9 +171,13 @@ class Character extends MovableObject {
                 this.snorSound.volume = 0.5; // Lautstärke (0.0 bis 1.0)
 
             }else if (inactivityTimer >= 2000) { // Nach 5 Sekunden Inaktivität
-                this.playAnimation(this.IMAGES_IDLE); // Play idle animation                
+                this.playAnimation(this.IMAGES_IDLE);             
                 this.idleSound.play(); // Play idle sound
                 this.idleSound.volume = 0.5; // Lautstärke (0.0 bis 1.0)
+            }
+
+            else {
+                this.playAnimation(this.IMAGES_IDLE); // Play idle animation                
             }
             
         }, 100); // Update animation every 50ms

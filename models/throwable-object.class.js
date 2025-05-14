@@ -91,8 +91,7 @@ class ThrowableObject extends MovableObject {
         // Prüfe nur, wenn die Flasche sichtbar ist
         if (this.x >= 0 && this.x <= 720 && this.y >= 0 && this.y <= 390) {
             enemies.forEach((enemy) => {
-                if (!this.hasCollided && this.isColliding(enemy)) {
-                    console.log('Flasche trifft Gegner:', enemy);
+                if (!this.hasCollided && this.isColliding(enemy)) {                    
     
                     // Markiere die Flasche als getroffen
                     this.hasCollided = true;

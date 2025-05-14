@@ -17,6 +17,7 @@ soundCoinCollect = new Audio('./audio/coin_collect.mp3')
 gameEnded = false; // Flag, um das Spielende zu verfolgen
 intervalId;
 allAudioObjects = [];
+lastBottleThrow = 0;
 
 constructor(canvas, keyboard) {
 
@@ -94,30 +95,26 @@ initAudioObjects() {
     }
 
     checkThrowObjects() {
-        // Überprüfen, ob die D-Taste gedrückt ist
-        if (this.keyboard.D) {
-            // Überprüfen, ob Flaschen verfügbar sind
-            if (this.statusBarBottles.percentage > 0) {
-                let bottleX;
-                let bottleY = this.character.y + 100;
-    
-                // Überprüfen, ob der Charakter nach links schaut
-                if (this.character.otherDirection) {
-                    bottleX = this.character.x - 100; // Position links vom Charakter
-                } else {
-                    bottleX = this.character.x + 100; // Position rechts vom Charakter
-                }
-    
-                // Flasche erstellen und werfen
-            let bottle = new ThrowableObject(bottleX, bottleY);
-            bottle.world = this; // Setze die Referenz zur Welt
-            bottle.soundBrokenBottle.muted = this.backgroundMusic.muted;
-            bottle.throw(this.character.otherDirection); // Übergibt die Laufrichtung
-            this.throwableObjects.push(bottle);
-    
-                // Flaschen-Leiste aktualisieren
-                this.updateBottleStatusBarOnThrow();
+        const now = Date.now();
+        // Prüfe, ob mindestens 1 Sekunde vergangen ist
+        if (this.keyboard.D && this.statusBarBottles.percentage > 0 && (now - this.lastBottleThrow > 1500)) {
+            let bottleX;
+            let bottleY = this.character.y + 100;
+
+            if (this.character.otherDirection) {
+                bottleX = this.character.x - 100;
+            } else {
+                bottleX = this.character.x + 100;
             }
+
+            let bottle = new ThrowableObject(bottleX, bottleY);
+            bottle.world = this;
+            bottle.soundBrokenBottle.muted = this.backgroundMusic.muted;
+            bottle.throw(this.character.otherDirection);
+            this.throwableObjects.push(bottle);
+
+            this.updateBottleStatusBarOnThrow();
+            this.lastBottleThrow = now; // Zeitstempel aktualisieren
         }
     }
 
