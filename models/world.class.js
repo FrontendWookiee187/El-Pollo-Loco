@@ -87,7 +87,7 @@ initAudioObjects() {
                     this.showEndScreen(true);
                     }, 3500);}
             }
-        }, 200);
+        }, 1000 / 60);
     }
 
     stopGameLoop() {
