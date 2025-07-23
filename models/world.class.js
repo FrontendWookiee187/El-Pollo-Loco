@@ -56,7 +56,7 @@ initAudioObjects() {
 
     this.level.enemies.forEach(enemy => {
         if (enemy instanceof Endboss) {
-            this.allAudioObjects.push(enemy.bossSound, enemy.bossDeadSound);
+            this.allAudioObjects.push(enemy.bossSound, enemy.bossDeadSound, enemy.winnerSound);
         }
     });
 
@@ -236,8 +236,8 @@ initAudioObjects() {
        }
        
        // Zweite Schleife: Nur Schadenskollisionen, wenn kein Kopfsprung stattgefunden hat
-       // UND der Charakter nicht unverwundbar ist
-       if (!successfulJumpAttack && !this.character.isInvulnerableAfterJumpAttack()) {
+       // UND der Charakter nicht unverwundbar ist (weder nach Kopfsprung noch nach normalem Treffer)
+       if (!successfulJumpAttack && !this.character.isInvulnerableAfterJumpAttack() && !this.character.isHurt()) {
            this.level.enemies.forEach(enemy => {
                if (this.character.isColliding(enemy)) {
                    this.character.hit();
@@ -393,7 +393,7 @@ toggleMute() {
 
     this.level.enemies.forEach(enemy => {
         if (enemy instanceof Endboss) {
-            this.allAudioObjects.push(enemy.bossSound, enemy.bossDeadSound);
+            this.allAudioObjects.push(enemy.bossSound, enemy.bossDeadSound, enemy.winnerSound);
         }
     });
 
