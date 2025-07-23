@@ -202,14 +202,15 @@ initAudioObjects() {
                if ((enemy instanceof Chicken || enemy instanceof ChickenSmall) &&
                    this.character.speedY < -5 && // Der Charakter bewegt sich nach unten
                    this.character.y + this.character.height - this.character.offset.bottom >= enemy.y + enemy.offset.top && // Untere Kante des Charakters trifft obere Kante des Huhns
-                   this.character.y + this.character.height - this.character.offset.bottom <= enemy.y + enemy.offset.top + 57 // Toleranz für die Erkennung
+                   this.character.y + this.character.height - this.character.offset.bottom <= enemy.y + enemy.offset.top + 57 && // Toleranz für die Erkennung
+                   !this.character.isInvulnerableAfterJumpAttack() // Verhindere aufeinanderfolgende Kopfsprünge
                ) {
                    console.log('Charakter trifft das Huhn von oben:', enemy);
                    enemy.isKO = true;
                    enemy.speed = 0;
        
                    // Vertikale Geschwindigkeit des Charakters zurücksetzen
-                   this.character.speedY = 15; // Charakter springt leicht zurück nach oben
+                   this.character.speedY = 8; // Charakter springt weniger stark zurück nach oben (reduziert von 15)
        
                    // Setze Kopfsprung-Unverwundbarkeit
                    this.character.setJumpAttackInvulnerability();

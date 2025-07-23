@@ -90,7 +90,7 @@ isHurt() {
 isInvulnerableAfterJumpAttack() {
     let timepassed = new Date().getTime() - this.lastJumpAttack; // Zeit seit letztem Kopfsprung
     timepassed = timepassed / 1000; // In Sekunden umrechnen
-    return timepassed < 0.5; // 0.5 Sekunden Unverwundbarkeit nach Kopfsprung
+    return timepassed < 0.2; // 0.2 Sekunden Unverwundbarkeit nach Kopfsprung (reduziert von 0.5)
 }
 
 setJumpAttackInvulnerability() {

@@ -20,7 +20,7 @@ class ChickenSmall extends MovableObject{
         this.loadImages(this.IMAGES_WALKING_SMALL);
         this.loadImages(this.IMAGES_KO);
         
-        this.x = 300 + Math.random() * 500;
+        this.x = 300 + Math.random() * 800; // Vergrößerter Bereich für mehr Abstand (von 500 auf 800)
         this.speed = 0.15 + Math.random() * 0.5;
 
         // Offsets für präzise Kollisionserkennung
