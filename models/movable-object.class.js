@@ -9,6 +9,7 @@ acceleration = 2.5;
 energy = 100;
 
 lastHit = 0;
+lastJumpAttack = 0; // Zeitpunkt des letzten erfolgreichen Kopfsprungs
 
 rX;
 rY;
@@ -84,6 +85,16 @@ isHurt() {
     timepassed = timepassed / 1000; // Convert to seconds
     return timepassed < 1; 
 
+}
+
+isInvulnerableAfterJumpAttack() {
+    let timepassed = new Date().getTime() - this.lastJumpAttack; // Zeit seit letztem Kopfsprung
+    timepassed = timepassed / 1000; // In Sekunden umrechnen
+    return timepassed < 0.5; // 0.5 Sekunden Unverwundbarkeit nach Kopfsprung
+}
+
+setJumpAttackInvulnerability() {
+    this.lastJumpAttack = new Date().getTime(); // Setze den Zeitpunkt des Kopfsprungs
 }
 
 isDead() {

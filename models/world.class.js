@@ -191,36 +191,61 @@ initAudioObjects() {
         });
     
        // Kollision mit Gegnern
-this.level.enemies.forEach(enemy => {
-    if (this.character.isColliding(enemy)) {
-        // Prüfe, ob der Charakter auf ein Huhn springt
-        if ((enemy instanceof Chicken || enemy instanceof ChickenSmall) &&
-            this.character.speedY < -5 && // Der Charakter bewegt sich nach unten
-            this.character.y + this.character.height - this.character.offset.bottom >= enemy.y + enemy.offset.top && // Untere Kante des Charakters trifft obere Kante des Huhns
-            this.character.y + this.character.height - this.character.offset.bottom <= enemy.y + enemy.offset.top + 57 // Toleranz für die Erkennung
-        ) {
-            console.log('Charakter trifft das Huhn von oben:', enemy);
-            enemy.isKO = true;
-            enemy.speed = 0;
-
-            // Vertikale Geschwindigkeit des Charakters zurücksetzen
-            this.character.speedY = 15; // Charakter springt leicht zurück nach oben
-
-            // Huhn-K.O.-Geräusch abspielen
-            this.chickenKOSound.play();
-            this.chickenKOSound.volume = 0.1;
-
-            // Entferne das Huhn nach kurzer Verzögerung
-            setTimeout(() => {                
-                this.level.enemies.splice(this.level.enemies.indexOf(enemy), 1);
-            }, 1000);
-            return; // Beende die Verarbeitung für diese Kollision
-        }
-        // Standard-Kollisionslogik für Gegner
-        this.character.hit();
-        this.statusBar.setPercentage(this.character.energy); // Aktualisiere die Lebensanzeige
-    }
-});
+       // Erst prüfen, ob ein erfolgreicher Kopfsprung stattfindet
+       let successfulJumpAttack = false;
+       let enemyToRemove = null;
+       
+       // Erste Schleife: Nur nach Kopfsprüngen suchen
+       this.level.enemies.forEach(enemy => {
+           if (this.character.isColliding(enemy) && !successfulJumpAttack) {
+               // Prüfe, ob der Charakter auf ein Huhn springt
+               if ((enemy instanceof Chicken || enemy instanceof ChickenSmall) &&
+                   this.character.speedY < -5 && // Der Charakter bewegt sich nach unten
+                   this.character.y + this.character.height - this.character.offset.bottom >= enemy.y + enemy.offset.top && // Untere Kante des Charakters trifft obere Kante des Huhns
+                   this.character.y + this.character.height - this.character.offset.bottom <= enemy.y + enemy.offset.top + 57 // Toleranz für die Erkennung
+               ) {
+                   console.log('Charakter trifft das Huhn von oben:', enemy);
+                   enemy.isKO = true;
+                   enemy.speed = 0;
+       
+                   // Vertikale Geschwindigkeit des Charakters zurücksetzen
+                   this.character.speedY = 15; // Charakter springt leicht zurück nach oben
+       
+                   // Setze Kopfsprung-Unverwundbarkeit
+                   this.character.setJumpAttackInvulnerability();
+       
+                   // Huhn-K.O.-Geräusch abspielen
+                   this.chickenKOSound.play();
+                   this.chickenKOSound.volume = 0.1;
+       
+                   // Merke das zu entfernende Huhn
+                   enemyToRemove = enemy;
+                   successfulJumpAttack = true; // Setze das Flag für erfolgreichen Kopfsprung
+               }
+           }
+       });
+       
+       // Entferne das besiegte Huhn nach kurzer Verzögerung
+       if (enemyToRemove) {
+           setTimeout(() => {                
+               const index = this.level.enemies.indexOf(enemyToRemove);
+               if (index > -1) {
+                   this.level.enemies.splice(index, 1);
+               }
+           }, 1000);
+       }
+       
+       // Zweite Schleife: Nur Schadenskollisionen, wenn kein Kopfsprung stattgefunden hat
+       // UND der Charakter nicht unverwundbar ist
+       if (!successfulJumpAttack && !this.character.isInvulnerableAfterJumpAttack()) {
+           this.level.enemies.forEach(enemy => {
+               if (this.character.isColliding(enemy)) {
+                   this.character.hit();
+                   this.statusBar.setPercentage(this.character.energy); // Aktualisiere die Lebensanzeige
+                   return; // Nur einmal Schaden pro Frame
+               }
+           });
+       }
     }
 
     draw() {
