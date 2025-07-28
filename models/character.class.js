@@ -113,6 +113,7 @@ class Character extends MovableObject {
                 this.otherDirection = false; // Set otherDirection to false when moving right
                 inactivityTimer = 0; // Timer zurücksetzen bei Bewegung
                 this.idleSound.pause(); // Stop Idle sounds
+                this.snorSound.pause(); // Stop snoring sound
                 this.stepSound.play(); // Play step sound
                 this.stepSound.volume = 0.5; // Lautstärke (0.0 bis 1.0)    
             }
@@ -122,6 +123,7 @@ class Character extends MovableObject {
                 this.otherDirection = true; // Set otherDirection to true when moving left
                 inactivityTimer = 0; // Timer zurücksetzen bei Bewegung
                 this.idleSound.pause(); // Stop Idle sounds
+                this.snorSound.pause(); // Stop snoring sound
                 this.stepSound.play(); // Play step sound
                 this.stepSound.volume = 0.5; // Lautstärke (0.0 bis 1.0)
             }
