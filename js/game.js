@@ -335,8 +335,27 @@ document.addEventListener('DOMContentLoaded', () => {
     document.addEventListener('fullscreenchange', () => {
         if (document.fullscreenElement) {
             fullscreenButton.textContent = '⤫'; 
+            document.body.classList.add('fullscreen-active'); // CSS-Klasse hinzufügen
         } else {
             fullscreenButton.textContent = '⛶'; 
+            document.body.classList.remove('fullscreen-active'); // CSS-Klasse entfernen
+        }
+    });
+
+    // Für verschiedene Browser-Präfixe
+    document.addEventListener('webkitfullscreenchange', () => {
+        if (document.webkitFullscreenElement) {
+            document.body.classList.add('fullscreen-active');
+        } else {
+            document.body.classList.remove('fullscreen-active');
+        }
+    });
+
+    document.addEventListener('msfullscreenchange', () => {
+        if (document.msFullscreenElement) {
+            document.body.classList.add('fullscreen-active');
+        } else {
+            document.body.classList.remove('fullscreen-active');
         }
     });
 });
@@ -371,4 +390,6 @@ function resizeCanvasForFullscreen() {
 }
 
 document.addEventListener('fullscreenchange', resizeCanvasForFullscreen);
+document.addEventListener('webkitfullscreenchange', resizeCanvasForFullscreen);
+document.addEventListener('msfullscreenchange', resizeCanvasForFullscreen);
 window.addEventListener('resize', resizeCanvasForFullscreen);

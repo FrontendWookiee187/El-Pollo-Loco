@@ -72,6 +72,11 @@
     z-index: 9999 !important;
 }
 
+/* CSS-Klasse für den Fullscreen-Zustand */
+body.fullscreen-active .end-screen {
+    z-index: 10000 !important;
+}
+
 #gameContainer:fullscreen canvas,
 #gameContainer:-webkit-full-screen canvas,
 #gameContainer:-ms-fullscreen canvas {
