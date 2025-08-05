@@ -193,46 +193,54 @@ initAudioObjects() {
        // Kollision mit Gegnern
        // Erst prüfen, ob ein erfolgreicher Kopfsprung stattfindet
        let successfulJumpAttack = false;
-       let enemyToRemove = null;
+       let enemiesToRemove = [];
        
-       // Erste Schleife: Nur nach Kopfsprüngen suchen
+       // Erste Schleife: Alle Kopfsprünge sammeln
        this.level.enemies.forEach(enemy => {
-           if (this.character.isColliding(enemy) && !successfulJumpAttack) {
+           if (this.character.isColliding(enemy)) {
                // Prüfe, ob der Charakter auf ein Huhn springt
                if ((enemy instanceof Chicken || enemy instanceof ChickenSmall) &&
                    this.character.speedY < -5 && // Der Charakter bewegt sich nach unten
                    this.character.y + this.character.height - this.character.offset.bottom >= enemy.y + enemy.offset.top && // Untere Kante des Charakters trifft obere Kante des Huhns
-                   this.character.y + this.character.height - this.character.offset.bottom <= enemy.y + enemy.offset.top + 57 && // Toleranz für die Erkennung
+                   this.character.y + this.character.height - this.character.offset.bottom <= enemy.y + enemy.offset.top + 30 && // Reduzierte Toleranz für die Erkennung
+                   // Zusätzliche horizontale Überschneidungsprüfung für präziseren Sprung-Angriff
+                   this.character.x + this.character.offset.left < enemy.x + enemy.width - enemy.offset.right &&
+                   this.character.x + this.character.width - this.character.offset.right > enemy.x + enemy.offset.left &&
                    !this.character.isInvulnerableAfterJumpAttack() // Verhindere aufeinanderfolgende Kopfsprünge
                ) {
                    console.log('Charakter trifft das Huhn von oben:', enemy);
                    enemy.isKO = true;
                    enemy.speed = 0;
        
-                   // Vertikale Geschwindigkeit des Charakters zurücksetzen
-                   this.character.speedY = 8; // Charakter springt weniger stark zurück nach oben (reduziert von 15)
-       
-                   // Setze Kopfsprung-Unverwundbarkeit
-                   this.character.setJumpAttackInvulnerability();
-       
                    // Huhn-K.O.-Geräusch abspielen
                    this.chickenKOSound.play();
                    this.chickenKOSound.volume = 0.1;
        
                    // Merke das zu entfernende Huhn
-                   enemyToRemove = enemy;
+                   enemiesToRemove.push(enemy);
                    successfulJumpAttack = true; // Setze das Flag für erfolgreichen Kopfsprung
                }
            }
        });
        
-       // Entferne das besiegte Huhn nach kurzer Verzögerung
-       if (enemyToRemove) {
-           setTimeout(() => {                
-               const index = this.level.enemies.indexOf(enemyToRemove);
-               if (index > -1) {
-                   this.level.enemies.splice(index, 1);
-               }
+       // Wenn mindestens ein Kopfsprung erfolgreich war, setze Charakter-Eigenschaften
+       if (successfulJumpAttack) {
+           // Vertikale Geschwindigkeit des Charakters zurücksetzen
+           this.character.speedY = 8; // Charakter springt weniger stark zurück nach oben
+           
+           // Setze Kopfsprung-Unverwundbarkeit
+           this.character.setJumpAttackInvulnerability();
+       }
+       
+       // Entferne alle besiegten Hühner nach kurzer Verzögerung
+       if (enemiesToRemove.length > 0) {
+           setTimeout(() => {
+               enemiesToRemove.forEach(enemyToRemove => {
+                   const index = this.level.enemies.indexOf(enemyToRemove);
+                   if (index > -1) {
+                       this.level.enemies.splice(index, 1);
+                   }
+               });
            }, 1000);
        }
        
