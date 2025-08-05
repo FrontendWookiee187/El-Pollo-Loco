@@ -212,33 +212,71 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // Touch button event listeners
-    document.getElementById('leftButton').addEventListener('touchstart', () => {
+    document.getElementById('leftButton').addEventListener('touchstart', (e) => {
+        e.preventDefault();
         keyboard.LEFT = true;
     });
-    document.getElementById('leftButton').addEventListener('touchend', () => {
+    document.getElementById('leftButton').addEventListener('touchend', (e) => {
+        e.preventDefault();
         keyboard.LEFT = false;
     });
+    document.getElementById('leftButton').addEventListener('contextmenu', (e) => {
+        e.preventDefault();
+    });
 
-    document.getElementById('rightButton').addEventListener('touchstart', () => {
+    document.getElementById('rightButton').addEventListener('touchstart', (e) => {
+        e.preventDefault();
         keyboard.RIGHT = true;
     });
-    document.getElementById('rightButton').addEventListener('touchend', () => {
+    document.getElementById('rightButton').addEventListener('touchend', (e) => {
+        e.preventDefault();
         keyboard.RIGHT = false;
     });
+    document.getElementById('rightButton').addEventListener('contextmenu', (e) => {
+        e.preventDefault();
+    });
 
-    document.getElementById('jumpButton').addEventListener('touchstart', () => {
+    document.getElementById('jumpButton').addEventListener('touchstart', (e) => {
+        e.preventDefault();
         keyboard.SPACE = true;
     });
-    document.getElementById('jumpButton').addEventListener('touchend', () => {
+    document.getElementById('jumpButton').addEventListener('touchend', (e) => {
+        e.preventDefault();
         keyboard.SPACE = false;
     });
+    document.getElementById('jumpButton').addEventListener('contextmenu', (e) => {
+        e.preventDefault();
+    });
 
-    document.getElementById('throwButton').addEventListener('touchstart', () => {
+    document.getElementById('throwButton').addEventListener('touchstart', (e) => {
+        e.preventDefault();
         keyboard.D = true;
     });
-    document.getElementById('throwButton').addEventListener('touchend', () => {
+    document.getElementById('throwButton').addEventListener('touchend', (e) => {
+        e.preventDefault();
         keyboard.D = false;
     });
+    document.getElementById('throwButton').addEventListener('contextmenu', (e) => {
+        e.preventDefault();
+    });
+
+    // Globaler Event-Listener für alle Touch-Controls
+    if (touchControls) {
+        // Verhindert Kontextmenü für den gesamten Touch-Control-Container
+        touchControls.addEventListener('contextmenu', (e) => {
+            e.preventDefault();
+        });
+        
+        // Verhindert Textauswahl
+        touchControls.addEventListener('selectstart', (e) => {
+            e.preventDefault();
+        });
+        
+        // Verhindert Drag & Drop
+        touchControls.addEventListener('dragstart', (e) => {
+            e.preventDefault();
+        });
+    }
 });
 
 /**

@@ -34,6 +34,15 @@
         gap: 10px !important;
         z-index: 1000 !important;
         /* display wird von JavaScript gesteuert */
+        
+        /* Verhindert Kontextmenü bei langen Berührungen */
+        -webkit-touch-callout: none !important;
+        -webkit-user-select: none !important;
+        -khtml-user-select: none !important;
+        -moz-user-select: none !important;
+        -ms-user-select: none !important;
+        user-select: none !important;
+        touch-action: manipulation !important;
     }
     .touch-controls button {
         width: 60px !important;
@@ -44,6 +53,17 @@
         background-color: #ff5722 !important;
         color: white !important;
         cursor: pointer !important;
+        
+        /* Verhindert Kontextmenü und andere Touch-Probleme */
+        -webkit-touch-callout: none !important;
+        -webkit-user-select: none !important;
+        -khtml-user-select: none !important;
+        -moz-user-select: none !important;
+        -ms-user-select: none !important;
+        user-select: none !important;
+        touch-action: manipulation !important;
+        -webkit-tap-highlight-color: transparent !important;
+        outline: none !important;
     }
     .touch-controls button:active {
         background-color: #e64a19 !important;
