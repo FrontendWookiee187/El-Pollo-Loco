@@ -5,6 +5,11 @@
         margin: 0 auto;
         box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.1);
     }
+    
+    /* Mute-Button näher an das Canvas in 4K-Ansicht */
+    .mute-btn {
+        right: calc(70% - 960px + 24px); /* Positioniert den Button relativ zum zentrierten 1920px Container */
+    }
 }
 
 @media (max-width: 1024px) {
