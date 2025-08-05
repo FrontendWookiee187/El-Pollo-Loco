@@ -312,7 +312,7 @@ initAudioObjects() {
         }
 
         mo.draw(this.ctx);
-        mo.drawFrame(this.ctx);        
+        // mo.drawFrame(this.ctx); // Debug-Rahmen auskommentiert       
 
         if (mo.otherDirection) {
             this.flipImageBack(mo); 
