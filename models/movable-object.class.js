@@ -63,6 +63,47 @@ isColliding(mo) {
         return colliding;
         }
 
+// Präzisere Kollisionserkennung für das Sammeln von Objekten (Flaschen und Münzen)
+// Verwendet kleinere Kollisionsbereiche um sicherzustellen, dass der Körper des Charakters die Objekte berührt
+isCollidingForCollecting(mo) {
+    // Verwende kleinere Offsets für den Charakter beim Sammeln
+    const characterCollectOffset = {
+        top: 30,    // Größerer Abstand von oben
+        bottom: 30, // Größerer Abstand von unten  
+        left: 35,   // Größerer Abstand von links
+        right: 35   // Größerer Abstand von rechts
+    };
+    
+    // Verwende unterschiedliche Kollisionsbereiche je nach Objekttyp
+    let objectCollectOffset;
+    
+    // Prüfe ob es sich um eine Münze handelt (größere Objekte brauchen mehr Offset)
+    if (mo.constructor.name === 'Coin' || mo.height >= 150) {
+        // Für Münzen: Noch kleinere Kollisionsbereiche (40% statt 30%)
+        objectCollectOffset = {
+            top: mo.height * 0.4,      // 40% vom oberen Rand
+            bottom: mo.height * 0.4,   // 40% vom unteren Rand
+            left: mo.width * 0.4,      // 40% vom linken Rand
+            right: mo.width * 0.4      // 40% vom rechten Rand
+        };
+    } else {
+        // Für Flaschen: Weniger restriktiv (30%)
+        objectCollectOffset = {
+            top: mo.height * 0.3,      // 30% vom oberen Rand
+            bottom: mo.height * 0.3,   // 30% vom unteren Rand
+            left: mo.width * 0.3,      // 30% vom linken Rand
+            right: mo.width * 0.3      // 30% vom rechten Rand
+        };
+    }
+    
+    let colliding = this.x + characterCollectOffset.left < mo.x + mo.width - objectCollectOffset.right &&
+           this.x + this.width - characterCollectOffset.right > mo.x + objectCollectOffset.left &&
+           this.y + characterCollectOffset.top < mo.y + mo.height - objectCollectOffset.bottom &&
+           this.y + this.height - characterCollectOffset.bottom > mo.y + objectCollectOffset.top;       
+    
+    return colliding;
+}
+
         hit(enemyHitFromAbove = false) {
             // Wenn der Charakter ein Huhn von oben trifft, erleidet er keinen Schaden
             if (enemyHitFromAbove) {

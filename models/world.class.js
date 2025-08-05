@@ -166,7 +166,7 @@ initAudioObjects() {
     
         // Kollision mit Flaschen (zum Aufnehmen)
         this.level.bottles.forEach((bottle, index) => {
-            if (this.character.isColliding(bottle)) {
+            if (this.character.isCollidingForCollecting(bottle)) {
                 if (this.statusBarBottles.percentage < 100) { // Nur aufnehmen, wenn die Leiste nicht voll ist
                     this.level.bottles.splice(index, 1); // Entferne die Flasche aus dem Level
                     this.updateBottleStatusBar(); // Aktualisiere die Flaschen-Leiste
@@ -179,7 +179,7 @@ initAudioObjects() {
     
         // Kollision mit Coins
         this.level.coins.forEach((coin, index) => {
-            if (this.character.isColliding(coin)) {
+            if (this.character.isCollidingForCollecting(coin)) {
                 if (this.statusBarCoins.percentage < 100) { // Nur aufnehmen, wenn die Leiste nicht voll ist
                     this.level.coins.splice(index, 1); // Entferne die Münze aus dem Level
                     this.updateCoinStatusBar(); // Aktualisiere die Münzen-Leiste
