@@ -300,6 +300,48 @@ document.addEventListener('DOMContentLoaded', () => {
     const gameContainer = document.getElementById('gameContainer');
 
     /**
+     * Checks if the device is a mobile device (smartphone/tablet)
+     * @returns {boolean}
+     */
+    function isMobileDevice() {
+        return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) 
+               || window.innerWidth <= 768; // Smartphones meist unter 768px
+    }
+
+    /**
+     * Automatically enters fullscreen mode for mobile devices
+     * @returns {void}
+     */
+    function autoFullscreenForMobile() {
+        if (isMobileDevice() && !document.fullscreenElement) {
+            const startScreen = document.getElementById('startScreen');
+            const endScreen = document.getElementById('endScreen');
+            
+            // Bestimme welches Element in den Fullscreen soll
+            const startScreenVisible = startScreen && startScreen.style.display !== 'none';
+            const endScreenVisible = endScreen && endScreen.style.display !== 'none';
+            
+            let elem = gameContainer;
+            if (startScreenVisible) {
+                elem = startScreen;
+            } else if (endScreenVisible) {
+                elem = endScreen;
+            }
+            
+            // Fullscreen aktivieren
+            if (elem.requestFullscreen) {
+                elem.requestFullscreen().catch(() => {
+                    console.log('Fullscreen konnte nicht automatisch aktiviert werden');
+                });
+            } else if (elem.webkitRequestFullscreen) {
+                elem.webkitRequestFullscreen();
+            } else if (elem.msRequestFullscreen) {
+                elem.msRequestFullscreen();
+            }
+        }
+    }
+
+    /**
      * Shows the fullscreen button on mobile devices.
      * @returns {void}
      */
@@ -314,14 +356,21 @@ document.addEventListener('DOMContentLoaded', () => {
     // Hide by default
     fullscreenButton.style.display = 'none';
 
-    // Show after game start
+    // Show after game start and auto-fullscreen for mobile
     document.getElementById('startButton').addEventListener('click', () => {
         showFullscreenButtonIfMobile();
+        // Kleine Verzögerung für bessere UX
+        setTimeout(() => {
+            autoFullscreenForMobile();
+        }, 100);
     });
 
-    // Show after restart
+    // Show after restart and auto-fullscreen for mobile
     document.getElementById('restartButton').addEventListener('click', () => {
         showFullscreenButtonIfMobile();
+        setTimeout(() => {
+            autoFullscreenForMobile();
+        }, 100);
     });
 
     // Hide when returning to start
@@ -331,6 +380,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Adjust on window resize
     window.addEventListener('resize', showFullscreenButtonIfMobile);
+
+    // Auto-Fullscreen bei Orientierungsänderung auf mobilen Geräten
+    window.addEventListener('orientationchange', () => {
+        if (isMobileDevice()) {
+            setTimeout(() => {
+                autoFullscreenForMobile();
+            }, 500); // Verzögerung für Orientierungsänderung
+        }
+    });
 
     // Fullscreen-Button toggelt Fullscreen-Modus
     fullscreenButton.addEventListener('click', () => {

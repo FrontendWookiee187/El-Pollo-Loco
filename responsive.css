@@ -100,7 +100,7 @@
     flex-direction: column !important;
     width: 100vw !important;
     height: 100vh !important;
-    background: #ff0000 !important; /* TEST: Rot */
+    background: #000 !important;
     position: fixed !important;
     top: 0 !important;
     left: 0 !important;
@@ -115,12 +115,63 @@ body.fullscreen-active .end-screen {
     z-index: 10000 !important;
 }
 
+/* Canvas-Optimierung für Fullscreen auf mobilen Geräten */
 #gameContainer:fullscreen canvas,
 #gameContainer:-webkit-full-screen canvas,
 #gameContainer:-ms-fullscreen canvas {
-    width: auto !important;
-    height: auto !important;
+    width: 100vw !important;
+    height: 100vh !important;
     max-width: none !important;
     max-height: none !important;
-    display: block;
+    object-fit: cover !important; /* Streckt das Spiel, um den ganzen Bildschirm auszufüllen */
+    display: block !important;
+}
+
+/* Spezielle Optimierung für Smartphones (unter 768px) */
+@media (max-width: 768px) {
+    #gameContainer:fullscreen canvas,
+    #gameContainer:-webkit-full-screen canvas,
+    #gameContainer:-ms-fullscreen canvas {
+        width: 100vw !important;
+        height: 100vh !important;
+        object-fit: fill !important; /* Noch aggressiveres Strecken für Smartphones */
+    }
+    
+    /* Touch Controls im Fullscreen */
+    body.fullscreen-active .touch-controls {
+        position: fixed !important;
+        bottom: 20px !important;
+        left: 50% !important;
+        transform: translateX(-50%) !important;
+        z-index: 10001 !important;
+    }
+    
+    /* Fullscreen Button im Fullscreen-Modus ausblenden */
+    body.fullscreen-active .fullscreen-btn {
+        display: none !important;
+    }
+}
+
+/* Fullscreen-Optimierung für Start- und End-Screens */
+#startScreen:fullscreen,
+#startScreen:-webkit-full-screen,
+#startScreen:-ms-fullscreen,
+#endScreen:fullscreen,
+#endScreen:-webkit-full-screen,
+#endScreen:-ms-fullscreen {
+    width: 100vw !important;
+    height: 100vh !important;
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: center !important;
+    align-items: center !important;
+    background-size: cover !important;
+    background-position: center !important;
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    margin: 0 !important;
+    padding: 20px !important;
+    box-sizing: border-box !important;
+    z-index: 9999 !important;
 }
