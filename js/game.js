@@ -248,7 +248,7 @@ document.addEventListener('DOMContentLoaded', () => {
 function hindViewTouchButtons(){
     let touchControls = document.getElementById('touchControls');
 
-if (window.innerWidth <= 1024){
+if (window.innerWidth <= 1400){
     touchControls.style.display = 'flex'; // Zeige die Touch-Buttons
 }
 };

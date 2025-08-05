@@ -12,7 +12,7 @@
     }
 }
 
-@media (max-width: 1024px) {
+@media (max-width: 1400px) {
     .main-container {
         max-width: 100%;
     }
@@ -23,27 +23,30 @@
     h1 { font-size: 32px; }
     .description { font-size: 16px; flex-direction: column; gap: 8px; }
     .status-bar { top: 20px; }
+    
+    /* Touch Controls für alle Geräte bis 1400px - JavaScript kontrolliert die Sichtbarkeit */
     .touch-controls {
-        position: fixed;
-        bottom: 20px;
-        width: 100%;
-        display: flex;
-        justify-content: center;
-        gap: 10px;
-        z-index: 1000;
+        position: fixed !important;
+        bottom: 20px !important;
+        left: 50% !important;
+        transform: translateX(-50%) !important;
+        width: auto !important;
+        gap: 10px !important;
+        z-index: 1000 !important;
+        /* display wird von JavaScript gesteuert */
     }
     .touch-controls button {
-        width: 60px;
-        height: 60px;
-        font-size: 24px;
-        border: none;
-        border-radius: 50%;
-        background-color: #ff5722;
-        color: white;
-        cursor: pointer;
+        width: 60px !important;
+        height: 60px !important;
+        font-size: 24px !important;
+        border: none !important;
+        border-radius: 50% !important;
+        background-color: #ff5722 !important;
+        color: white !important;
+        cursor: pointer !important;
     }
     .touch-controls button:active {
-        background-color: #e64a19;
+        background-color: #e64a19 !important;
     }
     .fullscreen-btn {
         position: fixed;
@@ -57,12 +60,10 @@
         background: #ff5722;
         color: white;
         box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-        display: none;
+        display: block;
     }
-    .fullscreen-btn { display: block; }
 
     .gameContainer{
-
         display: flex;
         justify-content: center;
     }
