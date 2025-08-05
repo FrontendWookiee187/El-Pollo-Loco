@@ -27,17 +27,18 @@ class ThrowableObject extends MovableObject {
         this.loadImages(this.IMAGES_SPLASH);
         this.x = x;
         this.y = y;
-        this.height = 50;
-        this.width = 50;
+        this.height = 60; // Flasche etwas größer für bessere Sichtbarkeit (von 50 auf 60)
+        this.width = 60; // Flasche etwas größer für bessere Sichtbarkeit (von 50 auf 60)
+        this.speedX = 6; // Horizontale Wurfgeschwindigkeit
         this.zIndex = 100; // Setze den Z-Index für die Flasche
         this.throw();
 
-        // Offsets für präzise Kollisionserkennung
+        // Offsets für präzise Kollisionserkennung (angepasst an neue Größe)
     this.offset = {
-        top: 10,
-        bottom: 10,
-        left: 10,
-        right: 10
+        top: 12,
+        bottom: 12,
+        left: 12,
+        right: 12
     };        
         
     }
@@ -45,13 +46,14 @@ class ThrowableObject extends MovableObject {
     throw(otherDirection) {
         this.speedY = 20; // Anfangsgeschwindigkeit in der Y-Richtung
         this.acceleration = 1.5; // Beschleunigung durch Schwerkraft
+        this.speedX = 6; // Horizontale Wurfgeschwindigkeit (reduziert von 10 auf 6)
     
         // Starte die Rotationsanimation
         let animationInterval = setInterval(() => {
             if (!this.hasHit) {
                 this.playAnimation(this.IMAGES_ROTATION); // Spiele die Rotationsanimation ab
             }
-        }, 100); // Wechsle das Bild alle 100ms
+        }, 120); // Rotationsanimation etwas langsamer für bessere Sichtbarkeit
     
         // Starte die Bewegung der Flasche
         this.throwInterval = setInterval(() => {
@@ -61,11 +63,11 @@ class ThrowableObject extends MovableObject {
                 return; // Beende die Schleife
             }
     
-            // Horizontale Bewegung
+            // Horizontale Bewegung mit reduzierter Geschwindigkeit
             if (otherDirection) {
-                this.x -= 10; // Bewegt die Flasche nach links
+                this.x -= this.speedX; // Bewegt die Flasche nach links
             } else {
-                this.x += 10; // Bewegt die Flasche nach rechts
+                this.x += this.speedX; // Bewegt die Flasche nach rechts
             }
     
             // Vertikale Bewegung
@@ -84,7 +86,7 @@ class ThrowableObject extends MovableObject {
     }
     this.soundBrokenBottle.volume = 0.3;
             }
-        }, 1000 / 60); // 60 FPS
+        }, 1000 / 50); // 50 FPS für smoothere, aber langsamere Bewegung
     }
  
     handleBottleCollision(enemies) {
