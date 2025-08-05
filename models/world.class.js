@@ -265,12 +265,6 @@ initAudioObjects() {
         // Zeichne die Gegner (z. B. Endboss)
     this.level.enemies.forEach(enemy => {
         this.addToMap(enemy);
-        // Zeichne die Statusleiste des Endbosses über dem Endboss
-        if (enemy instanceof Endboss) {
-            this.statusBarEndboss.x = enemy.x + enemy.width / 2 - this.statusBarEndboss.width / 2; // Zentriere die Statusleiste
-            this.statusBarEndboss.y = enemy.y - 20; // Positioniere die Statusleiste über dem Endboss
-            this.addToMap(this.statusBarEndboss);
-        }
     });
     
         // Zeichne den Charakter
@@ -290,6 +284,13 @@ initAudioObjects() {
         this.addToMap(this.statusBar);
         this.addToMap(this.statusBarBottles);
         this.addToMap(this.statusBarCoins);     
+
+        // Zeichne die Endboss-Statusleiste fest oben rechts, wenn der Endboss in Reichweite ist
+        this.level.enemies.forEach(enemy => {
+            if (enemy instanceof Endboss && enemy.isCharacterInRange()) {
+                this.addToMap(this.statusBarEndboss);
+            }
+        });
   
     // Rekursives Zeichnen
         let self = this;

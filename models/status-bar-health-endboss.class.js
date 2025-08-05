@@ -13,18 +13,16 @@ class StatusBarEndboss extends DrawableObject{
     
         percentage = 100; // Initial coin percentage
     
-        constructor() {
-            super();
-            this.loadImages(this.IMAGES);
-            this.setPercentage(0); // Set the initial coin percentage
-            this.x = 30;
-            this.y = 120;
-            this.width = 200;
-            this.height = 60;
-            console.log('StatusBarCoins initialisiert:', this.IMAGES);
-        }
-    
-        // setPercentage(50);
+    constructor() {
+        super();
+        this.loadImages(this.IMAGES);
+        this.setPercentage(100); // Set the initial endboss health percentage to 100
+        this.x = 500;  // Position rechts oben
+        this.y = 10;   // Position rechts oben
+        this.width = 200;
+        this.height = 60;
+        console.log('StatusBarEndboss initialisiert:', this.IMAGES);
+    }        // setPercentage(50);
     setPercentage(percentage){
         this.percentage = percentage; // Set the coin percentage  // => 0....5
         let path = this.IMAGES[this.resolveImageIndex()]; // Get the image path based on the percentage
