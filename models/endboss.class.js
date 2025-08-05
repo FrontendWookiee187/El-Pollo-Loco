@@ -65,7 +65,7 @@ class Endboss extends MovableObject {
     setInterval(() => {
         const now = Date.now();
 
-        if (this.health <= 0) {
+        if (this.health < 20) {
             this.isKO = true; // Markiere den Endboss als K.O.
             this.setAnimation(this.IMAGES_DEAD); // Spiele die Dead-Animation ab
             this.stopRageSound(); // Stoppe den Boss-Sound
@@ -155,7 +155,7 @@ stopRageSound(){
 }
 
 playYeahSound(){
- if (this.health <= 0) {           
+ if (this.health < 20) {           
 this.winnerSound.play(); // Spiele den Gewinner-Sound ab
 this.winnerSound.volume = 0.5; // Setze die Lautstärke des Gewinner-Sounds}
 }}
