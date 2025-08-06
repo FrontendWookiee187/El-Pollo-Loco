@@ -19,58 +19,40 @@
  * @class
  */
 class World{
-
     /** @type {Character} The main playable character */
     character = new Character();
-    
     /** @type {Level} The current game level containing enemies, objects, and backgrounds */
     level = level1;
-    
     /** @type {HTMLCanvasElement} The HTML canvas element for rendering */
     canvas;
-    
     /** @type {CanvasRenderingContext2D} The 2D rendering context for the canvas */
     ctx;
-    
     /** @type {Keyboard} The keyboard input handler */
     keyboard;
-    
     /** @type {number} Camera X-offset for scrolling background */
     camera_x = 0;
-    
     /** @type {StatusBar} Health status bar display */
     statusBar = new StatusBar();
-    
     /** @type {StatusBarBottles} Bottle inventory status bar */
     statusBarBottles = new StatusBarBottles();
-    
     /** @type {StatusBarCoins} Coin collection status bar */
     statusBarCoins = new StatusBarCoins();
-    
     /** @type {StatusBarEndboss} Endboss health status bar */
     statusBarEndboss = new StatusBarEndboss();
-    
     /** @type {ThrowableObject[]} Array of thrown bottle objects */
     throwableObjects = [];
-    
     /** @type {Audio} Sound effect for chicken knockout */
     chickenKOSound = new Audio('./audio/chicken_head_edited.mp3')
-    
     /** @type {Audio} Sound effect for bottle collection */
     soundBottleCollect = new Audio('./audio/collect_bottle.mp3')
-    
     /** @type {Audio} Sound effect for coin collection */
     soundCoinCollect = new Audio('./audio/coin_collect.mp3')
-    
     /** @type {boolean} Flag to track if the game has ended */
     gameEnded = false;
-    
     /** @type {number} Interval ID for the main game loop */
     intervalId;
-    
     /** @type {Audio[]} Array containing all audio objects for mute control */
     allAudioObjects = [];
-    
     /** @type {number} Timestamp of the last bottle throw for rate limiting */
     lastBottleThrow = 0;
 
@@ -84,20 +66,17 @@ class World{
      * @param {Keyboard} keyboard - The keyboard input handler object
      */
     constructor(canvas, keyboard) {
-
         this.ctx = canvas.getContext('2d');
         this.canvas = canvas;
         this.keyboard = keyboard;
         this.draw();
         this.setWorld(); 
-        
         this.level.enemies.forEach(enemy => {
             enemy.world = this;
             if (enemy instanceof Endboss) {
                 enemy.animate();
             }
         });
-
         this.initAudioObjects();
         this.run();
         this.initBackgroundMusic();
@@ -124,13 +103,11 @@ class World{
             this.character.idleSound,
             this.character.deadSound,
         ];
-
         this.level.enemies.forEach(enemy => {
             if (enemy instanceof Endboss) {
                 this.allAudioObjects.push(enemy.bossSound, enemy.bossDeadSound, enemy.winnerSound);
             }
         });
-
         console.log('Audio-Objekte initialisiert:', this.allAudioObjects);
     }
 
@@ -157,18 +134,14 @@ class World{
         this.intervalId = setInterval(() => {
             this.checkCollisions();
             this.checkThrowObjects();
-
             if (!this.gameEnded) {
                 if (this.character.isDead()) {
                     this.gameEnded = true;
-                    
                     setTimeout(() => {
                     this.showEndScreen(false);
                     }, 3500);
-
                 } else if (this.level.enemies.some(enemy => enemy instanceof Endboss && enemy.isKO)) {
                     this.gameEnded = true;
-
                     setTimeout(() => {
                     this.showEndScreen(true);
                     }, 3500);}
@@ -200,19 +173,16 @@ class World{
         if (this.keyboard.D && this.statusBarBottles.percentage > 0 && (now - this.lastBottleThrow > 1500)) {
             let bottleX;
             let bottleY = this.character.y + 100;
-
             if (this.character.otherDirection) {
                 bottleX = this.character.x - 100;
             } else {
                 bottleX = this.character.x + 100;
             }
-
             let bottle = new ThrowableObject(bottleX, bottleY);
             bottle.world = this;
             bottle.soundBrokenBottle.muted = this.backgroundMusic.muted;
             bottle.throw(this.character.otherDirection);
             this.throwableObjects.push(bottle);
-
             this.updateBottleStatusBarOnThrow();
             this.lastBottleThrow = now;
         }
@@ -229,19 +199,14 @@ class World{
     checkCollisions() {
         this.throwableObjects.forEach((bottle, bottleIndex) => {
             if (bottle.hasCollided) return;
-    
             this.level.enemies.forEach((enemy) => {
                 if (bottle.isColliding(enemy)) {
                     console.log('Flasche trifft Gegner:', enemy);
-    
                     bottle.hasCollided = true;
-    
                     clearInterval(bottle.throwInterval);
                     bottle.speedY = 0;
-    
                     bottle.x = enemy.x + enemy.width / 2 - bottle.width / 2;
                     bottle.y = enemy.y + enemy.height / 2 - bottle.height / 2;
-    
                     if (enemy instanceof Endboss) {
                         enemy.health -= 20;
                         this.statusBarEndboss.setPercentage(enemy.health);
@@ -253,9 +218,7 @@ class World{
                         enemy.speed = 0;
                         enemy.applyGravity = () => {};
                     }
-    
                     bottle.startSplashAnimation();
-
                     setTimeout(() => {
                         if (this.throwableObjects.includes(bottle)) {
                             console.log('Entferne Flasche nach Splash-Animation:', bottle);
@@ -265,7 +228,6 @@ class World{
                 }
             });
         });
-    
         this.level.bottles.forEach((bottle, index) => {
             if (this.character.isCollidingForCollecting(bottle)) {
                 if (this.statusBarBottles.percentage < 100) {
@@ -277,7 +239,6 @@ class World{
                 }
             }
         });
-    
         this.level.coins.forEach((coin, index) => {
             if (this.character.isCollidingForCollecting(coin)) {
                 if (this.statusBarCoins.percentage < 100) {
@@ -289,10 +250,8 @@ class World{
                 }
             }
         });
-    
        let successfulJumpAttack = false;
        let enemiesToRemove = [];
-       
        this.level.enemies.forEach(enemy => {
            if (this.character.isColliding(enemy)) {
                if ((enemy instanceof Chicken || enemy instanceof ChickenSmall) &&
@@ -306,21 +265,17 @@ class World{
                    console.log('Charakter trifft das Huhn von oben:', enemy);
                    enemy.isKO = true;
                    enemy.speed = 0;
-       
                    this.chickenKOSound.play();
                    this.chickenKOSound.volume = 0.1;
-       
                    enemiesToRemove.push(enemy);
                    successfulJumpAttack = true;
                }
            }
        });
-       
        if (successfulJumpAttack) {
            this.character.speedY = 8;
            this.character.setJumpAttackInvulnerability();
        }
-       
        if (enemiesToRemove.length > 0) {
            setTimeout(() => {
                enemiesToRemove.forEach(enemyToRemove => {
@@ -331,7 +286,6 @@ class World{
                });
            }, 1000);
        }
-       
        if (!successfulJumpAttack && !this.character.isInvulnerableAfterJumpAttack() && !this.character.isHurt()) {
            this.level.enemies.forEach(enemy => {
                if (this.character.isColliding(enemy)) {
@@ -358,27 +312,20 @@ class World{
     this.level.enemies.forEach(enemy => {
         this.addToMap(enemy);
     });
-    
         this.addToMap(this.character);
-    
         this.addObjectsToMap(this.level.clouds);
         this.addObjectsToMap(this.level.bottles);
         this.addObjectsToMap(this.level.coins);
-    
         this.throwableObjects.forEach(obj => this.addToMap(obj));
-    
         this.ctx.translate(-this.camera_x, 0);
-    
         this.addToMap(this.statusBar);
         this.addToMap(this.statusBarBottles);
         this.addToMap(this.statusBarCoins);     
-
         this.level.enemies.forEach(enemy => {
             if (enemy instanceof Endboss && enemy.isCharacterInRange()) {
                 this.addToMap(this.statusBarEndboss);
             }
         });
-  
         let self = this;
         requestAnimationFrame(function() {
             self.draw();
@@ -408,13 +355,10 @@ class World{
      * @returns {void}
      */
     addToMap(mo){
-
         if (mo.otherDirection) {
             this.flipImage(mo);            
         }
-
         mo.draw(this.ctx);
-
         if (mo.otherDirection) {
             this.flipImageBack(mo); 
         }
@@ -458,7 +402,6 @@ class World{
     updateBottleStatusBar() {
         let maxBottles = 5;
         let currentPercentage = this.statusBarBottles.percentage;
-
         if (currentPercentage < 100) {
             let newPercentage = currentPercentage + (100 / maxBottles);
             this.statusBarBottles.setPercentage(Math.min(newPercentage, 100));
@@ -475,7 +418,6 @@ class World{
     updateBottleStatusBarOnThrow() {
         let maxBottles = 5;
         let currentPercentage = this.statusBarBottles.percentage;
-
         if (currentPercentage > 0) {
             let newPercentage = currentPercentage - (100 / maxBottles);
             this.statusBarBottles.setPercentage(Math.max(newPercentage, 0));
@@ -532,12 +474,10 @@ class World{
         const isMuted = this.backgroundMusic.muted;    
         const newMuted = !isMuted;
         localStorage.setItem('muted', newMuted ? '1' : '0');
-
         const allAudioElements = document.querySelectorAll('audio');
         allAudioElements.forEach(audio => {
             audio.muted = newMuted;
         });
-
         this.allAudioObjects = [
             this.backgroundMusic,
             this.chickenKOSound,
@@ -550,19 +490,16 @@ class World{
             this.character.idleSound,
             this.character.deadSound,        
         ];
-
         this.level.enemies.forEach(enemy => {
             if (enemy instanceof Endboss) {
                 this.allAudioObjects.push(enemy.bossSound, enemy.bossDeadSound, enemy.winnerSound);
             }
         });
-
         this.throwableObjects.forEach(bottle => {
             if (bottle.soundBrokenBottle) {
                 this.allAudioObjects.push(bottle.soundBrokenBottle);
             }
         });
-
         this.allAudioObjects.forEach(audio => {
             if (audio) {
                 audio.muted = newMuted;
@@ -587,21 +524,17 @@ class World{
         let h1 = document.getElementById('h1');
         let description = document.getElementById('description');
         let mute = document.getElementById('mute');
-
         canvas.style.display = 'none';
         endScreen.style.display = 'flex';
         document.getElementById('touchControls').style.display = 'none';
-
         h1.style.display = 'none';
         description.style.display = 'none';
         mute.style.display = 'none';  
-        
         if (won) {
             endScreenImage.src = './img/You won, you lost/YouWonB.png';
         } else {
             endScreenImage.src = './img/You won, you lost/YouLost.png';
         }
-
         this.allAudioObjects.forEach(audio => {
             if (audio) {
                 audio.pause();
