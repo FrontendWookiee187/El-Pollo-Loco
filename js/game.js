@@ -292,21 +292,38 @@ if (window.innerWidth <= 1400){
 };
 
 /**
+ * Checks if the device is a mobile device (smartphone/tablet)
+ * @returns {boolean}
+ */
+function isMobileDevice() {
+    return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) 
+           || window.innerWidth <= 768; // Smartphones meist unter 768px
+}
+
+/**
+ * Shows the fullscreen button on mobile devices.
+ * @returns {void}
+ */
+function showFullscreenButtonIfMobile() {
+    const fullscreenButton = document.getElementById('fullscreenButton');
+    if (fullscreenButton) {
+        if (window.innerWidth <= 1024) {
+            fullscreenButton.style.display = 'flex'; // Flex für bessere Zentrierung
+            fullscreenButton.style.alignItems = 'center';
+            fullscreenButton.style.justifyContent = 'center';
+        } else {
+            fullscreenButton.style.display = 'none';
+        }
+    }
+}
+
+/**
  * Sets up and toggles fullscreen mode for the game container.
  * @returns {void}
  */
 document.addEventListener('DOMContentLoaded', () => {
     const fullscreenButton = document.getElementById('fullscreenButton');
     const gameContainer = document.getElementById('gameContainer');
-
-    /**
-     * Checks if the device is a mobile device (smartphone/tablet)
-     * @returns {boolean}
-     */
-    function isMobileDevice() {
-        return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) 
-               || window.innerWidth <= 768; // Smartphones meist unter 768px
-    }
 
     /**
      * Automatically enters fullscreen mode for mobile devices
@@ -338,18 +355,6 @@ document.addEventListener('DOMContentLoaded', () => {
             } else if (elem.msRequestFullscreen) {
                 elem.msRequestFullscreen();
             }
-        }
-    }
-
-    /**
-     * Shows the fullscreen button on mobile devices.
-     * @returns {void}
-     */
-    function showFullscreenButtonIfMobile() {
-        if (window.innerWidth <= 1024) {
-            fullscreenButton.style.display = 'block';
-        } else {
-            fullscreenButton.style.display = 'none';
         }
     }
 
@@ -418,6 +423,9 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     } else {
         // Enter fullscreen
+        // Post-Fullscreen-Exit-Klasse entfernen beim neuen Fullscreen
+        document.body.classList.remove('post-fullscreen-exit');
+        
         if (elem.requestFullscreen) {
             elem.requestFullscreen();
         } else if (elem.webkitRequestFullscreen) {
@@ -435,6 +443,7 @@ document.addEventListener('DOMContentLoaded', () => {
         } else {
             fullscreenButton.textContent = '⛶'; 
             document.body.classList.remove('fullscreen-active'); // CSS-Klasse entfernen
+            handleFullscreenExit(); // Canvas anpassen und Hinweis anzeigen
         }
     });
 
@@ -444,6 +453,7 @@ document.addEventListener('DOMContentLoaded', () => {
             document.body.classList.add('fullscreen-active');
         } else {
             document.body.classList.remove('fullscreen-active');
+            handleFullscreenExit(); // Canvas anpassen und Hinweis anzeigen
         }
     });
 
@@ -452,9 +462,129 @@ document.addEventListener('DOMContentLoaded', () => {
             document.body.classList.add('fullscreen-active');
         } else {
             document.body.classList.remove('fullscreen-active');
+            handleFullscreenExit(); // Canvas anpassen und Hinweis anzeigen
         }
     });
 });
+
+/**
+ * Handles fullscreen exit on mobile devices
+ * Adjusts canvas and shows fullscreen hint
+ * @returns {void}
+ */
+function handleFullscreenExit() {
+    if (isMobileDevice()) {
+        // CSS-Klasse für Post-Fullscreen-Zustand hinzufügen
+        document.body.classList.add('post-fullscreen-exit');
+        
+        // Canvas sofort an neuen Viewport anpassen
+        adjustCanvasForExitFullscreen();
+        
+        // Fullscreen-Button wieder anzeigen
+        showFullscreenButtonIfMobile();
+        
+        // Kurzen Hinweis anzeigen
+        showFullscreenHint();
+    }
+}
+
+/**
+ * Adjusts canvas size when exiting fullscreen
+ * @returns {void}
+ */
+function adjustCanvasForExitFullscreen() {
+    const canvas = document.getElementById('canvas');
+    if (canvas) {
+        // Canvas über den verfügbaren Viewport strecken
+        const viewportWidth = window.innerWidth;
+        const viewportHeight = window.innerHeight;
+        
+        // Canvas-Container anpassen
+        const gameContainer = document.getElementById('gameContainer');
+        if (gameContainer) {
+            gameContainer.style.width = '100vw';
+            gameContainer.style.height = '100vh';
+            gameContainer.style.position = 'fixed';
+            gameContainer.style.top = '0';
+            gameContainer.style.left = '0';
+            gameContainer.style.zIndex = '1000';
+        }
+        
+        // Canvas selbst anpassen
+        canvas.style.width = '100vw';
+        canvas.style.height = '100vh';
+        canvas.style.objectFit = 'cover';
+        canvas.style.display = 'block';
+        
+        // Sicherstellen, dass das Spiel weiterläuft
+        resizeCanvasForFullscreen();
+    }
+}
+
+/**
+ * Shows a hint to return to fullscreen mode
+ * @returns {void}
+ */
+function showFullscreenHint() {
+    // Entferne vorherigen Hinweis falls vorhanden
+    const existingHint = document.getElementById('fullscreenHint');
+    if (existingHint) {
+        existingHint.remove();
+    }
+    
+    // Erstelle Hinweis-Element
+    const hint = document.createElement('div');
+    hint.id = 'fullscreenHint';
+    hint.innerHTML = `
+        <div style="
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.9);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 25px;
+            font-family: 'Sombrero', Arial, sans-serif;
+            font-size: 16px;
+            font-weight: bold;
+            z-index: 10001;
+            text-align: center;
+            animation: fadeInOut 4s ease-in-out;
+            border: 2px solid #FFD700;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(5px);
+        ">
+            🔄 Für optimales Spielerlebnis Vollbild verwenden
+        </div>
+    `;
+    
+    // CSS-Animation hinzufügen
+    if (!document.getElementById('fullscreenHintStyles')) {
+        const style = document.createElement('style');
+        style.id = 'fullscreenHintStyles';
+        style.textContent = `
+            @keyframes fadeInOut {
+                0% { opacity: 0; transform: translateX(-50%) translateY(-20px); }
+                20% { opacity: 1; transform: translateX(-50%) translateY(0); }
+                80% { opacity: 1; transform: translateX(-50%) translateY(0); }
+                100% { opacity: 0; transform: translateX(-50%) translateY(-20px); }
+            }
+        `;
+        document.head.appendChild(style);
+    }
+    
+    // Hinweis zum Body hinzufügen
+    document.body.appendChild(hint);
+    
+    // Hinweis nach 4 Sekunden entfernen
+    setTimeout(() => {
+        if (hint && hint.parentNode) {
+            hint.remove();
+        }
+    }, 4000);
+}
 
 /**
  * Resizes the canvas to maintain the correct aspect ratio in fullscreen mode.
