@@ -87,6 +87,13 @@ class Character extends MovableObject {
     deadSoundPlayed = false;
 
     /**
+     * Timer to track character inactivity for idle animations.
+     * @type {number}
+     * @default 0
+     */
+    inactivityTimer = 0;
+
+    /**
      * Array of image paths for idle animation.
      * @type {string[]}
      * @constant
@@ -227,82 +234,166 @@ class Character extends MovableObject {
      * @returns {void}
      */
     animate(){
-        let inactivityTimer = 0;
+        this.setupMovementInterval();
+        this.setupAnimationInterval();
+    }
 
+    /**
+     * Sets up the movement interval for handling keyboard input and character movement.
+     * 
+     * @method
+     * @returns {void}
+     */
+    setupMovementInterval() {
         setInterval(() => {
-            if(this.world.keyboard.RIGHT && this.x < this.world.level.level_end_x){  
-                this.moveRight();
-                this.otherDirection = false;
-                inactivityTimer = 0;
-                this.idleSound.pause();
-                this.snorSound.pause();
-                this.stepSound.play();
-                this.stepSound.volume = 0.5;    
-            }
-
-            if(this.world.keyboard.LEFT && this.x > 0){
-                this.moveLeft();
-                this.otherDirection = true;
-                inactivityTimer = 0;
-                this.idleSound.pause();
-                this.snorSound.pause();
-                this.stepSound.play();
-                this.stepSound.volume = 0.5;
-            }
-
-            if(this.world.keyboard.SPACE && !this.isAboveGround()){
-                this.jump();
-                inactivityTimer = 0;
-            }
-
+            this.handleMovementInput();
             this.world.camera_x = -this.x + 100;
+        }, 1000/60);
+    }
 
-        },1000/60)
+    /**
+     * Handles all movement input from keyboard and resets inactivity timer.
+     * 
+     * @method
+     * @returns {void}
+     */
+    handleMovementInput() {
+        if(this.world.keyboard.RIGHT && this.x < this.world.level.level_end_x){  
+            this.handleRightMovement();
+            this.inactivityTimer = 0;
+        }
 
+        if(this.world.keyboard.LEFT && this.x > 0){
+            this.handleLeftMovement();
+            this.inactivityTimer = 0;
+        }
+
+        if(this.world.keyboard.SPACE && !this.isAboveGround()){
+            this.jump();
+            this.inactivityTimer = 0;
+        }
+    }
+
+    /**
+     * Handles right movement input and related sound effects.
+     * 
+     * @method
+     * @returns {void}
+     */
+    handleRightMovement() {
+        this.moveRight();
+        this.otherDirection = false;
+        this.idleSound.pause();
+        this.snorSound.pause();
+        this.stepSound.play();
+        this.stepSound.volume = 0.5;
+    }
+
+    /**
+     * Handles left movement input and related sound effects.
+     * 
+     * @method
+     * @returns {void}
+     */
+    handleLeftMovement() {
+        this.moveLeft();
+        this.otherDirection = true;
+        this.idleSound.pause();
+        this.snorSound.pause();
+        this.stepSound.play();
+        this.stepSound.volume = 0.5;
+    }
+
+    /**
+     * Sets up the animation interval for handling character state animations.
+     * 
+     * @method
+     * @returns {void}
+     */
+    setupAnimationInterval() {
         setInterval(() => {
-
-            inactivityTimer += 100;
-
-            if (this.isDead()) {
-                this.playAnimation(this.IMAGES_DEAD);
-                this.stopAllSounds();
-
-                if (!this.deadSoundPlayed) {
-                    this.deadSound.play();
-                    this.deadSound.volume = 0.5;
-                    this.deadSoundPlayed = true;
-                }
-                this.y += 5;               
-
-            } else if (this.isHurt()) {
-                this.playAnimation(this.IMAGES_HURT);
-                
-                this.hurtSound.play();
-                this.hurtSound.volume = 0.5;
-
-            } else if (this.isAboveGround()) {
-                this.playAnimation(this.IMAGES_JUMPING);
-
-            } else if (this.world.keyboard.RIGHT || this.world.keyboard.LEFT) {
-                this.playAnimation(this.IMAGES_WALKING);
-
-            } else if (inactivityTimer >= 15000) {
-                this.playAnimation(this.IMAGES_LONG_IDLE);
-                this.stopIdleSound();
-                this.snorSound.play();
-                this.snorSound.volume = 0.5;
-
-            }else if (inactivityTimer >= 2000) {
-                this.playAnimation(this.IMAGES_IDLE);             
-                this.idleSound.play();
-                this.idleSound.volume = 0.5;
-            }
-
-            else {
-                this.playAnimation(this.IMAGES_IDLE);               
-            }
-            
+            this.inactivityTimer += 100;
+            this.handleAnimationStates();
         }, 100);
+    }
+
+    /**
+     * Handles all animation states based on character status and inactivity timer.
+     * 
+     * @method
+     * @returns {void}
+     */
+    handleAnimationStates() {
+        if (this.isDead()) {
+            this.handleDeadAnimation();
+        } else if (this.isHurt()) {
+            this.handleHurtAnimation();
+        } else if (this.isAboveGround()) {
+            this.playAnimation(this.IMAGES_JUMPING);
+        } else if (this.world.keyboard.RIGHT || this.world.keyboard.LEFT) {
+            this.playAnimation(this.IMAGES_WALKING);
+        } else if (this.inactivityTimer >= 15000) {
+            this.handleLongIdleAnimation();
+        } else if (this.inactivityTimer >= 2000) {
+            this.handleIdleAnimation();
+        } else {
+            this.playAnimation(this.IMAGES_IDLE);
+        }
+    }
+
+    /**
+     * Handles the death animation and sound effects.
+     * 
+     * @method
+     * @returns {void}
+     */
+    handleDeadAnimation() {
+        this.playAnimation(this.IMAGES_DEAD);
+        this.stopAllSounds();
+
+        if (!this.deadSoundPlayed) {
+            this.deadSound.play();
+            this.deadSound.volume = 0.5;
+            this.deadSoundPlayed = true;
+        }
+        this.y += 5;
+    }
+
+    /**
+     * Handles the hurt animation and sound effects.
+     * 
+     * @method
+     * @returns {void}
+     */
+    handleHurtAnimation() {
+        this.playAnimation(this.IMAGES_HURT);
+        this.hurtSound.play();
+        this.hurtSound.volume = 0.5;
+    }
+
+    /**
+     * Handles the long idle animation and snoring sound.
+     * 
+     * @method
+     * @returns {void}
+     */
+    handleLongIdleAnimation() {
+        this.playAnimation(this.IMAGES_LONG_IDLE);
+        this.stopIdleSound();
+        this.snorSound.play();
+        this.snorSound.volume = 0.5;
+    }
+
+    /**
+     * Handles the regular idle animation and whistle sound.
+     * 
+     * @method
+     * @returns {void}
+     */
+    handleIdleAnimation() {
+        this.playAnimation(this.IMAGES_IDLE);
+        this.idleSound.play();
+        this.idleSound.volume = 0.5;
     }
  
     /**
@@ -327,22 +418,26 @@ class Character extends MovableObject {
      * @returns {void}
      */
     stopAllSounds(){
-    this.stepSound.pause();
-    this.stepSound.currentTime = 0;
+        this.stopSound(this.stepSound);
+        this.stopSound(this.hurtSound);
+        this.stopSound(this.snorSound);
+        this.stopSound(this.idleSound);
+        
+        if (!this.isDead()) {
+            this.stopSound(this.deadSound);
+        }
+    }
 
-    this.hurtSound.pause();
-    this.hurtSound.currentTime = 0;
-
-    this.snorSound.pause();
-    this.snorSound.currentTime = 0;
-
-    this.idleSound.pause();
-    this.idleSound.currentTime = 0;
-    
-    if (!this.isDead()) {
-        this.deadSound.pause();
-        this.deadSound.currentTime = 0;
-    }            
+    /**
+     * Stops and resets a single sound effect.
+     * 
+     * @method
+     * @param {Audio} sound - The audio object to stop
+     * @returns {void}
+     */
+    stopSound(sound) {
+        sound.pause();
+        sound.currentTime = 0;
     }
 
     /**
@@ -353,9 +448,7 @@ class Character extends MovableObject {
      * @returns {void}
      */
     stopIdleSound(){
-        this.idleSound.pause();
-        this.idleSound.currentTime = 0;
-
+        this.stopSound(this.idleSound);
     }
     
 }
