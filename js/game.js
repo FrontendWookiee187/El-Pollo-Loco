@@ -11,30 +11,49 @@ let keyboard = new Keyboard();
  * @returns {void}
  */
 function init(){
-
     if (world) {
         world.stopGameLoop();
     }
     initLevel();
+    setupCanvas();
+    resetGameState();
+    console.log('Spiel neu gestartet');
+}
 
-canvas=document.getElementById('canvas');
-world = new World(canvas, keyboard);
+/**
+ * Sets up the canvas element for the game.
+ * @returns {void}
+ */
+function setupCanvas() {
+    canvas = document.getElementById('canvas');
+    world = new World(canvas, keyboard);
+}
 
-world.character.energy = 100;
-world.statusBar.setPercentage(100);
-world.level = level1;
-world.level.enemies.forEach(enemy => {
-    if (enemy instanceof Endboss) {
-        enemy.isKO = false;
-        enemy.health = 100;
-    } else {
-        enemy.isKO = false;
-    }
-});
-world.gameEnded = false;
+/**
+ * Resets the game state to initial values.
+ * @returns {void}
+ */
+function resetGameState() {
+    world.character.energy = 100;
+    world.statusBar.setPercentage(100);
+    world.level = level1;
+    resetEnemies();
+    world.gameEnded = false;
+}
 
-console.log('Spiel neu gestartet');
-
+/**
+ * Resets all enemies to their initial state.
+ * @returns {void}
+ */
+function resetEnemies() {
+    world.level.enemies.forEach(enemy => {
+        if (enemy instanceof Endboss) {
+            enemy.isKO = false;
+            enemy.health = 100;
+        } else {
+            enemy.isKO = false;
+        }
+    });
 }
 
 /**
@@ -44,43 +63,35 @@ console.log('Spiel neu gestartet');
 window.addEventListener('keydown', (e) => {
     if(e.keyCode == 39) {
         keyboard.RIGHT = true;
-        
     } else if(e.keyCode == 37) {
         keyboard.LEFT = true;
-        
     } else if(e.keyCode == 38) {
         keyboard.UP = true;
-       
     } else if(e.keyCode == 40) {
         keyboard.DOWN = true;
     } else if(e.keyCode == 32) {
         keyboard.SPACE = true;
-       }  
-    else if(e.keyCode == 68) {
+    } else if(e.keyCode == 68) {
         keyboard.D = true;
     } 
-  });
+});
 
-  /**
+/**
  * Handles keyup events and updates the keyboard state.
  * @param {KeyboardEvent} e
  */
 window.addEventListener('keyup', (e) => {
     if(e.keyCode == 39) {
         keyboard.RIGHT = false;
-        
     } else if(e.keyCode == 37) {
         keyboard.LEFT = false;
-        
     } else if(e.keyCode == 38) {
         keyboard.UP = false;
-        
     } else if(e.keyCode == 40) {
         keyboard.DOWN = false;
     } else if(e.keyCode == 32) {
         keyboard.SPACE = false;
-    }
-    else if(e.keyCode == 68) {
+    } else if(e.keyCode == 68) {
         keyboard.D = false;
     } 
 });
@@ -90,88 +101,146 @@ window.addEventListener('keyup', (e) => {
  * @returns {void}
  */
 document.addEventListener('DOMContentLoaded', () => {
-    const startScreen = document.getElementById('startScreen');
-    const endScreen = document.getElementById('endScreen');
-    const endScreenImage = document.getElementById('endScreenImage');
-    const startButton = document.getElementById('startButton');
-    const restartButton = document.getElementById('restartButton');
-    const backToStartButton = document.getElementById('backToStartButton');
-    const canvas = document.getElementById('canvas');
-    let h1 = document.getElementById('h1');
-    let description = document.getElementById('description');
-    let mute = document.getElementById('mute');
-    let touchControls = document.getElementById('touchControls');
-    let muteIcon = document.getElementById('mute');
+    const elements = getUIElements();
+    setupMuteButton(elements.mute);
+    setupGameButtons(elements);
+});
 
-    /**
-     * Updates the mute button icon and state based on localStorage.
-     * @returns {void}
-     */
-    function updateMuteButton() {
-        const muted = localStorage.getItem('muted') === '1';
-        if (muted) {
-            mute.innerHTML = '<span aria-hidden="true">&#128263;</span>';
-            mute.classList.add('muted');
-            mute.title = "Ton an";
-        } else {
-            mute.innerHTML = '<span aria-hidden="true">&#128266;</span>';
-            mute.classList.remove('muted');
-            mute.title = "Ton aus";
-        }
-    }
+/**
+ * Gets all required UI elements.
+ * @returns {Object} Object containing all UI element references
+ */
+function getUIElements() {
+    return {
+        startScreen: document.getElementById('startScreen'),
+        endScreen: document.getElementById('endScreen'),
+        endScreenImage: document.getElementById('endScreenImage'),
+        startButton: document.getElementById('startButton'),
+        restartButton: document.getElementById('restartButton'),
+        backToStartButton: document.getElementById('backToStartButton'),
+        canvas: document.getElementById('canvas'),
+        h1: document.getElementById('h1'),
+        description: document.getElementById('description'),
+        mute: document.getElementById('mute'),
+        touchControls: document.getElementById('touchControls'),
+        muteIcon: document.getElementById('mute')
+    };
+}
 
-    updateMuteButton();
-
+/**
+ * Sets up the mute button functionality.
+ * @param {HTMLElement} mute - The mute button element
+ * @returns {void}
+ */
+function setupMuteButton(mute) {
+    updateMuteButton(mute);
     mute.addEventListener('click', () => {
         if (typeof world !== 'undefined' && world) {
             world.toggleMute();
-            updateMuteButton();
+            updateMuteButton(mute);
         }
     });
+}
 
-    startButton.addEventListener('click', () => {
-        startScreen.style.display = 'none';
-        muteIcon.style.display = 'flex';
-        canvas.style.display = 'block';
-        h1.style.display = 'block'; 
-        description.style.display = 'flex';
-        mute.style.display = 'block';
-        
+/**
+ * Updates the mute button icon and state based on localStorage.
+ * @param {HTMLElement} mute - The mute button element
+ * @returns {void}
+ */
+function updateMuteButton(mute) {
+    const muted = localStorage.getItem('muted') === '1';
+    if (muted) {
+        mute.innerHTML = '<span aria-hidden="true">&#128263;</span>';
+        mute.classList.add('muted');
+        mute.title = "Ton an";
+    } else {
+        mute.innerHTML = '<span aria-hidden="true">&#128266;</span>';
+        mute.classList.remove('muted');
+        mute.title = "Ton aus";
+    }
+}
+
+/**
+ * Sets up all game control buttons.
+ * @param {Object} elements - UI elements object
+ * @returns {void}
+ */
+function setupGameButtons(elements) {
+    setupStartButton(elements);
+    setupRestartButton(elements);
+    setupBackToStartButton(elements);
+}
+
+/**
+ * Sets up the start button functionality.
+ * @param {Object} elements - UI elements object
+ * @returns {void}
+ */
+function setupStartButton(elements) {
+    elements.startButton.addEventListener('click', () => {
+        elements.startScreen.style.display = 'none';
+        elements.muteIcon.style.display = 'flex';
+        elements.canvas.style.display = 'block';
+        elements.h1.style.display = 'block'; 
+        elements.description.style.display = 'flex';
+        elements.mute.style.display = 'block';
         init();
         hindViewTouchButtons();
     });
+}
 
-    restartButton.addEventListener('click', () => {
+/**
+ * Sets up the restart button functionality.
+ * @param {Object} elements - UI elements object
+ * @returns {void}
+ */
+function setupRestartButton(elements) {
+    elements.restartButton.addEventListener('click', () => {
         console.log('Restart Button clicked');
         if (world) {
             world.resetWorld();
             world = null;
         }
-        endScreen.style.display = 'none';
-        canvas.style.display = 'block';
-        h1.style.display = 'block'; 
-        description.style.display = 'flex';
-        mute.style.display = 'block';
-        
+        elements.endScreen.style.display = 'none';
+        elements.canvas.style.display = 'block';
+        elements.h1.style.display = 'block'; 
+        elements.description.style.display = 'flex';
+        elements.mute.style.display = 'block';
         init();
         hindViewTouchButtons();
     });
-    
-    backToStartButton.addEventListener('click', () => {
+}
+
+/**
+ * Sets up the back to start button functionality.
+ * @param {Object} elements - UI elements object
+ * @returns {void}
+ */
+function setupBackToStartButton(elements) {
+    elements.backToStartButton.addEventListener('click', () => {
         console.log('Back to Start Button clicked');
         if (world) {
             world.resetWorld();
             world = null;
         }
-        endScreen.style.display = 'none';
-        startScreen.style.display = 'flex';
-        canvas.style.display = 'none';
-        h1.style.display = 'none'; 
-        description.style.display = 'none';
-        mute.style.display = 'none';
-        touchControls.style.display = 'none';
+        hideGameShowStart(elements);
     });
-});
+}
+
+/**
+ * Hides game elements and shows start screen.
+ * @param {Object} elements - UI elements object
+ * @returns {void}
+ */
+function hideGameShowStart(elements) {
+    elements.endScreen.style.display = 'none';
+    elements.startScreen.style.display = 'flex';
+    elements.canvas.style.display = 'none';
+    elements.h1.style.display = 'none'; 
+    elements.description.style.display = 'none';
+    elements.mute.style.display = 'none';
+    elements.touchControls.style.display = 'none';
+}
 
 /**
  * Checks the device orientation and shows/hides the rotate message.
@@ -179,18 +248,16 @@ document.addEventListener('DOMContentLoaded', () => {
  */
 function checkOrientation() {
     let rotateMessage = document.getElementById('rotateMessage');
-    let canvas = document.getElementById('canvas');
-
     if (window.innerHeight > window.innerWidth) {
         rotateMessage.style.display = 'flex';
-        
     } else {
         rotateMessage.style.display = 'none';
-        
     }
 }
 
-//Check orientation on load and resize
+/**
+ * Event listeners for orientation change and canvas resize.
+ */
 window.addEventListener('load', checkOrientation);
 window.addEventListener('resize', checkOrientation);
 
@@ -200,81 +267,129 @@ window.addEventListener('resize', checkOrientation);
  */
 document.addEventListener('DOMContentLoaded', () => {
     const touchControls = document.getElementById('touchControls');
+    setupTouchControlsVisibility(touchControls);
+    setupTouchButtons();
+    setupTouchControlsGlobalEvents(touchControls);
+});
 
+/**
+ * Sets up touch controls visibility.
+ * @param {HTMLElement} touchControls - Touch controls container
+ * @returns {void}
+ */
+function setupTouchControlsVisibility(touchControls) {
     if (window.innerWidth <= 1024) {
         touchControls.style.display = 'none';
     } else {
         touchControls.style.display = 'none';
     }
+}
 
-    /**
-     * Adds touch event listeners for all control buttons.
-     */
-    document.getElementById('leftButton').addEventListener('touchstart', (e) => {
+/**
+ * Sets up all touch button event listeners.
+ * @returns {void}
+ */
+function setupTouchButtons() {
+    setupLeftButton();
+    setupRightButton();
+    setupJumpButton();
+    setupThrowButton();
+}
+
+/**
+ * Sets up left button touch events.
+ * @returns {void}
+ */
+function setupLeftButton() {
+    const leftButton = document.getElementById('leftButton');
+    leftButton.addEventListener('touchstart', (e) => {
         e.preventDefault();
         keyboard.LEFT = true;
     });
-    document.getElementById('leftButton').addEventListener('touchend', (e) => {
+    leftButton.addEventListener('touchend', (e) => {
         e.preventDefault();
         keyboard.LEFT = false;
     });
-    document.getElementById('leftButton').addEventListener('contextmenu', (e) => {
+    leftButton.addEventListener('contextmenu', (e) => {
         e.preventDefault();
     });
+}
 
-    document.getElementById('rightButton').addEventListener('touchstart', (e) => {
+/**
+ * Sets up right button touch events.
+ * @returns {void}
+ */
+function setupRightButton() {
+    const rightButton = document.getElementById('rightButton');
+    rightButton.addEventListener('touchstart', (e) => {
         e.preventDefault();
         keyboard.RIGHT = true;
     });
-    document.getElementById('rightButton').addEventListener('touchend', (e) => {
+    rightButton.addEventListener('touchend', (e) => {
         e.preventDefault();
         keyboard.RIGHT = false;
     });
-    document.getElementById('rightButton').addEventListener('contextmenu', (e) => {
+    rightButton.addEventListener('contextmenu', (e) => {
         e.preventDefault();
     });
+}
 
-    document.getElementById('jumpButton').addEventListener('touchstart', (e) => {
+/**
+ * Sets up jump button touch events.
+ * @returns {void}
+ */
+function setupJumpButton() {
+    const jumpButton = document.getElementById('jumpButton');
+    jumpButton.addEventListener('touchstart', (e) => {
         e.preventDefault();
         keyboard.SPACE = true;
     });
-    document.getElementById('jumpButton').addEventListener('touchend', (e) => {
+    jumpButton.addEventListener('touchend', (e) => {
         e.preventDefault();
         keyboard.SPACE = false;
     });
-    document.getElementById('jumpButton').addEventListener('contextmenu', (e) => {
+    jumpButton.addEventListener('contextmenu', (e) => {
         e.preventDefault();
     });
+}
 
-    document.getElementById('throwButton').addEventListener('touchstart', (e) => {
+/**
+ * Sets up throw button touch events.
+ * @returns {void}
+ */
+function setupThrowButton() {
+    const throwButton = document.getElementById('throwButton');
+    throwButton.addEventListener('touchstart', (e) => {
         e.preventDefault();
         keyboard.D = true;
     });
-    document.getElementById('throwButton').addEventListener('touchend', (e) => {
+    throwButton.addEventListener('touchend', (e) => {
         e.preventDefault();
         keyboard.D = false;
     });
-    document.getElementById('throwButton').addEventListener('contextmenu', (e) => {
+    throwButton.addEventListener('contextmenu', (e) => {
         e.preventDefault();
     });
+}
 
-    /**
-     * Global event listener for all touch controls to prevent default behaviors.
-     */
+/**
+ * Sets up global touch controls event listeners.
+ * @param {HTMLElement} touchControls - Touch controls container
+ * @returns {void}
+ */
+function setupTouchControlsGlobalEvents(touchControls) {
     if (touchControls) {
         touchControls.addEventListener('contextmenu', (e) => {
             e.preventDefault();
         });
-        
         touchControls.addEventListener('selectstart', (e) => {
             e.preventDefault();
         });
-        
         touchControls.addEventListener('dragstart', (e) => {
             e.preventDefault();
         });
     }
-});
+}
 
 /**
  * Shows touch buttons if on a mobile device.
@@ -282,11 +397,10 @@ document.addEventListener('DOMContentLoaded', () => {
  */
 function hindViewTouchButtons(){
     let touchControls = document.getElementById('touchControls');
-
-if (window.innerWidth <= 1400){
-    touchControls.style.display = 'flex';
+    if (window.innerWidth <= 1400){
+        touchControls.style.display = 'flex';
+    }
 }
-};
 
 /**
  * Checks if the device is a mobile device (smartphone/tablet)
@@ -321,66 +435,109 @@ function showFullscreenButtonIfMobile() {
 document.addEventListener('DOMContentLoaded', () => {
     const fullscreenButton = document.getElementById('fullscreenButton');
     const gameContainer = document.getElementById('gameContainer');
+    setupFullscreenFeature(fullscreenButton, gameContainer);
+});
 
-    /**
-     * Automatically enters fullscreen mode for mobile devices
-     * @returns {void}
-     */
-    function autoFullscreenForMobile() {
-        if (isMobileDevice() && !document.fullscreenElement) {
-            const startScreen = document.getElementById('startScreen');
-            const endScreen = document.getElementById('endScreen');
-            
-            const startScreenVisible = startScreen && startScreen.style.display !== 'none';
-            const endScreenVisible = endScreen && endScreen.style.display !== 'none';
-            
-            let elem = gameContainer;
-            if (startScreenVisible) {
-                elem = startScreen;
-            } else if (endScreenVisible) {
-                elem = endScreen;
-            }
-            
-            if (elem.requestFullscreen) {
-                elem.requestFullscreen().catch(() => {
-                    console.log('Fullscreen konnte nicht automatisch aktiviert werden');
-                });
-            } else if (elem.webkitRequestFullscreen) {
-                elem.webkitRequestFullscreen();
-            } else if (elem.msRequestFullscreen) {
-                elem.msRequestFullscreen();
-            }
-        }
-    }
-
+/**
+ * Sets up all fullscreen functionality.
+ * @param {HTMLElement} fullscreenButton - The fullscreen button
+ * @param {HTMLElement} gameContainer - The game container
+ * @returns {void}
+ */
+function setupFullscreenFeature(fullscreenButton, gameContainer) {
     fullscreenButton.style.display = 'none';
+    setupFullscreenEventListeners(fullscreenButton, gameContainer);
+    setupFullscreenStateChangeListeners(fullscreenButton);
+}
 
-    /**
-     * Event listeners for fullscreen functionality on game start and restart.
-     */
+/**
+ * Sets up fullscreen event listeners.
+ * @param {HTMLElement} fullscreenButton - The fullscreen button
+ * @param {HTMLElement} gameContainer - The game container
+ * @returns {void}
+ */
+function setupFullscreenEventListeners(fullscreenButton, gameContainer) {
+    setupGameStartFullscreenEvents();
+    setupOrientationChangeFullscreen();
+    setupFullscreenButtonClickHandler(fullscreenButton, gameContainer);
+    window.addEventListener('resize', showFullscreenButtonIfMobile);
+}
+
+/**
+ * Sets up game start and restart fullscreen events.
+ * @returns {void}
+ */
+function setupGameStartFullscreenEvents() {
     document.getElementById('startButton').addEventListener('click', () => {
         showFullscreenButtonIfMobile();
         setTimeout(() => {
             autoFullscreenForMobile();
         }, 100);
     });
-
     document.getElementById('restartButton').addEventListener('click', () => {
         showFullscreenButtonIfMobile();
         setTimeout(() => {
             autoFullscreenForMobile();
         }, 100);
     });
-
     document.getElementById('backToStartButton').addEventListener('click', () => {
-        fullscreenButton.style.display = 'none';
+        document.getElementById('fullscreenButton').style.display = 'none';
     });
+}
 
-    window.addEventListener('resize', showFullscreenButtonIfMobile);
+/**
+ * Automatically enters fullscreen mode for mobile devices.
+ * @returns {void}
+ */
+function autoFullscreenForMobile() {
+    if (isMobileDevice() && !document.fullscreenElement) {
+        const elem = getFullscreenElement();
+        requestFullscreenForElement(elem);
+    }
+}
 
-    /**
-     * Auto-fullscreen on orientation change for mobile devices.
-     */
+/**
+ * Gets the appropriate element for fullscreen mode.
+ * @returns {HTMLElement} The element to put in fullscreen
+ */
+function getFullscreenElement() {
+    const startScreen = document.getElementById('startScreen');
+    const endScreen = document.getElementById('endScreen');
+    const gameContainer = document.getElementById('gameContainer');
+    
+    const startScreenVisible = startScreen && startScreen.style.display !== 'none';
+    const endScreenVisible = endScreen && endScreen.style.display !== 'none';
+    
+    if (startScreenVisible) {
+        return startScreen;
+    } else if (endScreenVisible) {
+        return endScreen;
+    }
+    return gameContainer;
+}
+
+/**
+ * Requests fullscreen for the given element.
+ * @param {HTMLElement} elem - Element to put in fullscreen
+ * @returns {void}
+ */
+function requestFullscreenForElement(elem) {
+    if (elem.requestFullscreen) {
+        elem.requestFullscreen().catch(() => {
+            console.log('Fullscreen konnte nicht automatisch aktiviert werden');
+        });
+    } else if (elem.webkitRequestFullscreen) {
+        elem.webkitRequestFullscreen();
+    } else if (elem.msRequestFullscreen) {
+        elem.msRequestFullscreen();
+    }
+}
+
+/**
+ * Sets up orientation change fullscreen functionality.
+ * @returns {void}
+ */
+function setupOrientationChangeFullscreen() {
     window.addEventListener('orientationchange', () => {
         if (isMobileDevice()) {
             setTimeout(() => {
@@ -388,78 +545,116 @@ document.addEventListener('DOMContentLoaded', () => {
             }, 500);
         }
     });
+}
 
-    /**
-     * Fullscreen button click handler to toggle fullscreen mode.
-     */
+/**
+ * Sets up fullscreen button click handler.
+ * @param {HTMLElement} fullscreenButton - The fullscreen button
+ * @param {HTMLElement} gameContainer - The game container
+ * @returns {void}
+ */
+function setupFullscreenButtonClickHandler(fullscreenButton, gameContainer) {
     fullscreenButton.addEventListener('click', () => {
-    const startScreen = document.getElementById('startScreen');
-    const endScreen = document.getElementById('endScreen');
-    const gameContainer = document.getElementById('gameContainer');
+        toggleFullscreenMode(gameContainer);
+    });
+}
 
-    const startScreenVisible = startScreen && startScreen.style.display !== 'none' && startScreen.style.display !== '';
-    const endScreenVisible = endScreen && endScreen.style.display !== 'none' && endScreen.style.display !== '';
-
-    let elem = gameContainer;
-    if (startScreenVisible) {
-        elem = startScreen;
-    } else if (endScreenVisible) {
-        elem = endScreen;
-    }
-
+/**
+ * Toggles fullscreen mode on or off.
+ * @param {HTMLElement} gameContainer - The game container
+ * @returns {void}
+ */
+function toggleFullscreenMode(gameContainer) {
+    const elem = getFullscreenElement();
     if (document.fullscreenElement) {
-        if (document.exitFullscreen) {
-            document.exitFullscreen();
-        } else if (document.webkitExitFullscreen) {
-            document.webkitExitFullscreen();
-        } else if (document.msExitFullscreen) {
-            document.msExitFullscreen();
-        }
+        exitFullscreen();
     } else {
-        document.body.classList.remove('post-fullscreen-exit');
-        
-        if (elem.requestFullscreen) {
-            elem.requestFullscreen();
-        } else if (elem.webkitRequestFullscreen) {
-            elem.webkitRequestFullscreen();
-        } else if (elem.msRequestFullscreen) {
-            elem.msRequestFullscreen();
-        }
+        enterFullscreen(elem);
     }
-    });
-    
-    /**
-     * Fullscreen state change event listeners for different browsers.
-     */
+}
+
+/**
+ * Exits fullscreen mode.
+ * @returns {void}
+ */
+function exitFullscreen() {
+    if (document.exitFullscreen) {
+        document.exitFullscreen();
+    } else if (document.webkitExitFullscreen) {
+        document.webkitExitFullscreen();
+    } else if (document.msExitFullscreen) {
+        document.msExitFullscreen();
+    }
+}
+
+/**
+ * Enters fullscreen mode.
+ * @param {HTMLElement} elem - Element to put in fullscreen
+ * @returns {void}
+ */
+function enterFullscreen(elem) {
+    document.body.classList.remove('post-fullscreen-exit');
+    requestFullscreenForElement(elem);
+}
+
+/**
+ * Sets up fullscreen state change listeners.
+ * @param {HTMLElement} fullscreenButton - The fullscreen button
+ * @returns {void}
+ */
+function setupFullscreenStateChangeListeners(fullscreenButton) {
     document.addEventListener('fullscreenchange', () => {
-        if (document.fullscreenElement) {
-            fullscreenButton.textContent = '⤫'; 
-            document.body.classList.add('fullscreen-active');
-        } else {
-            fullscreenButton.textContent = '⛶'; 
-            document.body.classList.remove('fullscreen-active');
-            handleFullscreenExit();
-        }
+        handleFullscreenStateChange(fullscreenButton);
     });
-
     document.addEventListener('webkitfullscreenchange', () => {
-        if (document.webkitFullscreenElement) {
-            document.body.classList.add('fullscreen-active');
-        } else {
-            document.body.classList.remove('fullscreen-active');
-            handleFullscreenExit();
-        }
+        handleWebkitFullscreenChange();
     });
-
     document.addEventListener('msfullscreenchange', () => {
-        if (document.msFullscreenElement) {
-            document.body.classList.add('fullscreen-active');
-        } else {
-            document.body.classList.remove('fullscreen-active');
-            handleFullscreenExit();
-        }
+        handleMsFullscreenChange();
     });
-});/**
+}
+
+/**
+ * Handles fullscreen state changes.
+ * @param {HTMLElement} fullscreenButton - The fullscreen button
+ * @returns {void}
+ */
+function handleFullscreenStateChange(fullscreenButton) {
+    if (document.fullscreenElement) {
+        fullscreenButton.textContent = '⤫'; 
+        document.body.classList.add('fullscreen-active');
+    } else {
+        fullscreenButton.textContent = '⛶'; 
+        document.body.classList.remove('fullscreen-active');
+        handleFullscreenExit();
+    }
+}
+
+/**
+ * Handles webkit fullscreen changes.
+ * @returns {void}
+ */
+function handleWebkitFullscreenChange() {
+    if (document.webkitFullscreenElement) {
+        document.body.classList.add('fullscreen-active');
+    } else {
+        document.body.classList.remove('fullscreen-active');
+        handleFullscreenExit();
+    }
+}
+
+/**
+ * Handles ms fullscreen changes.
+ * @returns {void}
+ */
+function handleMsFullscreenChange() {
+    if (document.msFullscreenElement) {
+        document.body.classList.add('fullscreen-active');
+    } else {
+        document.body.classList.remove('fullscreen-active');
+        handleFullscreenExit();
+    }
+}/**
  * Handles fullscreen exit on mobile devices.
  * Adjusts canvas and shows fullscreen hint.
  * @returns {void}
@@ -483,26 +678,38 @@ function handleFullscreenExit() {
 function adjustCanvasForExitFullscreen() {
     const canvas = document.getElementById('canvas');
     if (canvas) {
-        const viewportWidth = window.innerWidth;
-        const viewportHeight = window.innerHeight;
-        
-        const gameContainer = document.getElementById('gameContainer');
-        if (gameContainer) {
-            gameContainer.style.width = '100vw';
-            gameContainer.style.height = '100vh';
-            gameContainer.style.position = 'fixed';
-            gameContainer.style.top = '0';
-            gameContainer.style.left = '0';
-            gameContainer.style.zIndex = '1000';
-        }
-        
-        canvas.style.width = '100vw';
-        canvas.style.height = '100vh';
-        canvas.style.objectFit = 'cover';
-        canvas.style.display = 'block';
-        
+        adjustGameContainer();
+        adjustCanvasStyles(canvas);
         resizeCanvasForFullscreen();
     }
+}
+
+/**
+ * Adjusts the game container for exit fullscreen.
+ * @returns {void}
+ */
+function adjustGameContainer() {
+    const gameContainer = document.getElementById('gameContainer');
+    if (gameContainer) {
+        gameContainer.style.width = '100vw';
+        gameContainer.style.height = '100vh';
+        gameContainer.style.position = 'fixed';
+        gameContainer.style.top = '0';
+        gameContainer.style.left = '0';
+        gameContainer.style.zIndex = '1000';
+    }
+}
+
+/**
+ * Adjusts canvas styles for exit fullscreen.
+ * @param {HTMLElement} canvas - The canvas element
+ * @returns {void}
+ */
+function adjustCanvasStyles(canvas) {
+    canvas.style.width = '100vw';
+    canvas.style.height = '100vh';
+    canvas.style.objectFit = 'cover';
+    canvas.style.display = 'block';
 }
 
 /**
@@ -510,14 +717,41 @@ function adjustCanvasForExitFullscreen() {
  * @returns {void}
  */
 function showFullscreenHint() {
+    removeExistingHint();
+    const hint = createFullscreenHint();
+    addHintStyles();
+    document.body.appendChild(hint);
+    removeHintAfterDelay(hint);
+}
+
+/**
+ * Removes existing fullscreen hint if present.
+ * @returns {void}
+ */
+function removeExistingHint() {
     const existingHint = document.getElementById('fullscreenHint');
     if (existingHint) {
         existingHint.remove();
     }
-    
+}
+
+/**
+ * Creates the fullscreen hint element.
+ * @returns {HTMLElement} The hint element
+ */
+function createFullscreenHint() {
     const hint = document.createElement('div');
     hint.id = 'fullscreenHint';
-    hint.innerHTML = `
+    hint.innerHTML = getHintHTML();
+    return hint;
+}
+
+/**
+ * Gets the HTML content for the fullscreen hint.
+ * @returns {string} HTML content for the hint
+ */
+function getHintHTML() {
+    return `
         <div style="
             position: fixed;
             top: 20px;
@@ -541,23 +775,42 @@ function showFullscreenHint() {
             🔄 Für optimales Spielerlebnis Vollbild verwenden
         </div>
     `;
-    
+}
+
+/**
+ * Adds CSS styles for the fullscreen hint animation.
+ * @returns {void}
+ */
+function addHintStyles() {
     if (!document.getElementById('fullscreenHintStyles')) {
         const style = document.createElement('style');
         style.id = 'fullscreenHintStyles';
-        style.textContent = `
-            @keyframes fadeInOut {
-                0% { opacity: 0; transform: translateX(-50%) translateY(-20px); }
-                20% { opacity: 1; transform: translateX(-50%) translateY(0); }
-                80% { opacity: 1; transform: translateX(-50%) translateY(0); }
-                100% { opacity: 0; transform: translateX(-50%) translateY(-20px); }
-            }
-        `;
+        style.textContent = getHintCSSAnimation();
         document.head.appendChild(style);
     }
-    
-    document.body.appendChild(hint);
-    
+}
+
+/**
+ * Gets the CSS animation for the hint.
+ * @returns {string} CSS animation styles
+ */
+function getHintCSSAnimation() {
+    return `
+        @keyframes fadeInOut {
+            0% { opacity: 0; transform: translateX(-50%) translateY(-20px); }
+            20% { opacity: 1; transform: translateX(-50%) translateY(0); }
+            80% { opacity: 1; transform: translateX(-50%) translateY(0); }
+            100% { opacity: 0; transform: translateX(-50%) translateY(-20px); }
+        }
+    `;
+}
+
+/**
+ * Removes the hint after a delay.
+ * @param {HTMLElement} hint - The hint element to remove
+ * @returns {void}
+ */
+function removeHintAfterDelay(hint) {
     setTimeout(() => {
         if (hint && hint.parentNode) {
             hint.remove();
@@ -572,26 +825,47 @@ function showFullscreenHint() {
 function resizeCanvasForFullscreen() {
     const canvas = document.getElementById('canvas');
     const aspect = 720 / 480;
-    let w = window.innerWidth;
-    let h = window.innerHeight;
-
     if (document.fullscreenElement) {
-        if (w / h > aspect) {
-            h = window.innerHeight;
-            w = h * aspect;
-        } else {
-            w = window.innerWidth;
-            h = w / aspect;
-        }
-        canvas.style.width = w + 'px';
-        canvas.style.height = h + 'px';
-        canvas.style.display = 'block';
+        setFullscreenCanvasSize(canvas, aspect);
     } else {
-        canvas.style.width = '';
-        canvas.style.height = '';
+        resetCanvasSize(canvas);
     }
 }
 
+/**
+ * Sets canvas size for fullscreen mode.
+ * @param {HTMLElement} canvas - The canvas element
+ * @param {number} aspect - The aspect ratio
+ * @returns {void}
+ */
+function setFullscreenCanvasSize(canvas, aspect) {
+    let w = window.innerWidth;
+    let h = window.innerHeight;
+    if (w / h > aspect) {
+        h = window.innerHeight;
+        w = h * aspect;
+    } else {
+        w = window.innerWidth;
+        h = w / aspect;
+    }
+    canvas.style.width = w + 'px';
+    canvas.style.height = h + 'px';
+    canvas.style.display = 'block';
+}
+
+/**
+ * Resets canvas size to default.
+ * @param {HTMLElement} canvas - The canvas element
+ * @returns {void}
+ */
+function resetCanvasSize(canvas) {
+    canvas.style.width = '';
+    canvas.style.height = '';
+}
+
+/**
+ * Canvas resize event listeners for fullscreen mode across different browsers.
+ */
 document.addEventListener('fullscreenchange', resizeCanvasForFullscreen);
 document.addEventListener('webkitfullscreenchange', resizeCanvasForFullscreen);
 document.addEventListener('msfullscreenchange', resizeCanvasForFullscreen);
