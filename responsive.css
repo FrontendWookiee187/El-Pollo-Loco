@@ -230,8 +230,8 @@ body.fullscreen-active .end-screen {
     /* Fullscreen Button nach Exit */
     .post-fullscreen-exit .fullscreen-btn {
         position: fixed !important;
-        top: 20px !important;
-        left: 20px !important; /* Links oben statt rechts */
+        top: calc(40% - 60px) !important; /* Über dem Mute-Button */
+        right: 26px !important; /* Rechts neben dem Mute-Button */
         z-index: 1001 !important;
         background: rgba(255, 87, 34, 0.9) !important; /* Orange mit Transparenz */
         border: 2px solid #FFD700 !important;
@@ -240,5 +240,14 @@ body.fullscreen-active .end-screen {
         height: 48px !important;
         font-size: 18px !important;
         box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5) !important;
+    }
+    
+    /* Für mobile Geräte nach Fullscreen-Exit */
+    @media (max-width: 768px) {
+        .post-fullscreen-exit .fullscreen-btn {
+            top: auto !important;
+            bottom: 140px !important; /* Über den Touch-Controls */
+            right: 20px !important;
+        }
     }
 }
