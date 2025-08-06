@@ -112,7 +112,7 @@ isCollidingForCollecting(mo) {
             }
         
             // Standard-Schaden-Logik
-            this.energy -= 10;
+            this.energy -= 20; // Erhöhter Schaden von 10 auf 20
             if (this.energy < 0) {
                 this.energy = 0;
             } else {
