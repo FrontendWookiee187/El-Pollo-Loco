@@ -272,7 +272,6 @@ class ThrowableObject extends MovableObject {
      * @returns {void}
      */
     startSplashAnimation() {        
-        console.log('Starte Splash-Animation an Position:', this.x, this.y);
         this.loadImages(this.IMAGES_SPLASH);
         this.playAnimation(this.IMAGES_SPLASH);
         this.playBreakSound();
@@ -291,11 +290,10 @@ class ThrowableObject extends MovableObject {
                 this.soundBrokenBottle.muted = this.world.backgroundMusic.muted;
                 this.soundBrokenBottle.volume = 0.3;
                 this.soundBrokenBottle.currentTime = 0;
-                this.soundBrokenBottle.play().catch(error => {
-                    console.log('Audio play interrupted:', error);
+                this.soundBrokenBottle.play().catch(error => {                    
                 });
             } catch (error) {
-                console.log('Audio error:', error);
+               
             }
         }
     }
@@ -310,7 +308,6 @@ class ThrowableObject extends MovableObject {
         setTimeout(() => {
             const bottleIndex = this.world.throwableObjects.indexOf(this);
             if (bottleIndex > -1) {
-                console.log('Entferne Flasche nach Splash-Animation:', this);
                 this.world.throwableObjects.splice(bottleIndex, 1);
             }
         }, this.IMAGES_SPLASH.length * 100);
