@@ -1,5 +1,34 @@
+/**
+ * @fileoverview Level 1 configuration for El Pollo Loco game.
+ * Contains the initialization and setup for the first game level including
+ * enemies, clouds, background objects, collectible bottles and coins.
+ * @author Frontend Wookiee
+ * @version 1.0.0
+ */
+
+/**
+ * Global variable holding the Level 1 instance.
+ * Contains all game objects for the first level including enemies, backgrounds, and collectibles.
+ * @type {Level}
+ * @global
+ */
 let level1;
 
+/**
+ * Initializes Level 1 with all game objects.
+ * Creates a new Level instance containing enemies (chickens and endboss),
+ * clouds, layered background objects, collectible bottles and coins.
+ * 
+ * The level structure includes:
+ * - 6 chicken enemies (3 normal, 3 small) and 1 endboss
+ * - 1 cloud object
+ * - Multiple layered background objects for parallax scrolling
+ * - 8 collectible bottles
+ * - 5 collectible coins
+ * 
+ * @function
+ * @returns {void}
+ */
 function initLevel() {
 
 level1 = new Level([
