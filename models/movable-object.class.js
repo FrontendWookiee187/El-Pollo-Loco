@@ -19,8 +19,8 @@ rH;
 offset= {
     top: 50,
     bottom: 10,
-    left: 30,
-    right: 30
+    left: 0,    // Reduziert für präzisere Kollisionserkennung
+    right: 0    // Reduziert für präzisere Kollisionserkennung
 };
 
 
@@ -60,8 +60,8 @@ isColliding(mo) {
            this.y + this.offset.top < mo.y + mo.height - mo.offset.bottom &&
            this.y + this.height - this.offset.bottom > mo.y + mo.offset.top;       
     
-        return colliding;
-        }
+    return colliding;
+}
 
 // Präzisere Kollisionserkennung für das Sammeln von Objekten (Flaschen und Münzen)
 // Verwendet kleinere Kollisionsbereiche um sicherzustellen, dass der Körper des Charakters die Objekte berührt

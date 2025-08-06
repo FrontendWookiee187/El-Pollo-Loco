@@ -95,8 +95,8 @@ class Character extends MovableObject {
     this.offset = {
         top: 10,    // Abstand von oben
         bottom: 20, // Abstand von unten
-        left: 15,   // Abstand von links
-        right:  15   // Abstand von rechts
+        left: 40,   // Vergrößert um die effektive Kollisionsbreite zu reduzieren
+        right: 40   // Vergrößert um die effektive Kollisionsbreite zu reduzieren
     };
 
         this.animate();

@@ -27,8 +27,8 @@ class ChickenSmall extends MovableObject{
         this.offset = {
             top: 5,     // Abstand von oben
             bottom: 5,  // Abstand von unten
-            left: 5,    // Abstand von links
-            right: 5    // Abstand von rechts
+            left: 0,    // Minimaler Offset für direkten Kontakt bei frontaler Kollision
+            right: 0    // Minimaler Offset für direkten Kontakt bei frontaler Kollision
         };
 
         this.animate();
