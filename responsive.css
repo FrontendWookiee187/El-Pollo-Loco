@@ -111,6 +111,23 @@
         justify-content: center;
     }
 
+    /* Canvas-Skalierung für mobile Geräte OHNE Fullscreen - nur wenn NICHT im Fullscreen */
+    body:not(.fullscreen-active) .gameContainer:not(:fullscreen):not(:-webkit-full-screen):not(:-ms-fullscreen) canvas {
+        transform: scale(0.45) !important; /* Verkleinert den Inhalt auf 75% */
+        transform-origin: center !important; /* Skaliert vom Zentrum aus */
+        display: block !important;
+        border: 2px solid red !important; /* TEMPORÄR - zum Testen */
+    }
+    
+    /* Für sehr kleine Bildschirme - noch kompakter - nur wenn NICHT im Fullscreen */
+    @media (max-width: 768px) {
+        body:not(.fullscreen-active) .gameContainer:not(:fullscreen):not(:-webkit-full-screen):not(:-ms-fullscreen) canvas {
+            transform: scale(0.35) !important; /* Noch kleiner für mobile Geräte */
+            transform-origin: center !important;
+            border: 2px solid blue !important; /* TEMPORÄR - zum Testen */
+        }
+    }
+
 } /* <-- HIER muss die schließende Klammer hin! */
 
 /* Jetzt kommen die Fullscreen-Regeln außerhalb der Media Query! */
@@ -212,8 +229,8 @@ body.fullscreen-active .end-screen {
     }
     
     .post-fullscreen-exit #gameContainer canvas {
-        width: 100vw !important;
-        height: 100vh !important;
+        width: 690px !important;
+        /* height: 100vh !important; */
         object-fit: cover !important;
         display: block !important;
     }

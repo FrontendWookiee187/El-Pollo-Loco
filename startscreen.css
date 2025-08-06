@@ -5,7 +5,12 @@
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.3); /* Dunkler Hintergrund */
+    background-image: url('./img/5_background/background-main-2.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-color: rgba(0, 0, 0, 0.3); /* Fallback und leichte Abdunklung */
     display: flex;
     flex-direction: column;
     justify-content: center;
