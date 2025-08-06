@@ -1,17 +1,96 @@
+/**
+ * @fileoverview Character class for El Pollo Loco game.
+ * Represents the main playable character with movement, animation, and sound capabilities.
+ * @author Frontend Wookiee
+ * @version 1.0.0
+ */
+
+/**
+ * Character class representing the main playable character (Pepe).
+ * Extends MovableObject to inherit movement, collision detection, and physics.
+ * Handles character animations, sound effects, and player input responses.
+ * 
+ * @class
+ * @extends MovableObject
+ */
 class Character extends MovableObject {
 
+    /**
+     * Height of the character in pixels.
+     * @type {number}
+     * @default 300
+     */
     height = 300;
+    
+    /**
+     * Width of the character in pixels.
+     * @type {number}
+     * @default 150
+     */
     width = 150;
+    
+    /**
+     * Y-coordinate position of the character.
+     * @type {number}
+     * @default 130
+     */
     y = 130;
+    
+    /**
+     * Movement speed of the character.
+     * @type {number}
+     * @default 10
+     */
     speed = 10;
+    
+    /**
+     * Audio object for jump sound effect.
+     * @type {Audio}
+     */
     jumpSound = new Audio('./audio/jump.mp3');
+    
+    /**
+     * Audio object for walking step sound effect.
+     * @type {Audio}
+     */
     stepSound = new Audio('./audio/step.mp3');
+    
+    /**
+     * Audio object for hurt sound effect.
+     * @type {Audio}
+     */
     hurtSound = new Audio('./audio/hurt.mp3');
+    
+    /**
+     * Audio object for snoring sound effect during long idle.
+     * @type {Audio}
+     */
     snorSound = new Audio('./audio/snoring.mp3');
+    
+    /**
+     * Audio object for idle whistle sound effect.
+     * @type {Audio}
+     */
     idleSound = new Audio('./audio/whistle.mp3');
-    deadSound = new Audio('./audio/dying.mp3');   
+    
+    /**
+     * Audio object for death sound effect.
+     * @type {Audio}
+     */
+    deadSound = new Audio('./audio/dying.mp3');
+    
+    /**
+     * Flag to prevent death sound from playing multiple times.
+     * @type {boolean}
+     * @default false
+     */
     deadSoundPlayed = false;
 
+    /**
+     * Array of image paths for idle animation.
+     * @type {string[]}
+     * @constant
+     */
     IMAGES_IDLE = [
 
         './img/2_character_pepe/1_idle/idle/I-1.png',
@@ -26,6 +105,11 @@ class Character extends MovableObject {
         './img/2_character_pepe/1_idle/idle/I-10.png'
     ];
 
+    /**
+     * Array of image paths for long idle animation (sleeping/snoring).
+     * @type {string[]}
+     * @constant
+     */
     IMAGES_LONG_IDLE = [
 
         './img/2_character_pepe/1_idle/long_idle/I-11.png',
@@ -41,6 +125,11 @@ class Character extends MovableObject {
 
     ];
 
+    /**
+     * Array of image paths for walking animation.
+     * @type {string[]}
+     * @constant
+     */
     IMAGES_WALKING =[
 
         './img/2_character_pepe/2_walk/W-21.png',
@@ -51,6 +140,11 @@ class Character extends MovableObject {
         './img/2_character_pepe/2_walk/W-26.png',            
     ];
 
+    /**
+     * Array of image paths for jumping animation.
+     * @type {string[]}
+     * @constant
+     */
     IMAGES_JUMPING =[
         './img/2_character_pepe/3_jump/J-31.png',
         './img/2_character_pepe/3_jump/J-32.png',
@@ -63,6 +157,11 @@ class Character extends MovableObject {
         './img/2_character_pepe/3_jump/J-39.png',
     ]
 
+    /**
+     * Array of image paths for death animation.
+     * @type {string[]}
+     * @constant
+     */
     IMAGES_DEAD = [
         './img/2_character_pepe/5_dead/D-51.png',
         './img/2_character_pepe/5_dead/D-52.png',
@@ -73,14 +172,30 @@ class Character extends MovableObject {
         './img/2_character_pepe/5_dead/D-57.png'
     ]
 
+    /**
+     * Array of image paths for hurt animation.
+     * @type {string[]}
+     * @constant
+     */
     IMAGES_HURT = [
         './img/2_character_pepe/4_hurt/H-41.png',
         './img/2_character_pepe/4_hurt/H-42.png',
         './img/2_character_pepe/4_hurt/H-43.png'
     ]
 
+    /**
+     * Reference to the game world object.
+     * @type {World}
+     */
     world;    
 
+    /**
+     * Creates a new Character instance.
+     * Initializes the character with default image, loads all animation images,
+     * applies gravity physics, sets up collision offsets, and starts animations.
+     * 
+     * @constructor
+     */
     constructor() {
         super().loadImage('./img/2_character_pepe/2_walk/W-21.png');
         this.loadImages(this.IMAGES_LONG_IDLE);
@@ -91,46 +206,53 @@ class Character extends MovableObject {
         this.loadImages(this.IMAGES_HURT);
         this.applyGravity();
 
-        // Offsets für präzise Kollisionserkennung
-    this.offset = {
-        top: 10,    // Abstand von oben
-        bottom: 20, // Abstand von unten
-        left: 40,   // Vergrößert um die effektive Kollisionsbreite zu reduzieren
-        right: 40   // Vergrößert um die effektive Kollisionsbreite zu reduzieren
-    };
+        this.offset = {
+            top: 10,
+            bottom: 20,
+            left: 40,
+            right: 40
+        };
 
         this.animate();
         this.getRealFrame();      
 
     }
 
+    /**
+     * Handles character animation and movement based on keyboard input.
+     * Sets up two main intervals: one for movement/input handling and one for animation states.
+     * Manages inactivity timer for idle animations and sound effects.
+     * 
+     * @method
+     * @returns {void}
+     */
     animate(){
-        let inactivityTimer = 0; // Timer für Inaktivität
+        let inactivityTimer = 0;
 
         setInterval(() => {
             if(this.world.keyboard.RIGHT && this.x < this.world.level.level_end_x){  
                 this.moveRight();
-                this.otherDirection = false; // Set otherDirection to false when moving right
-                inactivityTimer = 0; // Timer zurücksetzen bei Bewegung
-                this.idleSound.pause(); // Stop Idle sounds
-                this.snorSound.pause(); // Stop snoring sound
-                this.stepSound.play(); // Play step sound
-                this.stepSound.volume = 0.5; // Lautstärke (0.0 bis 1.0)    
+                this.otherDirection = false;
+                inactivityTimer = 0;
+                this.idleSound.pause();
+                this.snorSound.pause();
+                this.stepSound.play();
+                this.stepSound.volume = 0.5;    
             }
 
-            if(this.world.keyboard.LEFT && this.x > 0){ // Prevent moving left if x is less than or equal to 0
+            if(this.world.keyboard.LEFT && this.x > 0){
                 this.moveLeft();
-                this.otherDirection = true; // Set otherDirection to true when moving left
-                inactivityTimer = 0; // Timer zurücksetzen bei Bewegung
-                this.idleSound.pause(); // Stop Idle sounds
-                this.snorSound.pause(); // Stop snoring sound
-                this.stepSound.play(); // Play step sound
-                this.stepSound.volume = 0.5; // Lautstärke (0.0 bis 1.0)
+                this.otherDirection = true;
+                inactivityTimer = 0;
+                this.idleSound.pause();
+                this.snorSound.pause();
+                this.stepSound.play();
+                this.stepSound.volume = 0.5;
             }
 
             if(this.world.keyboard.SPACE && !this.isAboveGround()){
-                this.jump(); // Call the jump method when UP key is pressed and character is on the ground
-                inactivityTimer = 0; // Timer zurücksetzen bei Sprung
+                this.jump();
+                inactivityTimer = 0;
             }
 
             this.world.camera_x = -this.x + 100;
@@ -139,59 +261,71 @@ class Character extends MovableObject {
 
         setInterval(() => {
 
-            inactivityTimer += 100; // Timer um 100ms erhöhen
+            inactivityTimer += 100;
 
             if (this.isDead()) {
-                this.playAnimation(this.IMAGES_DEAD); // Play dead animation 
-                this.stopAllSounds(); // Stop all sounds
+                this.playAnimation(this.IMAGES_DEAD);
+                this.stopAllSounds();
 
-                
-                 // Nur einmal abspielen:
                 if (!this.deadSoundPlayed) {
                     this.deadSound.play();
                     this.deadSound.volume = 0.5;
-                    this.deadSoundPlayed = true; // <--- Merken, dass gespielt wurde
+                    this.deadSoundPlayed = true;
                 }
                 this.y += 5;               
 
             } else if (this.isHurt()) {
-                this.playAnimation(this.IMAGES_HURT); // Play hurt animation
+                this.playAnimation(this.IMAGES_HURT);
                 
-                this.hurtSound.play(); // Play hurt sound
-                this.hurtSound.volume = 0.5; // Lautstärke (0.0 bis 1.0)
+                this.hurtSound.play();
+                this.hurtSound.volume = 0.5;
 
             } else if (this.isAboveGround()) {
-                this.playAnimation(this.IMAGES_JUMPING); // Play jumping animation
+                this.playAnimation(this.IMAGES_JUMPING);
 
             } else if (this.world.keyboard.RIGHT || this.world.keyboard.LEFT) {
-                this.playAnimation(this.IMAGES_WALKING); // Play walking animation
+                this.playAnimation(this.IMAGES_WALKING);
 
-            } else if (inactivityTimer >= 15000) { // Nach 15 Sekunden Inaktivität
+            } else if (inactivityTimer >= 15000) {
                 this.playAnimation(this.IMAGES_LONG_IDLE);
-                this.stopIdleSound(); // Stop Idle sounds
-                this.snorSound.play(); // Play snoring sound
-                this.snorSound.volume = 0.5; // Lautstärke (0.0 bis 1.0)
+                this.stopIdleSound();
+                this.snorSound.play();
+                this.snorSound.volume = 0.5;
 
-            }else if (inactivityTimer >= 2000) { // Nach 5 Sekunden Inaktivität
+            }else if (inactivityTimer >= 2000) {
                 this.playAnimation(this.IMAGES_IDLE);             
-                this.idleSound.play(); // Play idle sound
-                this.idleSound.volume = 0.5; // Lautstärke (0.0 bis 1.0)
+                this.idleSound.play();
+                this.idleSound.volume = 0.5;
             }
 
             else {
-                this.playAnimation(this.IMAGES_IDLE); // Play idle animation                
+                this.playAnimation(this.IMAGES_IDLE);               
             }
             
-        }, 100); // Update animation every 50ms
+        }, 100);
     }
  
+    /**
+     * Makes the character jump by setting vertical speed.
+     * Stops all sounds and plays jump sound effect.
+     * 
+     * @method
+     * @returns {void}
+     */
     jump() {
-        this.speedY = 35; // Set the speedY to a positive value to make the character jump
-        this.stopAllSounds(); // Stop all sounds
-        this.jumpSound.play(); // Spiele den Sprung-Sound ab
-        this.jumpSound.volume = 0.2; // Lautstärke (0.0 bis 1.0)
+        this.speedY = 35;
+        this.stopAllSounds();
+        this.jumpSound.play();
+        this.jumpSound.volume = 0.2;
     }
 
+    /**
+     * Stops and resets all character sound effects.
+     * Pauses all audio and resets playback position to beginning.
+     * 
+     * @method
+     * @returns {void}
+     */
     stopAllSounds(){
     this.stepSound.pause();
     this.stepSound.currentTime = 0;
@@ -211,6 +345,13 @@ class Character extends MovableObject {
     }            
     }
 
+    /**
+     * Stops only the idle sound effect.
+     * Used when transitioning from idle to other states.
+     * 
+     * @method
+     * @returns {void}
+     */
     stopIdleSound(){
         this.idleSound.pause();
         this.idleSound.currentTime = 0;
