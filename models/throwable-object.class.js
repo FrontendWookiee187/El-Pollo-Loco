@@ -94,41 +94,88 @@ class ThrowableObject extends MovableObject {
      * @returns {void}
      */
     throw(otherDirection) {
+        this.initializeThrowPhysics();
+        const animationInterval = this.startRotationAnimation();
+        this.startThrowMovement(otherDirection, animationInterval);
+    }
+
+    /**
+     * Initializes the physics properties for throwing motion.
+     * 
+     * @method
+     * @returns {void}
+     */
+    initializeThrowPhysics() {
         this.speedY = 20;
         this.acceleration = 1.5;
         this.speedX = 6;
-    
-        let animationInterval = setInterval(() => {
+    }
+
+    /**
+     * Starts the rotation animation during flight.
+     * 
+     * @method
+     * @returns {number} The interval ID for the animation
+     */
+    startRotationAnimation() {
+        return setInterval(() => {
             if (!this.hasHit) {
                 this.playAnimation(this.IMAGES_ROTATION);
             }
         }, 120);
-    
+    }
+
+    /**
+     * Handles the throwing movement with physics and collision detection.
+     * 
+     * @method
+     * @param {boolean} otherDirection - Whether to throw in opposite direction
+     * @param {number} animationInterval - The animation interval to clear on impact
+     * @returns {void}
+     */
+    startThrowMovement(otherDirection, animationInterval) {
         this.throwInterval = setInterval(() => {
             if (this.hasHit) {
                 clearInterval(this.throwInterval);
                 clearInterval(animationInterval);
                 return;
             }
-    
-            if (otherDirection) {
-                this.x -= this.speedX;
-            } else {
-                this.x += this.speedX;
-            }
-    
-            this.y -= this.speedY;
-            this.speedY -= this.acceleration;
-            
-            if (this.y >= 390) {
-                this.y = 390;
-                this.speedY = 0;
-                this.hasHit = true;
-                this.startSplashAnimation();
-            }
+            this.updatePosition(otherDirection);
+            this.checkGroundCollision();
         }, 1000 / 50);
     }
- 
+
+    /**
+     * Updates the bottle position during flight.
+     * 
+     * @method
+     * @param {boolean} otherDirection - Whether to move left instead of right
+     * @returns {void}
+     */
+    updatePosition(otherDirection) {
+        if (otherDirection) {
+            this.x -= this.speedX;
+        } else {
+            this.x += this.speedX;
+        }
+        this.y -= this.speedY;
+        this.speedY -= this.acceleration;
+    }
+
+    /**
+     * Checks for collision with the ground and handles impact.
+     * 
+     * @method
+     * @returns {void}
+     */
+    checkGroundCollision() {
+        if (this.y >= 390) {
+            this.y = 390;
+            this.speedY = 0;
+            this.hasHit = true;
+            this.startSplashAnimation();
+        }
+    }
     /**
      * Handles collision detection between the bottle and enemies.
      * Checks for collisions only when bottle is visible on screen.
@@ -139,32 +186,80 @@ class ThrowableObject extends MovableObject {
      * @returns {void}
      */
     handleBottleCollision(enemies) {
-        if (this.x >= 0 && this.x <= 720 && this.y >= 0 && this.y <= 390) {
+        if (this.isBottleVisible()) {
             enemies.forEach((enemy) => {
-                if (!this.hasHit && this.isColliding(enemy)) {                    
-    
-                    this.hasHit = true;
-    
-                    clearInterval(this.throwInterval);
-                    this.speedY = 0;
-    
-                    this.x = enemy.x + enemy.width / 2 - this.width / 2;
-                    this.y = enemy.y + enemy.height / 2 - this.height / 2;
-    
-                    if (enemy instanceof Endboss) {
-                        enemy.health -= 20;
-                        if (enemy.health <= 0) {
-                            enemy.isKO = true;
-                        }
-                    } else {
-                        enemy.isKO = true;
-                        enemy.speed = 0;
-                        enemy.applyGravity = () => {};
-                    }
-    
-                    this.startSplashAnimation();
+                if (!this.hasHit && this.isColliding(enemy)) {
+                    this.processEnemyHit(enemy);
                 }
             });
+        }
+    }
+
+    /**
+     * Checks if the bottle is visible on screen.
+     * 
+     * @method
+     * @returns {boolean} True if bottle is within screen bounds
+     */
+    isBottleVisible() {
+        return this.x >= 0 && this.x <= 720 && this.y >= 0 && this.y <= 390;
+    }
+
+    /**
+     * Processes the hit when bottle collides with an enemy.
+     * 
+     * @method
+     * @param {MovableObject} enemy - The enemy that was hit
+     * @returns {void}
+     */
+    processEnemyHit(enemy) {
+        this.hasHit = true;
+        this.stopBottleMovement();
+        this.positionBottleOnEnemy(enemy);
+        this.applyEnemyDamage(enemy);
+        this.startSplashAnimation();
+    }
+
+    /**
+     * Stops the bottle movement after collision.
+     * 
+     * @method
+     * @returns {void}
+     */
+    stopBottleMovement() {
+        clearInterval(this.throwInterval);
+        this.speedY = 0;
+    }
+
+    /**
+     * Positions the bottle at the center of the hit enemy.
+     * 
+     * @method
+     * @param {MovableObject} enemy - The enemy to position bottle on
+     * @returns {void}
+     */
+    positionBottleOnEnemy(enemy) {
+        this.x = enemy.x + enemy.width / 2 - this.width / 2;
+        this.y = enemy.y + enemy.height / 2 - this.height / 2;
+    }
+
+    /**
+     * Applies damage to the enemy based on its type.
+     * 
+     * @method
+     * @param {MovableObject} enemy - The enemy to damage
+     * @returns {void}
+     */
+    applyEnemyDamage(enemy) {
+        if (enemy instanceof Endboss) {
+            enemy.health -= 20;
+            if (enemy.health <= 0) {
+                enemy.isKO = true;
+            }
+        } else {
+            enemy.isKO = true;
+            enemy.speed = 0;
+            enemy.applyGravity = () => {};
         }
     }
 
@@ -180,7 +275,17 @@ class ThrowableObject extends MovableObject {
         console.log('Starte Splash-Animation an Position:', this.x, this.y);
         this.loadImages(this.IMAGES_SPLASH);
         this.playAnimation(this.IMAGES_SPLASH);
+        this.playBreakSound();
+        this.scheduleBottleRemoval();
+    }
 
+    /**
+     * Plays the bottle break sound effect.
+     * 
+     * @method
+     * @returns {void}
+     */
+    playBreakSound() {
         if (this.world && this.soundBrokenBottle) {
             try {
                 this.soundBrokenBottle.muted = this.world.backgroundMusic.muted;
@@ -193,7 +298,15 @@ class ThrowableObject extends MovableObject {
                 console.log('Audio error:', error);
             }
         }
-        
+    }
+
+    /**
+     * Schedules the removal of the bottle from the world after animation.
+     * 
+     * @method
+     * @returns {void}
+     */
+    scheduleBottleRemoval() {
         setTimeout(() => {
             const bottleIndex = this.world.throwableObjects.indexOf(this);
             if (bottleIndex > -1) {
