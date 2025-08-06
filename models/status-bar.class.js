@@ -1,7 +1,7 @@
 /**
  * @fileoverview StatusBar class for El Pollo Loco game.
  * Displays the current health status of the player character in the UI.
- * @author Frontend Wookiee
+ * @author Daniel Grabowski
  * @version 1.0.0
  */
 

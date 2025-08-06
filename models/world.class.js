@@ -4,7 +4,7 @@
  * Handles the overall game state and coordinates between all game objects.
  * 
  * @version 1.0.0
- * @author Developer Academy
+ * @author Daniel Grabowski
  * @since 2024
  */
 

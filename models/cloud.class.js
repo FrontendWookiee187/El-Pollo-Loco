@@ -1,7 +1,7 @@
 /**
  * @fileoverview Cloud class for El Pollo Loco game.
  * Represents moving cloud objects that create atmospheric background elements.
- * @author Frontend Wookiee
+ * @author Daniel Grabowski
  * @version 1.0.0
  */
 

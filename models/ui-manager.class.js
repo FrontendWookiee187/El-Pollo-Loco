@@ -3,7 +3,7 @@
  * Manages end screens, UI visibility, and game state transitions.
  * 
  * @version 1.0.0
- * @author Developer Academy
+ * @author Daniel Grabowski
  * @since 2024
  */
 

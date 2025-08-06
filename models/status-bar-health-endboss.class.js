@@ -1,7 +1,7 @@
 /**
  * @fileoverview StatusBarEndboss class for El Pollo Loco game.
  * Displays the current health status of the endboss in the UI.
- * @author Frontend Wookiee
+ * @author Daniel Grabowski
  * @version 1.0.0
  */
 

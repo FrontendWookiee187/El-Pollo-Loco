@@ -1,7 +1,7 @@
 /**
  * @fileoverview Coin class for El Pollo Loco game.
  * Represents collectible coin objects with animated spinning effect.
- * @author Frontend Wookiee
+ * @author Daniel Grabowski
  * @version 1.0.0
  */
 

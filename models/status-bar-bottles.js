@@ -1,7 +1,7 @@
 /**
  * @fileoverview StatusBarBottles class for El Pollo Loco game.
  * Displays the current bottle/hot sauce inventory count in the UI.
- * @author Frontend Wookiee
+ * @author Daniel Grabowski
  * @version 1.0.0
  */
 

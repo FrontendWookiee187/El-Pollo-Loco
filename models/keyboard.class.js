@@ -1,7 +1,7 @@
 /**
  * @fileoverview Keyboard class for El Pollo Loco game.
  * Manages keyboard input state for game controls and player interactions.
- * @author Frontend Wookiee
+ * @author Daniel Grabowski
  * @version 1.0.0
  */
 

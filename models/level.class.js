@@ -1,7 +1,7 @@
 /**
  * @fileoverview Level class for El Pollo Loco game.
  * Manages and contains all game objects and elements for a specific game level.
- * @author Frontend Wookiee
+ * @author Daniel Grabowski
  * @version 1.0.0
  */
 

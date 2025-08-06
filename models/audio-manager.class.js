@@ -3,7 +3,7 @@
  * Manages background music, sound effects, muting, and audio initialization.
  * 
  * @version 1.0.0
- * @author Developer Academy
+ * @author Daniel Grabowski
  * @since 2024
  */
 

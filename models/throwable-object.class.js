@@ -1,7 +1,7 @@
 /**
  * @fileoverview ThrowableObject class for El Pollo Loco game.
  * Represents bottles that can be thrown as projectiles with physics, animations, and collision detection.
- * @author Frontend Wookiee
+ * @author Daniel Grabowski
  * @version 1.0.0
  */
 

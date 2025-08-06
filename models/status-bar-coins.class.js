@@ -1,7 +1,7 @@
 /**
  * @fileoverview StatusBarCoins class for El Pollo Loco game.
  * Displays the current coin collection count in the UI.
- * @author Frontend Wookiee
+ * @author Daniel Grabowski
  * @version 1.0.0
  */
 

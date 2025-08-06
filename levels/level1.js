@@ -2,7 +2,7 @@
  * @fileoverview Level 1 configuration for El Pollo Loco game.
  * Contains the initialization and setup for the first game level including
  * enemies, clouds, background objects, collectible bottles and coins.
- * @author Frontend Wookiee
+ * @author Daniel Grabowski
  * @version 1.0.0
  */
 

@@ -3,7 +3,7 @@
  * Manages bottle-enemy collisions, collectible pickups, and character-enemy interactions.
  * 
  * @version 1.0.0
- * @author Developer Academy
+ * @author Daniel Grabowski
  * @since 2024
  */
 

@@ -1,7 +1,7 @@
 /**
  * @fileoverview Background object class for El Pollo Loco game.
  * Represents static background images used for creating parallax scrolling effects.
- * @author Frontend Wookiee
+ * @author Daniel Grabowski
  * @version 1.0.0
  */
 

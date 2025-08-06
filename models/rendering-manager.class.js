@@ -3,7 +3,7 @@
  * Manages camera movement, object rendering, and frame animation for the game world.
  * 
  * @version 1.0.0
- * @author Developer Academy
+ * @author Daniel Grabowski
  * @since 2024
  */
 

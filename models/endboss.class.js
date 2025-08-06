@@ -1,7 +1,7 @@
 /**
  * @fileoverview Endboss class for El Pollo Loco game.
  * Represents the final boss enemy with complex AI, multiple animations, and sound effects.
- * @author Frontend Wookiee
+ * @author Daniel Grabowski
  * @version 1.0.0
  */
 

@@ -1,7 +1,7 @@
 /**
  * @fileoverview Normal chicken enemy class for El Pollo Loco game.
  * Represents standard-sized chicken enemies with walking animation and knockout behavior.
- * @author Frontend Wookiee
+ * @author Daniel Grabowski
  * @version 1.0.0
  */
 

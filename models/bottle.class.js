@@ -1,7 +1,7 @@
 /**
  * @fileoverview Bottle class for El Pollo Loco game.
  * Represents collectible bottle objects that can be picked up by the player for throwing.
- * @author Frontend Wookiee
+ * @author Daniel Grabowski
  * @version 1.0.0
  */
 
