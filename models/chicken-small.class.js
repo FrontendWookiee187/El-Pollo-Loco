@@ -2,7 +2,7 @@ class ChickenSmall extends MovableObject{
     
     width = 60;
     height = 60;
-    y = 350;
+    y = 365;
     isKO = false; // Zustand des Huhns (k.o. oder nicht)    
 
     IMAGES_WALKING_SMALL = [
