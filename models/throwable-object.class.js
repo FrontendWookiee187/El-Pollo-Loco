@@ -80,11 +80,6 @@ class ThrowableObject extends MovableObject {
                 this.speedY = 0; // Stoppe die vertikale Bewegung
                 this.hasHit = true; // Markiere die Flasche als getroffen
                 this.startSplashAnimation(); // Starte die Splash-Animation
-                if (this.world && this.soundBrokenBottle) {
-        this.soundBrokenBottle.muted = this.world.backgroundMusic.muted;
-        this.soundBrokenBottle.play();
-    }
-    this.soundBrokenBottle.volume = 0.3;
             }
         }, 1000 / 50); // 50 FPS für smoothere, aber langsamere Bewegung
     }
@@ -93,10 +88,10 @@ class ThrowableObject extends MovableObject {
         // Prüfe nur, wenn die Flasche sichtbar ist
         if (this.x >= 0 && this.x <= 720 && this.y >= 0 && this.y <= 390) {
             enemies.forEach((enemy) => {
-                if (!this.hasCollided && this.isColliding(enemy)) {                    
+                if (!this.hasHit && this.isColliding(enemy)) {                    
     
                     // Markiere die Flasche als getroffen
-                    this.hasCollided = true;
+                    this.hasHit = true;
     
                     // Stoppe die Bewegung der Flasche
                     clearInterval(this.throwInterval); // Stoppe die Bewegung
@@ -125,19 +120,24 @@ class ThrowableObject extends MovableObject {
         }
     }
 
-    startSplashAnimation() {
-        if (this.hasCollided) return; // Verhindere mehrfaches Starten der Animation
-    
+    startSplashAnimation() {        
         console.log('Starte Splash-Animation an Position:', this.x, this.y);
         this.loadImages(this.IMAGES_SPLASH);
         this.playAnimation(this.IMAGES_SPLASH);
 
-         // Sound abspielen, aber vorher Mute-Status setzen
-    if (this.world && this.soundBrokenBottle) {
-        this.soundBrokenBottle.muted = this.world.backgroundMusic.muted;
-        this.soundBrokenBottle.volume = 0.3;
-        this.soundBrokenBottle.play();
-    }
+        // Sound abspielen mit Fehlerbehandlung
+        if (this.world && this.soundBrokenBottle) {
+            try {
+                this.soundBrokenBottle.muted = this.world.backgroundMusic.muted;
+                this.soundBrokenBottle.volume = 0.3;
+                this.soundBrokenBottle.currentTime = 0; // Zurücksetzen auf den Anfang
+                this.soundBrokenBottle.play().catch(error => {
+                    console.log('Audio play interrupted:', error);
+                });
+            } catch (error) {
+                console.log('Audio error:', error);
+            }
+        }
         
         // Entferne die Flasche nach der Animation
         setTimeout(() => {
