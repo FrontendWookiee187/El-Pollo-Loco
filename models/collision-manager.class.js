@@ -191,16 +191,19 @@ class CollisionManager {
     /**
      * Checks if a jump attack is valid for the given enemy.
      * Validates enemy type, character speed, and collision positioning.
+     * Uses different tolerance values for different chicken types for more precise jump detection.
      * 
      * @method
      * @param {MovableObject} enemy - The enemy to check
      * @returns {boolean} Whether jump attack is valid
      */
-    isValidJumpAttack(enemy) {
+    isValidJumpAttack(enemy) {        
+        let jumpTolerance = enemy instanceof Chicken ? 40 : 30; 
+        
         return (enemy instanceof Chicken || enemy instanceof ChickenSmall) &&
                this.world.character.speedY < -5 &&
                this.world.character.y + this.world.character.height - this.world.character.offset.bottom >= enemy.y + enemy.offset.top &&
-               this.world.character.y + this.world.character.height - this.world.character.offset.bottom <= enemy.y + enemy.offset.top + 30 &&
+               this.world.character.y + this.world.character.height - this.world.character.offset.bottom <= enemy.y + enemy.offset.top + jumpTolerance &&
                this.world.character.x + this.world.character.offset.left < enemy.x + enemy.width - enemy.offset.right &&
                this.world.character.x + this.world.character.width - this.world.character.offset.right > enemy.x + enemy.offset.left &&
                !this.world.character.isInvulnerableAfterJumpAttack();
