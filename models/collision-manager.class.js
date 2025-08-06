@@ -70,7 +70,6 @@ class CollisionManager {
      * @returns {void}
      */
     handleBottleEnemyHit(bottle, enemy, bottleIndex) {
-        console.log('Flasche trifft Gegner:', enemy);
         bottle.hasCollided = true;
         clearInterval(bottle.throwInterval);
         bottle.speedY = 0;
@@ -115,7 +114,6 @@ class CollisionManager {
     scheduleBottleRemoval(bottle, bottleIndex) {
         setTimeout(() => {
             if (this.world.throwableObjects.includes(bottle)) {
-                console.log('Entferne Flasche nach Splash-Animation:', bottle);
                 this.world.throwableObjects.splice(bottleIndex, 1);
             }
         }, bottle.IMAGES_SPLASH.length * 100);
@@ -218,7 +216,6 @@ class CollisionManager {
      * @returns {void}
      */
     executeJumpAttack(enemy, enemiesToRemove) {
-        console.log('Charakter trifft das Huhn von oben:', enemy);
         enemy.isKO = true;
         enemy.speed = 0;
         this.world.chickenKOSound.play();

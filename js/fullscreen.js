@@ -118,7 +118,6 @@ function getFullscreenElement() {
 function requestFullscreenForElement(elem) {
     if (elem.requestFullscreen) {
         elem.requestFullscreen().catch(() => {
-            console.log('Fullscreen konnte nicht automatisch aktiviert werden');
         });
     } else if (elem.webkitRequestFullscreen) {
         elem.webkitRequestFullscreen();

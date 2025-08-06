@@ -40,7 +40,6 @@ class AudioManager {
         this.collectWorldAudioObjects();
         this.collectCharacterAudioObjects();
         this.collectEnemyAudioObjects();
-        console.log('Audio-Objekte initialisiert:', this.allAudioObjects);
     }
 
     /**

@@ -17,7 +17,6 @@ function init(){
     initLevel();
     setupCanvas();
     resetGameState();
-    console.log('Spiel neu gestartet');
 }
 
 /**
@@ -196,7 +195,6 @@ function setupStartButton(elements) {
  */
 function setupRestartButton(elements) {
     elements.restartButton.addEventListener('click', () => {
-        console.log('Restart Button clicked');
         if (world) {
             world.resetWorld();
             world = null;
@@ -218,7 +216,6 @@ function setupRestartButton(elements) {
  */
 function setupBackToStartButton(elements) {
     elements.backToStartButton.addEventListener('click', () => {
-        console.log('Back to Start Button clicked');
         if (world) {
             world.resetWorld();
             world = null;

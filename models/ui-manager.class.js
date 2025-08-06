@@ -36,7 +36,6 @@ class UIManager {
      * @returns {void}
      */
     showEndScreen(won) {
-        console.log('showEndScreen aufgerufen:', won ? 'You Won' : 'You Lost');
         this.hideGameElements();
         this.showEndScreenElement();
         this.setEndScreenImage(won);

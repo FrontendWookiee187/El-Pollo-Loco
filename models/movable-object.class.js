@@ -222,7 +222,6 @@ class MovableObject extends DrawableObject {
      */
     hit(enemyHitFromAbove = false) {
         if (enemyHitFromAbove) {
-            console.log('Kein Schaden, da der Charakter ein Huhn von oben getroffen hat.');
             return;
         }
     
