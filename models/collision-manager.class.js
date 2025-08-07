@@ -132,7 +132,9 @@ class CollisionManager {
                 if (this.world.statusBarBottles.percentage < 100) {
                     this.world.level.bottles.splice(index, 1);
                     this.world.updateBottleStatusBar();
-                    this.world.soundBottleCollect.play();
+                    this.world.soundBottleCollect.play().catch(error => {
+                        // Ignore AbortError when play() is interrupted by pause()
+                    });
                     this.world.soundBottleCollect.volume = 0.3;
                 }
             }
@@ -152,7 +154,9 @@ class CollisionManager {
                 if (this.world.statusBarCoins.percentage < 100) {
                     this.world.level.coins.splice(index, 1);
                     this.world.updateCoinStatusBar();
-                    this.world.soundCoinCollect.play();
+                    this.world.soundCoinCollect.play().catch(error => {
+                        // Ignore AbortError when play() is interrupted by pause()
+                    });
                     this.world.soundCoinCollect.volume = 0.3;
                 }
             }
@@ -221,7 +225,9 @@ class CollisionManager {
     executeJumpAttack(enemy, enemiesToRemove) {
         enemy.isKO = true;
         enemy.speed = 0;
-        this.world.chickenKOSound.play();
+        this.world.chickenKOSound.play().catch(error => {
+            // Ignore AbortError when play() is interrupted by pause()
+        });
         this.world.chickenKOSound.volume = 0.1;
         enemiesToRemove.push(enemy);
     }
