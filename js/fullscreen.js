@@ -4,7 +4,7 @@
  */
 function isMobileDevice() {    
     const userAgentMatch = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-    const smallScreen = window.innerWidth <= 1024; // Erhöht für bessere Abdeckung
+    const smallScreen = window.innerWidth <= 1024;
     const touchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
     
     return userAgentMatch || smallScreen || touchDevice;
@@ -310,7 +310,7 @@ function adjustGameContainer() {
         gameContainer.style.display = 'flex';
         gameContainer.style.justifyContent = 'center';
         gameContainer.style.alignItems = 'center';
-        gameContainer.style.backgroundColor = '#000'; // Schwarzer Hintergrund
+        gameContainer.style.backgroundColor = '#000';
     }
 }
 
@@ -320,14 +320,13 @@ function adjustGameContainer() {
  * @returns {void}
  */
 function adjustCanvasStyles(canvas) {
-    // Canvas soll den gesamten verfügbaren Viewport ausfüllen - gestreckt ohne schwarze Balken
     canvas.style.width = '100%';
     canvas.style.height = '100vh';
     canvas.style.maxWidth = '100vw';
     canvas.style.maxHeight = '100vh';
-    canvas.style.objectFit = 'fill'; // 'fill' streckt das Bild um den ganzen Bereich auszufüllen
+    canvas.style.objectFit = 'fill';
     canvas.style.display = 'block';
-    canvas.style.margin = '0 auto'; // Zentriert das Canvas horizontal
+    canvas.style.margin = '0 auto';
 }
 
 /**
