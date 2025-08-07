@@ -2,8 +2,7 @@
  * Checks if the device is a mobile device (smartphone/tablet)
  * @returns {boolean} True if the device is mobile, false otherwise
  */
-function isMobileDevice() {
-    // Prüfe User Agent UND Bildschirmgröße für bessere DevTools-Kompatibilität
+function isMobileDevice() {    
     const userAgentMatch = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
     const smallScreen = window.innerWidth <= 1024; // Erhöht für bessere Abdeckung
     const touchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
@@ -36,12 +35,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const fullscreenButton = document.getElementById('fullscreenButton');
     const gameContainer = document.getElementById('gameContainer');
     
-    setupFullscreenFeature(fullscreenButton, gameContainer);
+    setupFullscreenFeature(fullscreenButton, gameContainer);    
     
-    // Initial check beim Laden der Seite
-    showFullscreenButtonIfMobile();
+    showFullscreenButtonIfMobile();    
     
-    // Zusätzlicher Check nach kurzer Verzögerung für DevTools
     setTimeout(() => {
         showFullscreenButtonIfMobile();
     }, 500);
@@ -150,9 +147,8 @@ function setupOrientationChangeFullscreen() {
                 autoFullscreenForMobile();
             }, 500);
         }
-    });
+    });    
     
-    // Zusätzlicher Resize-Listener für DevTools-Simulation
     window.addEventListener('resize', () => {
         setTimeout(() => {
             if (isMobileDevice() || window.innerWidth <= 1024) {
