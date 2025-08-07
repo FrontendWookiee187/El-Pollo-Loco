@@ -285,9 +285,7 @@ class Character extends MovableObject {
         this.otherDirection = false;
         this.idleSound.pause();
         this.snorSound.pause();
-        this.stepSound.play().catch(error => {
-            // Ignore AbortError when play() is interrupted by pause()
-        });
+        this.stepSound.play().catch(error => {});
         this.stepSound.volume = 0.5;
     }
 
@@ -302,9 +300,7 @@ class Character extends MovableObject {
         this.otherDirection = true;
         this.idleSound.pause();
         this.snorSound.pause();
-        this.stepSound.play().catch(error => {
-            // Ignore AbortError when play() is interrupted by pause()
-        });
+        this.stepSound.play().catch(error => {});
         this.stepSound.volume = 0.5;
     }
 
@@ -356,9 +352,7 @@ class Character extends MovableObject {
         this.stopAllSounds();
 
         if (!this.deadSoundPlayed) {
-            this.deadSound.play().catch(error => {
-                // Ignore AbortError when play() is interrupted by pause()
-            });
+            this.deadSound.play().catch(error => {});
             this.deadSound.volume = 0.5;
             this.deadSoundPlayed = true;
         }
@@ -373,9 +367,7 @@ class Character extends MovableObject {
      */
     handleHurtAnimation() {
         this.playAnimation(this.IMAGES_HURT);
-        this.hurtSound.play().catch(error => {
-            // Ignore AbortError when play() is interrupted by pause()
-        });
+        this.hurtSound.play().catch(error => {});
         this.hurtSound.volume = 0.5;
     }
 
@@ -388,9 +380,7 @@ class Character extends MovableObject {
     handleLongIdleAnimation() {
         this.playAnimation(this.IMAGES_LONG_IDLE);
         this.stopIdleSound();
-        this.snorSound.play().catch(error => {
-            // Ignore AbortError when play() is interrupted by pause()
-        });
+        this.snorSound.play().catch(error => {});
         this.snorSound.volume = 0.5;
     }
 
@@ -402,9 +392,7 @@ class Character extends MovableObject {
      */
     handleIdleAnimation() {
         this.playAnimation(this.IMAGES_IDLE);
-        this.idleSound.play().catch(error => {
-            // Ignore AbortError when play() is interrupted by pause()
-        });
+        this.idleSound.play().catch(error => {});
         this.idleSound.volume = 0.5;
     }
  
@@ -418,9 +406,7 @@ class Character extends MovableObject {
     jump() {
         this.speedY = 35;
         this.stopAllSounds();
-        this.jumpSound.play().catch(error => {
-            // Ignore AbortError when play() is interrupted by pause()
-        });
+        this.jumpSound.play().catch(error => {});
         this.jumpSound.volume = 0.2;
     }
 

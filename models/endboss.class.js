@@ -166,9 +166,7 @@ handleDeathState() {
     this.isKO = true;
     this.setAnimation(this.IMAGES_DEAD);
     this.stopRageSound();
-    this.bossDeadSound.play().catch(error => {
-        // Ignore AbortError when play() is interrupted by pause()
-    });
+    this.bossDeadSound.play().catch(error => {});
     this.bossDeadSound.volume = 0.5;
 
     if (!this.yeahSoundPlayed) {
@@ -186,9 +184,7 @@ handleDeathState() {
  */
 handleKOState() {
     this.setAnimation(this.IMAGES_DEAD);
-    this.bossDeadSound.play().catch(error => {
-        // Ignore AbortError when play() is interrupted by pause()
-    });
+    this.bossDeadSound.play().catch(error => {});
     this.bossDeadSound.volume = 0.5;
 }
 
@@ -280,9 +276,7 @@ handleJumpPhysics() {
  */
 handleAttackSounds() {
     if (this.bossSound.paused) {
-        this.bossSound.play().catch(error => {
-            // Ignore AbortError when play() is interrupted by pause()
-        });
+        this.bossSound.play().catch(error => {});
         this.bossSound.volume = 0.5;
     }
 }
@@ -345,9 +339,7 @@ stopRageSound(){
  */
 playYeahSound(){
  if (this.health < 20) {           
-this.winnerSound.play().catch(error => {
-    // Ignore AbortError when play() is interrupted by pause()
-});
+this.winnerSound.play().catch(error => {});
 this.winnerSound.volume = 0.5;
 }}
 

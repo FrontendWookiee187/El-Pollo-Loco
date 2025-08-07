@@ -157,9 +157,7 @@ class AudioManager {
      * @returns {void}
      */
     startBackgroundMusic() {
-        this.world.backgroundMusic.play().catch(error => {
-            // Ignore AbortError when play() is interrupted by pause()
-        });
+        this.world.backgroundMusic.play().catch(error => {});
     }
 
     /**
