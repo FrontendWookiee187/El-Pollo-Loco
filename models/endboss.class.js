@@ -133,7 +133,6 @@ class Endboss extends MovableObject {
   /**
    * Handles the endboss AI behavior and animation states.
    * Manages different states: death, attack (when character in range), and walking.
-   * Controls jumping mechanics, movement towards character, sound effects, and animations.
    * 
    * @method
    * @returns {void}
@@ -143,59 +142,143 @@ class Endboss extends MovableObject {
         const now = Date.now();
 
         if (this.health < 20) {
-            this.isKO = true;
-            this.setAnimation(this.IMAGES_DEAD);
-            this.stopRageSound();
-            this.bossDeadSound.play();
-            this.bossDeadSound.volume = 0.5;
-        
-            if (!this.yeahSoundPlayed) {
-                this.playYeahSound();
-                this.yeahSoundPlayed = true;
-            }
-        
+            this.handleDeathState();
         } else if (this.isKO) {
-            this.setAnimation(this.IMAGES_DEAD);
-            this.bossDeadSound.play();
-            this.bossDeadSound.volume = 0.5;
-        
+            this.handleKOState();
         } else if (this.isCharacterInRange()) {
-            this.setAnimation(this.IMAGES_ATTACK);
-
-            if (!this.isJumping && now - this.lastJumpTime > 2500) {
-                this.isJumping = true;
-                this.speedY = 50;
-                this.lastJumpTime = now;
-            }
-
-            const character = this.world.character;
-            if (this.x > character.x) {
-                this.x -= this.speed;
-            } else if (this.x < character.x) {
-                this.x += this.speed;
-            }
-
-            if (this.isJumping) {
-                this.y -= this.speedY;
-                this.speedY -= 10;
-                if (this.y >= 55) {
-                    this.y = 55;
-                    this.speedY = 0;
-                    this.isJumping = false;
-                }
-            }
-
-            if (this.bossSound.paused) {
-                this.bossSound.play();
-                this.bossSound.volume = 0.5;
-            }
+            this.handleAttackState(now);
         } else {
-            this.setAnimation(this.IMAGES_WALKING);
-            this.stopRageSound();
+            this.handleWalkingState();
         }
 
         this.playAnimation(this.currentAnimation);
     }, 200);
+}
+
+/**
+ * Handles the death state of the endboss.
+ * Sets death animation, stops sounds, and plays victory sound.
+ * 
+ * @method
+ * @returns {void}
+ */
+handleDeathState() {
+    this.isKO = true;
+    this.setAnimation(this.IMAGES_DEAD);
+    this.stopRageSound();
+    this.bossDeadSound.play();
+    this.bossDeadSound.volume = 0.5;
+
+    if (!this.yeahSoundPlayed) {
+        this.playYeahSound();
+        this.yeahSoundPlayed = true;
+    }
+}
+
+/**
+ * Handles the KO state when boss is already knocked out.
+ * Continues death animation and sound effects.
+ * 
+ * @method
+ * @returns {void}
+ */
+handleKOState() {
+    this.setAnimation(this.IMAGES_DEAD);
+    this.bossDeadSound.play();
+    this.bossDeadSound.volume = 0.5;
+}
+
+/**
+ * Handles the attack state when character is in range.
+ * Manages jumping, movement, and sound effects.
+ * 
+ * @method
+ * @param {number} now - Current timestamp
+ * @returns {void}
+ */
+handleAttackState(now) {
+    this.setAnimation(this.IMAGES_ATTACK);
+    this.handleJumpingMechanics(now);
+    this.handleMovementTowardsCharacter();
+    this.handleJumpPhysics();
+    this.handleAttackSounds();
+}
+
+/**
+ * Handles the walking state when character is out of range.
+ * Sets walking animation and stops rage sounds.
+ * 
+ * @method
+ * @returns {void}
+ */
+handleWalkingState() {
+    this.setAnimation(this.IMAGES_WALKING);
+    this.stopRageSound();
+}
+
+/**
+ * Handles jumping mechanics and timing.
+ * Initiates jumps based on time intervals.
+ * 
+ * @method
+ * @param {number} now - Current timestamp
+ * @returns {void}
+ */
+handleJumpingMechanics(now) {
+    if (!this.isJumping && now - this.lastJumpTime > 2500) {
+        this.isJumping = true;
+        this.speedY = 50;
+        this.lastJumpTime = now;
+    }
+}
+
+/**
+ * Handles movement towards the character.
+ * Moves boss left or right based on character position.
+ * 
+ * @method
+ * @returns {void}
+ */
+handleMovementTowardsCharacter() {
+    const character = this.world.character;
+    if (this.x > character.x) {
+        this.x -= this.speed;
+    } else if (this.x < character.x) {
+        this.x += this.speed;
+    }
+}
+
+/**
+ * Handles jump physics and ground collision.
+ * Applies gravity and ground collision detection.
+ * 
+ * @method
+ * @returns {void}
+ */
+handleJumpPhysics() {
+    if (this.isJumping) {
+        this.y -= this.speedY;
+        this.speedY -= 10;
+        if (this.y >= 55) {
+            this.y = 55;
+            this.speedY = 0;
+            this.isJumping = false;
+        }
+    }
+}
+
+/**
+ * Handles attack sound effects.
+ * Plays boss rage sound during attack state.
+ * 
+ * @method
+ * @returns {void}
+ */
+handleAttackSounds() {
+    if (this.bossSound.paused) {
+        this.bossSound.play();
+        this.bossSound.volume = 0.5;
+    }
 }
 
 /**
