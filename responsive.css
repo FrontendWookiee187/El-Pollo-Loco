@@ -276,7 +276,7 @@ body.fullscreen-active .end-screen {
     /* Fullscreen Button nach Exit */
     .post-fullscreen-exit .fullscreen-btn {
         position: fixed !important;
-        top: calc(40% - 60px) !important; /* Über dem Mute-Button */
+        top: calc(40% - 80px) !important; /* Deutlich über dem Mute-Button */
         right: 26px !important; /* Rechts neben dem Mute-Button */
         z-index: 1001 !important;
         background: rgba(255, 87, 34, 0.9) !important; /* Orange mit Transparenz */
@@ -288,12 +288,29 @@ body.fullscreen-active .end-screen {
         box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5) !important;
     }
     
+    /* Mute Button nach Fullscreen-Exit - sicherstellen dass er korrekt positioniert ist */
+    .post-fullscreen-exit .mute-btn {
+        position: fixed !important;
+        top: 40% !important;
+        right: 26px !important;
+        z-index: 1001 !important;
+    }
+    
     /* Für mobile Geräte nach Fullscreen-Exit */
     @media (max-width: 768px) {
         .post-fullscreen-exit .fullscreen-btn {
             top: auto !important;
             bottom: 140px !important; /* Über den Touch-Controls */
             right: 20px !important;
+        }
+        
+        /* Mute Button für mobile Geräte nach Fullscreen-Exit */
+        .post-fullscreen-exit .mute-btn {
+            position: fixed !important;
+            top: auto !important;
+            bottom: 200px !important; /* Über dem Fullscreen-Button */
+            right: 20px !important;
+            z-index: 1001 !important;
         }
     }
     
@@ -306,6 +323,17 @@ body.fullscreen-active .end-screen {
             width: 50px !important;
             height: 50px !important;
             font-size: 22px !important;
+        }
+        
+        /* Mute Button für Galaxy S9+ nach Fullscreen-Exit */
+        .post-fullscreen-exit .mute-btn {
+            position: fixed !important;
+            top: auto !important;
+            bottom: 200px !important; /* 60px über dem Fullscreen-Button */
+            right: 15px !important;
+            z-index: 1001 !important;
+            width: 50px !important;
+            height: 50px !important;
         }
         
         /* Fullscreen Hint für kleinere Bildschirme anpassen */
