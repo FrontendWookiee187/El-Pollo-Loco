@@ -147,4 +147,29 @@ class DrawableObject{
       this.imageCache[path] = img;                
        });                
          }  
+
+    /**
+     * Resolves the appropriate image index based on a percentage value.
+     * Maps percentage ranges to corresponding image indices for visual representation.
+     * Used primarily by status bars to determine which image to display.
+     * 
+     * @method
+     * @param {number} percentage - The percentage value (0-100) to map to an image index
+     * @returns {number} Index (0-5) corresponding to the appropriate image
+     */
+    resolveImageIndex(percentage) {
+        if (percentage == 100) {
+            return 5; 
+        } else if (percentage >= 80) {
+            return 4; 
+        } else if (percentage >= 60) {
+            return 3; 
+        } else if (percentage >= 40) {
+            return 2; 
+        } else if (percentage >= 20) {
+            return 1; 
+        } else {
+            return 0; 
+        }
+    }
 }

@@ -8,17 +8,6 @@ function isMobileDevice() {
     const smallScreen = window.innerWidth <= 1024; // Erhöht für bessere Abdeckung
     const touchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
     
-    // Debug-Logging für Entwicklung
-    console.log('isMobileDevice Debug:', {
-        userAgent: navigator.userAgent,
-        userAgentMatch,
-        windowWidth: window.innerWidth,
-        windowHeight: window.innerHeight,
-        smallScreen,
-        touchDevice,
-        result: userAgentMatch || smallScreen || touchDevice
-    });
-    
     return userAgentMatch || smallScreen || touchDevice;
 }
 
@@ -29,26 +18,13 @@ function isMobileDevice() {
 function showFullscreenButtonIfMobile() {
     const fullscreenButton = document.getElementById('fullscreenButton');
     if (fullscreenButton) {
-        // Debug-Logging
-        console.log('showFullscreenButtonIfMobile Debug:', {
-            windowWidth: window.innerWidth,
-            windowHeight: window.innerHeight,
-            isMobile: isMobileDevice(),
-            buttonCurrentDisplay: fullscreenButton.style.display
-        });
-        
-        // Zeige Button für alle Geräte <= 1024px ODER wenn isMobileDevice() true ist
         if (window.innerWidth <= 1024 || isMobileDevice()) {
             fullscreenButton.style.display = 'flex';
             fullscreenButton.style.alignItems = 'center';
             fullscreenButton.style.justifyContent = 'center';
-            console.log('Fullscreen button shown');
         } else {
             fullscreenButton.style.display = 'none';
-            console.log('Fullscreen button hidden');
         }
-    } else {
-        console.warn('Fullscreen button element not found!');
     }
 }
 
@@ -60,8 +36,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const fullscreenButton = document.getElementById('fullscreenButton');
     const gameContainer = document.getElementById('gameContainer');
     
-    console.log('DOM loaded, setting up fullscreen feature');
-    
     setupFullscreenFeature(fullscreenButton, gameContainer);
     
     // Initial check beim Laden der Seite
@@ -70,7 +44,6 @@ document.addEventListener('DOMContentLoaded', () => {
     // Zusätzlicher Check nach kurzer Verzögerung für DevTools
     setTimeout(() => {
         showFullscreenButtonIfMobile();
-        console.log('Secondary fullscreen button check completed');
     }, 500);
 });
 
@@ -126,18 +99,9 @@ function setupGameStartFullscreenEvents() {
  * @returns {void}
  */
 function autoFullscreenForMobile() {
-    console.log('autoFullscreenForMobile called', {
-        isMobileDevice: isMobileDevice(),
-        windowWidth: window.innerWidth,
-        isFullscreen: !!document.fullscreenElement
-    });
-    
     if ((isMobileDevice() || window.innerWidth <= 1024) && !document.fullscreenElement) {
         const elem = getFullscreenElement();
-        console.log('Requesting fullscreen for element:', elem);
         requestFullscreenForElement(elem);
-    } else {
-        console.log('Conditions not met for auto fullscreen');
     }
 }
 
@@ -181,7 +145,6 @@ function requestFullscreenForElement(elem) {
  */
 function setupOrientationChangeFullscreen() {
     window.addEventListener('orientationchange', () => {
-        console.log('Orientation change detected');
         if (isMobileDevice() || window.innerWidth <= 1024) {
             setTimeout(() => {
                 autoFullscreenForMobile();
@@ -314,20 +277,11 @@ function handleMsFullscreenChange() {
  * @returns {void}
  */
 function handleFullscreenExit() {
-    console.log('handleFullscreenExit called', {
-        isMobileDevice: isMobileDevice(),
-        windowWidth: window.innerWidth,
-        windowHeight: window.innerHeight
-    });
-    
     if (isMobileDevice() || window.innerWidth <= 1024) {
         document.body.classList.add('post-fullscreen-exit');
         adjustCanvasForExitFullscreen();
         showFullscreenButtonIfMobile();
         showFullscreenHint();
-        console.log('Fullscreen exit handling completed');
-    } else {
-        console.log('Not a mobile device, skipping fullscreen exit handling');
     }
 }
 
@@ -361,8 +315,6 @@ function adjustGameContainer() {
         gameContainer.style.justifyContent = 'center';
         gameContainer.style.alignItems = 'center';
         gameContainer.style.backgroundColor = '#000'; // Schwarzer Hintergrund
-        
-        console.log('Game container adjusted for post-fullscreen exit');
     }
 }
 
@@ -380,8 +332,6 @@ function adjustCanvasStyles(canvas) {
     canvas.style.objectFit = 'fill'; // 'fill' streckt das Bild um den ganzen Bereich auszufüllen
     canvas.style.display = 'block';
     canvas.style.margin = '0 auto'; // Zentriert das Canvas horizontal
-    
-    console.log('Canvas styles adjusted for post-fullscreen exit - stretched to fill');
 }
 
 /**
