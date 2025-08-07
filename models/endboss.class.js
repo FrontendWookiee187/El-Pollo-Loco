@@ -16,6 +16,12 @@
 class Endboss extends MovableObject {
 
     /**
+     * Reference to the game world object.
+     * @type {World|null}
+     */
+    world = null;
+
+    /**
      * Height of the endboss in pixels.
      * @type {number}
      * @default 400
@@ -106,13 +112,14 @@ class Endboss extends MovableObject {
    * Sets up initial state for AI behavior and jumping mechanics.
    * 
    * @constructor
-   * @param {World} world - Reference to the game world object
+   * @param {World} [world] - Reference to the game world object (optional)
    */
-  constructor(world) {
+  constructor(world = null) {
     super().loadImage(this.IMAGES_WALKING[0]);
     this.loadImages(this.IMAGES_WALKING);
     this.loadImages(this.IMAGES_DEAD);
     this.loadImages(this.IMAGES_ATTACK);
+    this.world = world;
     this.x = 2500;
     this.y = 55;
     this.health = 100;
@@ -128,6 +135,18 @@ class Endboss extends MovableObject {
       left: 20,
       right: 20
   };
+  }
+
+  /**
+   * Sets the world reference for this endboss instance.
+   * Called by the world initialization process.
+   * 
+   * @method
+   * @param {World} world - Reference to the game world object
+   * @returns {void}
+   */
+  setWorld(world) {
+    this.world = world;
   }
 
   /**
@@ -240,6 +259,12 @@ handleJumpingMechanics(now) {
  * @returns {void}
  */
 handleMovementTowardsCharacter() {
+    // Early return if world or character is not available
+    if (!this.world || !this.world.character) {
+        return;
+    }
+    
+    /** @type {Character} */
     const character = this.world.character;
     if (this.x > character.x) {
         this.x -= this.speed;
@@ -289,12 +314,13 @@ handleAttackSounds() {
  * @returns {boolean} True if character is within 500 pixels, false otherwise
  */
 isCharacterInRange() { 
-
+  // Early return if world or character is not available
   if (!this.world || !this.world.character) {
       console.warn('World oder Character ist nicht definiert');
       return false;
   }
 
+  /** @type {Character} */
   const character = this.world.character;
   const distance = Math.abs(this.x - character.x);
 
