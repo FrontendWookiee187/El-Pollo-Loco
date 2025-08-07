@@ -98,7 +98,7 @@ class World{
 
     /**
      * Initializes all enemies in the level.
-     * Sets world reference and starts Endboss animation.
+     * Sets world reference for each enemy.
      * 
      * @method
      * @returns {void}
@@ -107,7 +107,7 @@ class World{
         this.level.enemies.forEach(enemy => {
             enemy.world = this;
             if (enemy instanceof Endboss) {
-                enemy.animate();
+                enemy.setWorld(this);
             }
         });
     }

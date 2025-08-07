@@ -147,6 +147,7 @@ class Endboss extends MovableObject {
    */
   setWorld(world) {
     this.world = world;
+    this.animate();
   }
 
   /**
@@ -259,7 +260,6 @@ handleJumpingMechanics(now) {
  * @returns {void}
  */
 handleMovementTowardsCharacter() {
-    // Early return if world or character is not available
     if (!this.world || !this.world.character) {
         return;
     }
@@ -314,9 +314,7 @@ handleAttackSounds() {
  * @returns {boolean} True if character is within 500 pixels, false otherwise
  */
 isCharacterInRange() { 
-  // Early return if world or character is not available
   if (!this.world || !this.world.character) {
-      console.warn('World oder Character ist nicht definiert');
       return false;
   }
 
